@@ -61,6 +61,10 @@ phone_x = 160.1
 phone_y = 76.1
 phone_z = 8.20
 phone_mass = 167.0
+# Plan-view corner radii, from Mk2's pocket sketch (9.362 / 10.904 at a 0.5
+# gap) less that gap; the Mk2 phone STL's outline agrees. Front = button edge.
+phone_corner_r_front = 8.86
+phone_corner_r_rear = 10.40
 
 # --- 3. materials and clearances -----------------------------------------
 mat_density = 1.27e-3  # g/mm3, PETG, SOLID

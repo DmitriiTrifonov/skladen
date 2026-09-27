@@ -34,6 +34,30 @@ def x_cyl(d, w, x, y, z):
     return Pos(x, y, z) * Rot(0, 90, 0) * Cylinder(radius=d / 2, height=w)
 
 
+def rounded_outline(w, d, y0, r_front, r_rear, z0=-50.0, h=100.0):
+    """Vertical prism on a w x d rectangle from Y = y0, corners rounded in plan:
+    r_front at the Y = y0 edge, r_rear at the far one."""
+    x1, y1 = w / 2, y0 + d
+    pts = [
+        (-x1 + r_front, y0), (x1 - r_front, y0),
+        (x1, y0 + r_front), (x1, y1 - r_rear),
+        (x1 - r_rear, y1), (-x1 + r_rear, y1),
+        (-x1, y1 - r_rear), (-x1, y0 + r_front),
+    ]
+    k = 1 - 0.5 ** 0.5
+    mids = [
+        (x1 - r_front * k, y0 + r_front * k), (x1 - r_rear * k, y1 - r_rear * k),
+        (-x1 + r_rear * k, y1 - r_rear * k), (-x1 + r_front * k, y0 + r_front * k),
+    ]
+    edges = []
+    for i in range(4):
+        a, b = pts[2 * i], pts[2 * i + 1]
+        edges.append(Line(a, b))
+        edges.append(ThreePointArc(b, mids[i], pts[(2 * i + 2) % 8]))
+    face = make_face(edges)
+    return Pos(0, 0, z0) * extrude(face, amount=h)
+
+
 # --- shells ---------------------------------------------------------------
 def base_shell():
     # Walls stand keycap_gap proud of the keycap plane so the lid lands on them.
@@ -88,7 +112,7 @@ def lid_shell():
     def z_at(y, off):
         return bot_f + slope * y + off
 
-    s -= yz_prism(
+    slab = yz_prism(
         [
             (ph_y0, z_at(ph_y0, -1.0)),
             (ph_y0 + ph_y, z_at(ph_y0 + ph_y, -1.0)),
@@ -97,6 +121,12 @@ def lid_shell():
         ],
         ph_x,
     )
+    # Plan-view corners follow the phone's, as Mk2's pocket did. The radius
+    # takes the smaller (depth) gap, so the long-axis tape gap only widens
+    # toward the ends and never goes negative round a corner.
+    s -= slab & rounded_outline(ph_x, ph_y, ph_y0,
+                                p.phone_corner_r_front + p.clr_phone,
+                                p.phone_corner_r_rear + p.clr_phone)
     # rounded rear edge: every point within lid_rear_radius of the hinge axis, so
     # the lid sweeps a clean cylinder and clears the tail at any opening angle
     s += x_cyl(2 * p.lid_rear_radius, p.lid_x, 0, p.hinge_axis_y, p.hinge_axis_z)

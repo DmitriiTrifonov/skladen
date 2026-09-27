@@ -53,6 +53,8 @@ from others here · `A` assumed, not yet verified
 | `phone_y` | 76.1 | S |  |
 | `phone_z` | 8.2 | S | body, excluding the camera bump |
 | `phone_mass` | 167 | S |  |
+| `phone_corner_r_front` | 8.86 | M | plan view, button edge; from Mk2's pocket sketch |
+| `phone_corner_r_rear` | 10.4 | M | plan view, hinge edge |
 | `phone_front_wall` | 4 | D | biased forward so the buttons are reachable |
 | `tape_t` | 1 | D | double-sided tape, on the pocket's SIDE walls |
 | `button_win_x0` | -48.6 | M | button window, from Mk2's STL |

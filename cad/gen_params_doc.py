@@ -46,6 +46,8 @@ SECTIONS = [
         ("phone_y", "S", ""),
         ("phone_z", "S", "body, excluding the camera bump"),
         ("phone_mass", "S", ""),
+        ("phone_corner_r_front", "M", "plan view, button edge; from Mk2's pocket sketch"),
+        ("phone_corner_r_rear", "M", "plan view, hinge edge"),
         ("phone_front_wall", "D", "biased forward so the buttons are reachable"),
         ("tape_t", "D", "double-sided tape, on the pocket's SIDE walls"),
         ("button_win_x0", "M", "button window, from Mk2's STL"),
