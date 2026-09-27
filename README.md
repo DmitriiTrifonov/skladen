@@ -6,8 +6,10 @@ Third iteration, after Mk1 (Blender) and Mk2 (FreeCAD), neither of them publishe
 Same phone, new keyboard — a Jomaa KEYBOARD098RU salvaged from its folio case.
 
 <p align="center">
-  <img src="docs/img/mk3-open.png" width="760"
-       alt="Palmtop Mk3 open at 112 degrees: a blue printed clamshell, the phone in the lid showing a terminal, the keyboard in the base">
+  <img src="docs/img/mk3-photo.jpg" width="760"
+       alt="The printed Palmtop Mk3 open on a desk: grey PETG shell, the phone in the lid showing the Sxmo hotkey screen, the Jomaa keyboard in the base">
+  <br>
+  <sub>The first full print, running Sxmo.</sub>
 </p>
 
 **The goal of Mk3 is to be as thin as possible.** Mk2 is roughly 32 mm closed;
@@ -15,8 +17,11 @@ Mk3's design point is 22.2 mm, with both components fully enclosed and the
 keyboard never opened.
 
 <p align="center">
+  <img src="docs/img/mk3-open.png" width="760"
+       alt="Palmtop Mk3 rendered open at 112 degrees: the phone in the lid showing a terminal, the keyboard in the base">
+  <br>
   <img src="docs/img/mk3-closed.png" width="760"
-       alt="Palmtop Mk3 closed, seen from the front right">
+       alt="Palmtop Mk3 rendered closed, seen from the front right">
   <br>
   <sub>Shut: 22.24 mm at the hinge, 18.26 at the front. Both renders come straight from the
   model via <code>cad/render.py</code>; the phone and keyboard are stand-ins built from
@@ -88,7 +93,7 @@ substantial ballast that Mk2's `palmtop_weighted` name implies.
 
 ```
 docs/          requirements, measurements, analyses, ADRs
-docs/img/      README renders, from cad/render.py
+docs/img/      README photo, and renders from cad/render.py
 cad/           build123d model: params.py drives it, build.py checks and exports
 export/        STL and STEP for printing, SVG drawings
 ```
