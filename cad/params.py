@@ -152,10 +152,10 @@ phone_usbc_cut_h = 7.0   # along Z: sets the FLOOR side only - the slot is open
                          # the one limit left on overmould thickness
 
 # --- logo -----------------------------------------------------------------
-# The Mitya Computer lockup, inlaid flush in the lid's outer face as one body
+# The Mitya Computer dog, inlaid flush in the lid's outer face as one body
 # per colour, for a multi-material printer. The lid alone, on one filament,
 # carries the same logo as an engraving. See cad/logo.py.
-logo_width = 80.0   # across the lockup; the thinnest strokes come out near 0.6
+logo_height = 40.0  # ear tip to paws; the leg lines, the thinnest strokes, come out 0.85
 logo_depth = 0.60   # half the rear wall, and three 0.2 layers
 logo_centre_y = phone_front_wall + (phone_y + 2 * clr_phone) / 2   # over the phone
 # Upright to someone facing the OPEN lid, as Apple's is: the lid's front edge is

@@ -1,10 +1,12 @@
 """Build, check and export. Run: .venv/bin/python cad/build.py"""
 
+import struct
 import sys
 from math import asin, degrees, radians, sin
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+import numpy as np
 from build123d import export_step, export_stl
 
 import logo
@@ -21,12 +23,34 @@ def check(label, got, want, tol=0.01, unit="mm"):
         FAIL.append(label)
 
 
+def open_edges(stl):
+    """Mesh edges used by one triangle only: holes a slicer calls non-manifold.
+
+    The B-rep checks above cannot see these. A face the mesher cannot
+    triangulate is simply left out of the STL, and every edge around the gap
+    goes open - which is how the first logo lid reached the slicer broken.
+    """
+    raw = stl.read_bytes()
+    n = struct.unpack("<I", raw[80:84])[0]
+    tri = np.frombuffer(raw[84:84 + 50 * n], dtype=np.dtype(
+        [("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")]))["v"]
+    _, idx = np.unique(tri.reshape(-1, 3), axis=0, return_inverse=True)
+    idx = idx.reshape(-1, 3)
+    edges = np.sort(np.concatenate([idx[:, [0, 1]], idx[:, [1, 2]], idx[:, [2, 0]]]), axis=1)
+    _, count = np.unique(edges, axis=0, return_counts=True)
+    return int((count != 2).sum())
+
+
 def save(part, sub, name):
     """STEP and STL side by side, one folder per thing you would print together."""
     d = m.OUT / sub
     d.mkdir(exist_ok=True)
     export_step(part, str(d / f"mk3-{name}.step"))
     export_stl(part, str(d / f"mk3-{name}.stl"))
+    bad = open_edges(d / f"mk3-{name}.stl")
+    if bad:
+        print(f"  mk3-{name}.stl: {bad} non-manifold edges")
+        FAIL.append(f"mk3-{name}.stl mesh")
 
 
 def main():
@@ -152,7 +176,7 @@ def main():
     for part in inlays.values():
         recess = part if recess is None else recess + part
     lid_logo = lid - recess
-    print(f"\nlogo   {p.logo_width:.0f} mm across, {p.logo_depth:.2f} deep, "
+    print(f"\nlogo   {p.logo_height:.0f} mm tall, {p.logo_depth:.2f} deep, "
           f"{'upright when open' if p.logo_reads_open else 'upright when closed'}")
     n = len(lid_logo.solids())
     print(f"  {'lid solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")

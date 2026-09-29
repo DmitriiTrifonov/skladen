@@ -2,7 +2,8 @@
 
 The logo itself is not under the design's licence - see the README.
 
-The artwork is logo/mitya-computer.svg, a copy of the brand's master. Fills come
+The artwork is logo/mitya-shiba.svg, the brand's dog without its lettering, a
+copy of the master. Fills come
 through import_svg as faces, but strokes come through as bare centrelines - and
 the tail ring, the collar and the leg lines are all strokes - so they are
 thickened here. The collar is also clipped to the dog in the artwork, which
@@ -21,7 +22,7 @@ from build123d import *
 sys.path.insert(0, str(Path(__file__).parent))
 import params as p
 
-SVG = Path(__file__).parent / "logo" / "mitya-computer.svg"
+SVG = Path(__file__).parent / "logo" / "mitya-shiba.svg"
 
 # Colours in the artwork, and the stroke width each colour's strokes use there,
 # in the artwork's own units. One stroke width per colour holds for this logo:
@@ -55,10 +56,17 @@ def _union(faces):
 
 
 def regions():
-    """{colour: 2D shape}, centred on the origin, logo_width across, Y up."""
+    """{colour: 2D shape}, centred on the origin, logo_height tall, Y up."""
     # Imported as drawn, Y down: flip_y hides the flip in each face's location,
     # which scale() then misplaces. The flip is done explicitly at the end.
     shapes = import_svg(SVG, align=None, flip_y=False)
+    # An invalid face does not mesh, and leaves a hole in every STL cut from it.
+    # A self-crossing outline does this - it is how variable-font lettering
+    # arrived here once - so refuse the artwork rather than export a broken part.
+    bad = [s for s in shapes if isinstance(s, Face) and not s.is_valid]
+    if bad:
+        raise ValueError(f"logo: {len(bad)} invalid shape(s) in {SVG.name}, "
+                         f"first at {bad[0].bounding_box().center()}")
     canvas = max(s.bounding_box().size.X for s in shapes)
     fills = {k: [] for k in COLOURS}
     strokes = {k: [] for k in COLOURS}
@@ -70,13 +78,9 @@ def regions():
     thick = {k: [_thicken(w, COLOURS[k][1] * canvas / _viewbox_w()) for w in ws]
              for k, ws in strokes.items()}
     black = _union(fills["black"] + thick["black"])
-    # The collar is clipped to the dog's filled body in the artwork - not to the
-    # tail, which is a stroke, and not to the lettering, which starts right of
-    # the collar's far end.
-    collar = _union(thick["teal"])
-    dog = _union([f for f in fills["black"]
-                  if f.bounding_box().min.X < collar.bounding_box().max.X])
-    teal = collar & dog
+    # The collar is clipped to the dog's filled body in the artwork, not to the
+    # tail, which is a stroke.
+    teal = _union(thick["teal"]) & _union(fills["black"])
     white = _union(fills["white"] + thick["white"])
     # A white shape with a black one inside it (the nut and its hole) keeps the
     # black: black fills that lie wholly inside white are holes in the white.
@@ -87,7 +91,7 @@ def regions():
 
     out = {"black": black, "teal": teal, "white": white}
     bb = _union(list(out.values())).bounding_box()
-    k = p.logo_width / bb.size.X
+    k = p.logo_height / bb.size.Y
     # Scale about the origin first, then move: scale() drops a location that
     # Pos() has only recorded, rather than applied, on a boolean result.
     move = Pos(-bb.center().X * k, -bb.center().Y * k)
