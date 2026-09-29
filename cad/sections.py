@@ -9,7 +9,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 import model as m
 import params as p
 
-OUT = Path(__file__).parent.parent / "export"
+OUT = Path(__file__).parent.parent / "export" / "drawings"
+OUT.mkdir(parents=True, exist_ok=True)
 
 
 def section_at(part, x, half=0.05):

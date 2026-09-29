@@ -211,7 +211,7 @@ nut_af = 5.70            # across flats, M3 nut 5.5 plus fit
 # two threads into the insert. Nylon side OUT, metal face on the pocket floor.
 nut_depth = 4.30
 # Plain DIN 934 (2.40 tall) kept as a second base while the nylon nuts are on
-# order: export/*-plainnut.*. It wants threadlocker, which cannot be re-applied
+# order: export/plainnut/. It wants threadlocker, which cannot be re-applied
 # once the lid is nested - fine for a coupon, not what the device should ship with.
 nut_depth_plain = 2.70
 head_dia = 5.80          # M3 socket cap 5.5 plus fit

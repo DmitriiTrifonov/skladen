@@ -97,7 +97,10 @@ substantial ballast that Mk2's `palmtop_weighted` name implies.
 docs/          requirements, measurements, analyses, ADRs
 docs/img/      README photo, and renders from cad/render.py
 cad/           build123d model: params.py drives it, build.py checks and exports
-export/        STL and STEP for printing, SVG drawings
+export/device/    STL and STEP for the device: lid + base (DIN 985 nylon nut)
+export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
+export/coupon21/  hinge-station coupons
+export/drawings/  SVG views and sections
 ```
 
 ## Licence

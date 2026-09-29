@@ -20,6 +20,14 @@ def check(label, got, want, tol=0.01, unit="mm"):
         FAIL.append(label)
 
 
+def save(part, sub, name):
+    """STEP and STL side by side, one folder per thing you would print together."""
+    d = m.OUT / sub
+    d.mkdir(exist_ok=True)
+    export_step(part, str(d / f"mk3-{name}.step"))
+    export_stl(part, str(d / f"mk3-{name}.stl"))
+
+
 def main():
     base, lid = m.build()
 
@@ -130,10 +138,10 @@ def main():
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")
 
-    for name, part in (("base", base), ("lid", lid),
-                       ("coupon21-base", cb), ("coupon21-lid", cl)):
-        export_step(part, str(m.OUT / f"mk3-{name}.step"))
-        export_stl(part, str(m.OUT / f"mk3-{name}.stl"))
+    for sub, name, part in (("device", "base", base), ("device", "lid", lid),
+                            ("coupon21", "coupon21-base", cb),
+                            ("coupon21", "coupon21-lid", cl)):
+        save(part, sub, name)
     print(f"exported to {m.OUT}")
 
     # Plain-nut variant of the base. Only the base carries the nut pocket, so the
@@ -152,9 +160,8 @@ def main():
         FAIL.append("plain-nut closed interference")
     cb_pn, _ = m.coupon(base_pn, lid)
     for name, part in (("base-plainnut", base_pn), ("coupon21-base-plainnut", cb_pn)):
-        export_step(part, str(m.OUT / f"mk3-{name}.step"))
-        export_stl(part, str(m.OUT / f"mk3-{name}.stl"))
-    print(f"  exported mk3-base-plainnut, mk3-coupon21-base-plainnut")
+        save(part, "plainnut", name)
+    print(f"  exported to {m.OUT / 'plainnut'}")
 
     # Keep docs/parameters.md from drifting: regenerate it every build.
     import gen_params_doc
