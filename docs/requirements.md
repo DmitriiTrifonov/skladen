@@ -32,7 +32,7 @@ within the constraints below.
 
 | # | Requirement |
 |---|---|
-| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 22.5. Design point is **22.24** — the target is missed by 2.24 through two deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md). **The hard limit needs restating** (see below) |
+| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 24.5. Design point is **23.24** — the target is missed by 3.24 through deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md) (the lid's rear skin, and 1.0 of tape behind the phone). Limit restated by the owner, see below |
 | N2 | Footprint: base ~197 x 105 including the 15 mm rear setback; lid ~197 x 90, ending at the hinge axis, leaving the tail exposed when closed (see [clamshell geometry](analysis/clamshell-geometry.md)) |
 | N3 | Printable on a 256 x 256 bed without the base being split into multiple parts |
 | N4 | Total mass <= 400. Currently ~374 as printed (~432 if it were solid) — measure against the slicer's figure, not `volume x density` |
@@ -63,7 +63,7 @@ The build is done when all of the following hold on the physical device:
 
 The hard limit of 22.5 was written before any construction was chosen, as a round
 number just above an early estimate of what is now the selected scenario. The
-device has landed at 22.24, so the limit constrains with 0.26 mm of margin — and
+device has landed at 22.24, so the limit constrained with 0.26 mm of margin — and
 it is constraining against a number derived from itself.
 
 This matters because the contingency is real: if coupon 2.4 shows the base flexes
@@ -79,7 +79,11 @@ Two responses, not exclusive:
    number the owner actually cares about — rather than one back-derived from a
    spreadsheet.
 
-**Open question for the owner:** what is the real ceiling?
+**Answered 2026-09-29:** the owner accepts "a couple of millimetres" over the
+old figure, so the hard limit is now **24.5**. The first 1.0 of that went
+straight to tape behind the phone ([ADR-0004](adr/0004-phone-retention.md)),
+leaving 1.26 — enough to absorb the thicker-floor contingency above at 2.0,
+not at 2.5.
 
 ## Scope boundary with Mk4
 

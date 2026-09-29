@@ -180,16 +180,23 @@ carries over. The pocket is therefore a plain recess the depth of the phone, wit
 nothing overlapping the screen — which is what this model already had, so no
 geometry changed and **task 0.8 (front bezel width) is superseded**.
 
-**The tape goes on the pocket's side walls, not its floor.** On the floor, a 1 mm
-tape adds its full thickness to the closed stack: 22.24 becomes 23.24, which is
-0.74 over N1's hard limit and more than every millimetre the project fought for
-elsewhere — the lid's back skin was worth 1.2, ADR-0008 Option E is worth 0.4.
-Recessing pads into the 1.2 mm rear wall does not help either; a 1 mm recess
-leaves 0.2 mm, which is a hole.
+**The tape goes on the pocket's floor, and the pocket is 1.0 deeper for it.**
+This was first decided the other way: side walls, to keep the closed stack at
+22.24 under N1's then hard limit of 22.5. On the side walls it cost only pocket
+width — 160.7 to 162.7, side blocks 18.05 to 17.05 — and that widening is kept.
 
-On the side walls it costs nothing but pocket width. The pocket widens from 160.7
-to 162.7 and the side blocks narrow from 18.05 to 17.05; closed height is
-unchanged.
+It did not survive assembly (2026-09-29). The first full build went together
+with 1 mm tape on the floor, the phone stood 1 mm proud of the lid's face, and
+with only `keycap_gap` (0.3) to the keycaps it landed on the keys. Because the
+lid pivots about the hinge, the contact nearest the axis governs, and the lid
+stood ~4 mm open at its front edge — roughly the whole close tilt.
+
+The owner chose the height over the side-wall discipline: the pocket is now
+`phone_z + tape_t` deep, the lid 10.40 thick, and the device closes at
+**23.24**. N1's hard limit was restated to 24.5 to match
+([requirements](../requirements.md)). Floor tape also means the phone seats
+against a flat plane rather than being wedged between walls, which is how it
+naturally went together.
 
 Adhesion is nowhere near the constraint. Holding an inverted phone is 1.64 N
 against roughly 1250 mm2 of contact on the two short ends alone, and the pocket

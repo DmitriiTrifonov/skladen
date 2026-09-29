@@ -24,6 +24,7 @@ CAD. See [ADR-0001](0001-record-architecture-decisions.md) for why.
    +--> only two 1.2 mm skins left as thickness levers, both now spent:
    |        0008 (base floor, ACCEPTED: kept)
    |        0004 (lid rear wall, ACCEPTED: kept)   --> 22.24 mm
+   |            +--> tape behind the phone (0004, 2026-09-29) --> 23.24 mm
    |            |
    |            +--> 0008 Option E (0.8 ribbed floor) is the last 0.4 mm
    |
@@ -47,8 +48,9 @@ The result is **22.24 mm** — a 30% reduction over Mk2 with both components ful
 enclosed, rather than the 38% that was available with both exposed. That was the
 trade, made twice and deliberately.
 
-**It leaves 0.26 mm of margin against N1's hard limit of 22.5, which is not a
-margin.** Two things follow: 0008 Option E (a 0.8 ribbed floor, stiffer than the
+**It left 0.26 mm of margin against N1's hard limit of 22.5, which was not a
+margin.** The limit has since been restated to 24.5, and 1.0 of it went to tape
+behind the phone (0004), putting the device at **23.24 mm**. Two things follow: 0008 Option E (a 0.8 ribbed floor, stiffer than the
 flat 1.2 it replaces) is now the project's only remaining reduction and should be
 resolved early; and the hard limit itself needs restating, since 22.5 was derived
 from an early estimate of this very scenario.

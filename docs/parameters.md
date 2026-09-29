@@ -56,7 +56,8 @@ from others here · `A` assumed, not yet verified
 | `phone_corner_r_front` | 8.86 | M | plan view, button edge; from Mk2's pocket sketch |
 | `phone_corner_r_rear` | 10.4 | M | plan view, hinge edge |
 | `phone_front_wall` | 4 | D | biased forward so the buttons are reachable |
-| `tape_t` | 1 | D | double-sided tape, on the pocket's SIDE walls |
+| `tape_t` | 1 | D | double-sided tape, on the pocket's FLOOR |
+| `pocket_z` | 9.2 | C | phone_z + tape_t |
 | `button_win_x0` | -48.6 | M | button window, from Mk2's STL |
 | `button_win_x1` | 5 | M |  |
 | `cam_x0` | -69.8 | M | camera cutout, from Mk2's STL |
@@ -103,8 +104,8 @@ from others here · `A` assumed, not yet verified
 | `lid_rear_wall` | 1.2 | D | ADR-0004, closed pocket |
 | `lid_x` | 198.4 | C | matches base_x |
 | `lid_y` | 90.05 | C | ends at the hinge axis |
-| `lid_t` | 9.4 | C | lid_rear_wall + phone_z |
-| `lid_rear_radius` | 4.7 | C | half the lid thickness |
+| `lid_t` | 10.4 | C | lid_rear_wall + pocket_z |
+| `lid_rear_radius` | 5.2 | C | half the lid thickness |
 
 
 ## Derived stack
@@ -115,8 +116,8 @@ from others here · `A` assumed, not yet verified
 | `parting_front` | 8.56 | C |  |
 | `rim_rear` | 12.84 | C | where the lid lands |
 | `rim_front` | 8.86 | C |  |
-| `closed_h_rear` | 22.24 | C | **the N1 number** |
-| `closed_h_front` | 18.26 | C |  |
+| `closed_h_rear` | 23.24 | C | **the N1 number** |
+| `closed_h_front` | 19.26 | C |  |
 | `close_tilt` | 2.5307 | C | the lid shuts nose-down onto the wedge |
 
 
@@ -125,7 +126,7 @@ from others here · `A` assumed, not yet verified
 | Name | Value | St | Note |
 |---|---|---|---|
 | `hinge_axis_y` | 90.05 | C |  |
-| `hinge_axis_z` | 17.54 | C | lid mid-thickness, NOT the parting plane |
+| `hinge_axis_z` | 18.04 | C | lid mid-thickness, NOT the parting plane |
 | `hinge_torque_req` | 0.091 | C | N*m at 90 deg |
 | `knuckle_od` | 9 | D | capped by the lid's thickness at the axis |
 | `knuckle_id` | 3.5 | D | M3 clearance |
@@ -133,7 +134,7 @@ from others here · `A` assumed, not yet verified
 | `station_outer_w` | 6 | D | each base knuckle |
 | `station_inner_w` | 5.8 | D | the lid knuckle |
 | `station_w` | 18.2 | C |  |
-| `station_relief_r` | 5.7 | D | wider than lid_rear_radius so a post can exist |
+| `station_relief_r` | 6.2 | C | lid_rear_radius + 1.0, so a post can exist |
 | `post_half_y` | 2.5 | D |  |
 | `nut_af` | 5.7 | D | M3 nut across flats |
 | `nut_depth` | 4.3 | D |  |

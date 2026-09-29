@@ -116,8 +116,8 @@ def lid_shell():
         [
             (ph_y0, z_at(ph_y0, -1.0)),
             (ph_y0 + ph_y, z_at(ph_y0 + ph_y, -1.0)),
-            (ph_y0 + ph_y, z_at(ph_y0 + ph_y, p.phone_z)),
-            (ph_y0, z_at(ph_y0, p.phone_z)),
+            (ph_y0 + ph_y, z_at(ph_y0 + ph_y, p.pocket_z)),
+            (ph_y0, z_at(ph_y0, p.pocket_z)),
         ],
         ph_x,
     )
@@ -153,7 +153,7 @@ def lid_shell():
     s -= Pos(
         (p.cam_x0 + p.cam_x1) / 2,
         (cam_y0 + cam_y1) / 2,
-        z_at((cam_y0 + cam_y1) / 2, p.phone_z + p.lid_rear_wall / 2),
+        z_at((cam_y0 + cam_y1) / 2, p.pocket_z + p.lid_rear_wall / 2),
     ) * Box(p.cam_x1 - p.cam_x0, cam_y1 - cam_y0, p.lid_rear_wall + 2.0)
 
     # Phone USB-C through the right wall, as a slot open on the screen side

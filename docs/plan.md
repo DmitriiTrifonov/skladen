@@ -18,13 +18,15 @@ a rear wall**, for rear protection — the fingerprint reader it covers will not
 used. Both levers spent. Design point:
 
 ```
-   rear edge   22.24 mm      front edge   18.26 mm
+   rear edge   23.24 mm      front edge   19.26 mm   (22.24 / 18.26 before
+                                                    floor tape, ADR-0004)
    (Mk2 is roughly 32 mm, to be confirmed with calipers)
 ```
 
 A 30% reduction over Mk2 with both components fully enclosed, rather than the 38%
-that was available with both exposed. **That leaves 0.26 mm against N1's hard
-limit of 22.5, which is not a margin** — see
+that was available with both exposed. That left 0.26 mm against N1's original hard
+limit of 22.5; the limit has since been restated to 24.5 and 1.0 of it spent on
+tape behind the phone — see
 [requirements.md](requirements.md#n1-needs-restating).
 
 On balance the two decisions nearly cancelled — 26 g added low, 25 g added high —

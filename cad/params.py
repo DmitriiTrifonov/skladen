@@ -86,11 +86,13 @@ clr_kbd_x = 0.60
 clr_phone = 0.30
 
 # The phone is held by double-sided tape, as Mk2's was - no retention lips, so
-# the pocket is a plain recess. The tape goes on the pocket's SIDE walls, not
-# its floor: on the floor it would add its full thickness to the closed stack
-# and put the device 0.74 over N1's hard limit. On the sides it costs nothing
-# but pocket width. Holding an inverted phone takes 1.64 N against ~1250 mm2 of
-# contact, so adhesion is not the constraint anywhere.
+# the pocket is a plain recess. The tape goes on the pocket's FLOOR, behind the
+# phone, and the pocket is that much deeper. It was first put on the side walls
+# to save the 1.0 of height, but the assembled device got floor tape anyway: the
+# phone stood 1 mm proud, landed on the keycaps, and held the lid ~4 mm open at
+# the front. The owner took the height instead (N1 restated to 24.5). The side
+# widening is kept, so tape on the ends still fits. Holding an inverted phone
+# takes 1.64 N, so adhesion is not the constraint anywhere.
 tape_t = 1.00
 # Gap between the keycap tops and the lid. The lid lands on the base's RIM, not
 # on the keys: the base's walls stand this much proud of the keycap plane, so
@@ -110,7 +112,8 @@ base_y = base_depth_to_axis + hinge_setback
 lid_rear_wall = 1.20  # ADR-0004, closed pocket
 lid_x = base_x
 lid_y = base_depth_to_axis  # ends at the hinge axis; see clamshell-geometry.md
-lid_t = lid_rear_wall + phone_z
+pocket_z = phone_z + tape_t  # phone flush with the lid's face, tape behind it
+lid_t = lid_rear_wall + pocket_z
 
 lid_lip_depth_ASSUMED = 2.50  # task 0.8
 
@@ -158,7 +161,7 @@ closed_h_front = rim_front + lid_t
 close_tilt = degrees(atan((parting_rear - parting_front) / base_depth_to_axis))
 
 N1_TARGET = 20.00
-N1_HARD_LIMIT = 22.50  # self-referential, see requirements.md
+N1_HARD_LIMIT = 24.50  # restated 2026-09-29 by the owner, see requirements.md
 
 # --- 7. hinge -------------------------------------------------------------
 # The axis sits at the lid's MID-THICKNESS, not on the parting plane. With it on
@@ -187,7 +190,9 @@ station_outer_w = 6.00   # each base knuckle
 # at 180 deg the lid's underside behind the axis sits at (axis - lid_rear_radius),
 # so no base material may rise above that line except inside this relief. The
 # knuckle posts reach the axis through the relief, directly underneath it.
-station_relief_r = 5.70
+# Tied to the lid's radius, not fixed: a fixed 5.70 left the posts' front faces
+# clipping the lid's underside once the lid thickened for floor tape.
+station_relief_r = lid_rear_radius + 1.00
 post_half_y = 2.50
 station_inner_w = 5.80   # the lid knuckle
 station_w = 2 * station_outer_w + station_inner_w + 2 * 0.20

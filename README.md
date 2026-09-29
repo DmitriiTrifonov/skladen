@@ -23,7 +23,7 @@ keyboard never opened.
   <img src="docs/img/mk3-closed.png" width="760"
        alt="Palmtop Mk3 rendered closed, seen from the front right">
   <br>
-  <sub>Shut: 22.24 mm at the hinge, 18.26 at the front. Both renders come straight from the
+  <sub>Shut: 23.24 mm at the hinge, 19.26 at the front. Both renders come straight from the
   model via <code>cad/render.py</code>; the phone and keyboard are stand-ins built from
   their measured envelopes.</sub>
 </p>
@@ -35,8 +35,10 @@ builds and self-verifies against the analyses — and the first printed coupons
 caught two defects that no check could see, both of which are now checked for:
 see [ADR-0010](docs/adr/0010-hinge-station-count.md).
 
-**Design point: 22.24 mm closed at the rear, 18.26 at the front** — the keyboard
-is a 2.64 deg wedge, so the closed device is one too.
+**Design point: 23.24 mm closed at the rear, 19.26 at the front** — the keyboard
+is a 2.64 deg wedge, so the closed device is one too. The extra millimetre over
+the original 22.24 is tape behind the phone; see
+[ADR-0004](docs/adr/0004-phone-retention.md).
 
 | Doc | What it is |
 |---|---|
