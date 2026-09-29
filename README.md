@@ -101,7 +101,8 @@ cad/logo/      the logo artwork the lid inlays are cut from
 export/device/    STL and STEP for the device: lid + base (DIN 985 nylon nut)
 export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
 export/coupon21/  hinge-station coupons
-export/logo/      lid with the Mitya Computer logo recessed, and one inlay per colour
+export/logo/      Mitya Computer logo: lid-logo + one inlay per colour for a
+                  multi-material print, or lid-logo-engraved alone on one filament
 export/drawings/  SVG views and sections
 ```
 
