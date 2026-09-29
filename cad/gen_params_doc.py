@@ -88,6 +88,12 @@ SECTIONS = [
         ("lid_t", "C", "lid_rear_wall + pocket_z"),
         ("lid_rear_radius", "C", "half the lid thickness"),
     ]),
+    ("Logo — Mitya Computer, inlaid in the lid's outer face", [
+        ("logo_width", "D", "across the lockup"),
+        ("logo_depth", "D", "half the rear wall; three 0.2 layers"),
+        ("logo_centre_y", "C", "centred over the phone"),
+        ("logo_reads_open", "D", "upright to someone facing the open lid"),
+    ]),
     ("Derived stack", [
         ("parting_rear", "C", "top of the keycaps"),
         ("parting_front", "C", ""),

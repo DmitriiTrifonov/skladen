@@ -97,9 +97,11 @@ substantial ballast that Mk2's `palmtop_weighted` name implies.
 docs/          requirements, measurements, analyses, ADRs
 docs/img/      README photo, and renders from cad/render.py
 cad/           build123d model: params.py drives it, build.py checks and exports
+cad/logo/      the logo artwork the lid inlays are cut from
 export/device/    STL and STEP for the device: lid + base (DIN 985 nylon nut)
 export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
 export/coupon21/  hinge-station coupons
+export/logo/      lid with the Mitya Computer logo recessed, and one inlay per colour
 export/drawings/  SVG views and sections
 ```
 
@@ -112,5 +114,11 @@ released under the [CERN Open Hardware Licence Version 2 – Strongly Reciprocal
 (CERN-OHL-S-2.0). Under this licence the Python model is the design's source: if
 you adapt it, to a different phone or keyboard say, and distribute the result or
 anything built from it, you share your modified source under the same terms.
+
+**Except the Mitya Computer name and logo.** The artwork in `cad/logo/`, and the
+logo it puts into `export/logo/`, are not released under that licence: all rights
+reserved. They are in the repository so the lid can be built with them, not for
+reuse. A device you make and distribute from this design should use the plain lid
+in `export/device/`, which carries no logo, or one of your own.
 
 Source location: <https://github.com/DmitriiTrifonov/palmtop-mk3>

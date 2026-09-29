@@ -108,6 +108,16 @@ from others here · `A` assumed, not yet verified
 | `lid_rear_radius` | 5.2 | C | half the lid thickness |
 
 
+## Logo — Mitya Computer, inlaid in the lid's outer face
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `logo_width` | 80 | D | across the lockup |
+| `logo_depth` | 0.6 | D | half the rear wall; three 0.2 layers |
+| `logo_centre_y` | 42.35 | C | centred over the phone |
+| `logo_reads_open` | True | D | upright to someone facing the open lid |
+
+
 ## Derived stack
 
 | Name | Value | St | Note |

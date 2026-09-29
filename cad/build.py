@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from build123d import export_step, export_stl
 
+import logo
 import model as m
 import params as p
 
@@ -143,6 +144,36 @@ def main():
                             ("coupon21", "coupon21-lid", cl)):
         save(part, sub, name)
     print(f"exported to {m.OUT}")
+
+    # Logo: the lid with a recess, and one inlay per colour to fill it. The
+    # device/ lid is left plain; this is a variant of it, printed instead.
+    inlays = logo.inlays()
+    recess = None
+    for part in inlays.values():
+        recess = part if recess is None else recess + part
+    lid_logo = lid - recess
+    print(f"\nlogo   {p.logo_width:.0f} mm across, {p.logo_depth:.2f} deep, "
+          f"{'upright when open' if p.logo_reads_open else 'upright when closed'}")
+    n = len(lid_logo.solids())
+    print(f"  {'lid solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+    if n != 1:
+        FAIL.append("logo lid is not one solid")
+    # The inlays must exactly fill what the recess took out. Less taken than
+    # filled means an inlay pokes out of the lid - past its face, or through the
+    # rear wall into the phone pocket or the camera cutout.
+    filled = sum(part.volume for part in inlays.values())
+    check("recess taken vs inlays", lid.volume - lid_logo.volume, filled, tol=0.05, unit="mm3")
+    names = list(inlays)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            clash = (inlays[a] & inlays[b]).volume
+            if clash >= 0.01:
+                print(f"  inlays {a} and {b} overlap by {clash:.3f} mm3")
+                FAIL.append(f"logo {a}/{b} overlap")
+    save(lid_logo, "logo", "lid-logo")
+    for name, part in inlays.items():
+        save(part, "logo", f"logo-{name}")
+        print(f"  {'inlay ' + name:32s} {part.volume:8.1f} mm3")
 
     # Plain-nut variant of the base. Only the base carries the nut pocket, so the
     # lid is shared. A shallower pocket is strictly more material than the part
