@@ -3,6 +3,8 @@
        alt="Mitya Computer logo: a seated shiba in black with a teal collar and a hex nut for a tag, beside the words Mitya Computer">
 </p>
 
+<p align="center"><b>English</b> · <a href="README.ru.md">Русский</a></p>
+
 # Mitya Computer Skladen
 
 A clamshell that turns a Pixel 3a XL into a pocketable laptop-shaped terminal.
