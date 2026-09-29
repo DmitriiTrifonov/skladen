@@ -2,10 +2,10 @@
 
 ## Context
 
-Palmtop Mk3 is the third iteration of a clamshell that turns a Pixel 3a XL into a
-pocketable laptop-shaped terminal. Mk1 (`../pixel_palmtop`, Blender) and Mk2
-(`../palmtop_mk2`, FreeCAD) both worked, but Mk2 is bulky: a 170 x 91.4 footprint
-with a base part 23.35 tall and a lid part 18.21 tall.
+Mitya Computer Skladen Mk3 is the third iteration of a clamshell that turns a
+Pixel 3a XL into a pocketable laptop-shaped terminal. Mk1 (`../pixel_palmtop`,
+Blender) and Mk2 (`../palmtop_mk2`, FreeCAD) both worked, but Mk2 is bulky: a
+170 x 91.4 footprint with a base part 23.35 tall and a lid part 18.21 tall.
 
 Mk3 keeps the same phone and swaps in a much slimmer keyboard (Jomaa
 KEYBOARD098RU, salvaged from its folio case).

@@ -1,4 +1,4 @@
-"""Palmtop Mk3 geometry.
+"""Skladen Mk3 geometry.
 
 Coordinates:
     X  span, 0 at centre

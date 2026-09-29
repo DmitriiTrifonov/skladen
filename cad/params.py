@@ -1,4 +1,4 @@
-"""Driving dimensions for Palmtop Mk3.
+"""Driving dimensions for Skladen Mk3.
 
 Mirrors docs/parameters.md, which is the human-readable source of truth.
 Keep the two in step: a number that changes here changes there.
