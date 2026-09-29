@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="docs/img/mitya-computer.svg" width="420"
+       alt="Mitya Computer logo: a seated shiba in black with a teal collar and a hex nut for a tag, beside the words Mitya Computer">
+</p>
+
 # Mitya Computer Skladen
 
 A clamshell that turns a Pixel 3a XL into a pocketable laptop-shaped terminal.
@@ -120,9 +125,9 @@ released under the [CERN Open Hardware Licence Version 2 – Strongly Reciprocal
 you adapt it, to a different phone or keyboard say, and distribute the result or
 anything built from it, you share your modified source under the same terms.
 
-**Except the Mitya Computer name and logo.** The artwork in `cad/logo/`, and the
-logo it puts into `export/logo/`, are not released under that licence: all rights
-reserved. They are in the repository so the lid can be built with them, not for
+**Except the Mitya Computer name and logo.** The artwork in `cad/logo/` and
+`docs/img/mitya-computer.svg`, and the logo it puts into `export/logo/`, are not
+released under that licence: all rights reserved. They are in the repository so the lid can be built with them, not for
 reuse. A device you make and distribute from this design should use the plain lid
 in `export/device/`, which carries no logo, or one of your own.
 
