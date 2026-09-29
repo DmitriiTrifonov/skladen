@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="1680" height="600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-70 -26 523 248" width="1569" height="744">
 <defs><clipPath id="dog"><path d="M60,180 V104 Q60,80 86,80 H116 Q158,100 158,148 V180 Z"/><circle cx="84" cy="68" r="28"/></clipPath></defs>
-<rect width="560" height="200" fill="#fff"/>
+<rect x="-70" y="-26" width="523" height="248" rx="24" fill="#e4e4e4"/>
 <g transform="translate(-10,0)">
 <g fill="#111">
 <path d="M60,180 V104 Q60,80 86,80 H116 Q158,100 158,148 V180 Z"/>

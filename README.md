@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/img/mitya-computer.svg" width="420"
+  <img src="docs/img/mitya-computer.svg" width="520"
        alt="Mitya Computer logo: a seated shiba in black with a teal collar and a hex nut for a tag, beside the words Mitya Computer">
 </p>
 
