@@ -53,7 +53,7 @@ right side face; Z from the plane the keyboard rests on.
 | Side face height at the port (derived, the face is a wedge) | 8.94 | C |
 | USB-C opening height (derived) | 3.94 | C |
 | USB-C opening width, along the keyboard's depth | assumed 9.0 | ? - confirmed by fit |
-| OFF/ON slide switch | rear edge, not needed | D |
+| OFF/ON slide switch | rear edge, niche 12.5 from the right side face — see below | M |
 | LEDs x4 | rear edge, not needed | D |
 
 In device coordinates the opening centres on **Y 75.65, Z 6.17**, in the base's
@@ -62,8 +62,8 @@ right wall.
 Two things worth a second look: the assumed 9.0 opening width, and whether the
 3 and 2 were taken to the visible opening or to the connector housing.
 
-The switch stays permanently ON and the LEDs are not required to be visible, so
-**USB-C is the only feature on this edge needing access** — see
+The switch was first left permanently ON and the LEDs are not required to be visible, so
+**USB-C was the only feature on this edge needing access** — see
 [ADR-0006](adr/0006-rear-edge-io-vs-hinge.md) and F5.
 
 **Height matters as much as X.** The hinge axis sits at 12.54 above the desk and
@@ -81,6 +81,29 @@ receptacle is 8.34.
 
 This edge is also the natural hinge edge, which is a direct conflict — see
 [ADR-0006](adr/0006-rear-edge-io-vs-hinge.md).
+
+### Power switch (measured 2026-09-29)
+
+A glitching keyboard wanted power-cycling, so the switch is now reached after
+all — by a shuttle through the base's tail, worked from its rear face. It sits
+in a niche right under the right-hand hinge station. ON is toward the
+keyboard's left, OFF toward its right.
+
+| Feature | Value | Conf |
+|---|---|---|
+| Niche, right side face to its near end | 12-13, taken as 12.5 | M |
+| Niche, width x height | 7.45 x 4.10 | M |
+| Knob, width x height | 4.24 x 3.10 | M |
+| Knob to the niche's end, at either end of travel | 1.00 | M |
+| Knob travel (derived) | 1.21 | C |
+| Knob, proud of the rear face | 0.75, nearer 1.0 by feel | M |
+| Knob centre above the rest plane | 4.25 | M |
+| Niche edges, above the rest plane / below the top | 3.24 / 2.60 | M |
+
+The two Z readings disagree by about a millimetre: the niche's edges put its
+centre near 5.1, against 4.25 read at the knob. The shuttle's prongs span 2.4
+to 7.0 above the rest plane, so `build.py` checks that they drive the knob at
+both, and the question does not have to be settled before printing.
 
 ### Not yet known (requires teardown)
 

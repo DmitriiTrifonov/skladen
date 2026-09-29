@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import numpy as np
-from build123d import export_step, export_stl
+from build123d import Pos, export_step, export_stl
 
 import logo
 import model as m
@@ -159,6 +159,53 @@ def main():
         print(f"  {opening:3d} deg   {clash:9.3f}   {'ok' if clash < 1.0 else 'COLLISION'}")
     if worst >= 1.0:
         FAIL.append("opening sweep")
+
+    # --- power-switch shuttle ---------------------------------------------
+    # It has to slide the whole way without touching the base, drive the knob
+    # at either reading of its height, and be unable to leave through the rear.
+    print(f"\npower-switch shuttle   knob travel {p.kbd_sw_travel:.2f}, "
+          f"ON at X {p.sw_knob_x_on:.2f}, OFF at {p.sw_knob_x_off:.2f}")
+    lo, hi = p.sw_knob_x_on - p.sw_overtravel, p.sw_knob_x_off + p.sw_overtravel
+    niche_z = (p.kbd_sw_knob_z, 3.24 + p.kbd_sw_niche_h / 2)   # direct, and from the niche
+    for label, x in (("at the ON end of its slot", lo), ("ON", p.sw_knob_x_on),
+                     ("OFF", p.sw_knob_x_off), ("at the OFF end of its slot", hi)):
+        sh = m.switch_shuttle(x)
+        clash = (base & sh).volume
+        print(f"  {'vs base ' + label:32s} {clash:8.3f} mm3  want 0.00   "
+              f"{'ok' if clash < 0.01 else 'BINDS'}")
+        if clash >= 0.01:
+            FAIL.append(f"shuttle binds {label}")
+    for label, x in (("ON", p.sw_knob_x_on), ("OFF", p.sw_knob_x_off)):
+        sh = m.switch_shuttle(x)
+        for z in niche_z:
+            knob = m.switch_knob(x, p.base_floor_t + z)
+            hit = (knob & sh).volume + (knob & base).volume
+            # Pushed half a clearance toward the knob, a prong must meet it.
+            push = m.switch_shuttle(x + (p.sw_clr + 0.05) * (1 if label == "ON" else -1))
+            drives = (knob & push).volume > 0.01
+            ok = hit < 0.01 and drives
+            print(f"  {f'knob {label}, centre Z {z:.2f}':32s} {hit:8.3f} mm3  "
+                  f"{'drives' if drives else 'MISSES'}      {'ok' if ok else 'FAIL'}")
+            if not ok:
+                FAIL.append(f"knob {label} at Z {z:.2f}")
+    sh = m.switch_shuttle()
+    pulled = (base & Pos(0, 1.0, 0) * sh).volume
+    print(f"  {'held from leaving by the rear':32s} {pulled:8.1f} mm3  want > 0   "
+          f"{'ok' if pulled > 1.0 else 'FALLS OUT'}")
+    if pulled <= 1.0:
+        FAIL.append("shuttle not retained")
+    under = m.base_station(p.station_x[1]).bounding_box().min.Z - sh.bounding_box().max.Z
+    print(f"  {'clear under the station posts':32s} {under:8.2f} mm   want > 0    "
+          f"{'ok' if under > 0 else 'CLASH'}")
+    if under <= 0:
+        FAIL.append("shuttle meets station posts")
+    n = len(base.solids())
+    if n != 1:
+        FAIL.append("base split by switch cut")
+    # Moved to the origin by whole millimetres: an exact offset leaves vertices a
+    # rounding error either side of zero, and the STL opens along them.
+    sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
+    save(sh_print, "switch", "switch-shuttle")
 
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")

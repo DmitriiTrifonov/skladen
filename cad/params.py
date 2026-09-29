@@ -56,6 +56,23 @@ kbd_usbc_z_top = kbd_usbc_face_h - kbd_usbc_z_top_inset
 kbd_usbc_h = kbd_usbc_z_top - kbd_usbc_z_bottom
 kbd_wedge_angle = degrees(atan((kbd_h_rear - kbd_h_front) / kbd_depth_y))
 
+# --- power switch, on the keyboard's REAR face ----------------------------
+# A slide switch in a niche, right under the right-hand hinge station. ON is
+# toward -X (the keyboard's left), OFF toward +X. Measured 2026-09-29.
+# Datum: X back from the keyboard's right side face; Z from the rest plane.
+kbd_sw_niche_from_right = 12.50  # read as 12-13 to the niche's near end
+kbd_sw_niche_w = 7.45
+kbd_sw_niche_h = 4.10
+kbd_sw_knob_w = 4.24
+kbd_sw_knob_h = 3.10
+kbd_sw_knob_end_gap = 1.00   # knob to the niche's end, at either end of travel
+kbd_sw_knob_proud = 0.75     # beyond the rear face; owner reckons nearer 1.0
+# The readings disagree by ~1 mm: the niche's edges (3.24 up, 2.60 down) put its
+# centre at 5.1, the knob's centre was read directly as 4.25. The fork's prongs
+# are tall enough to take either, so neither has to be settled first.
+kbd_sw_knob_z = 4.25
+kbd_sw_travel = kbd_sw_niche_w - kbd_sw_knob_w - 2 * kbd_sw_knob_end_gap
+
 # --- 2. phone (spec) ------------------------------------------------------
 phone_x = 160.1
 phone_y = 76.1
@@ -204,6 +221,9 @@ station_outer_w = 6.00   # each base knuckle
 # Tied to the lid's radius, not fixed: a fixed 5.70 left the posts' front faces
 # clipping the lid's underside once the lid thickened for floor tape.
 station_relief_r = lid_rear_radius + 1.00
+# The posts reach 0.60 into the keyboard's box envelope, over its top rear edge
+# (Z 8.54-10.72). Harmless: that edge is rounded on the real keyboard, which
+# seats in the printed base.
 post_half_y = 2.50
 station_inner_w = 5.80   # the lid knuckle
 station_w = 2 * station_outer_w + station_inner_w + 2 * 0.20
@@ -272,6 +292,36 @@ usbc_centre_y = (wall_t + clr_kbd + kbd_depth_y) - (
     kbd_usbc_rear_inset + kbd_usbc_w_ASSUMED / 2
 )
 usbc_centre_z = base_floor_t + (kbd_usbc_z_bottom + kbd_usbc_z_top) / 2
+
+# Power-switch pusher: a printed shuttle that reaches the keyboard's switch from
+# the base's rear face. A fork straddles the knob; a stem runs back through the
+# tail, under the right station, to a thumb end in a window in the rear face.
+# The switch keeps its own detent, so the shuttle needs no spring and no stops.
+kbd_rear_y = wall_t + clr_kbd + kbd_depth_y
+sw_niche_x1 = kbd_span_x / 2 - kbd_sw_niche_from_right
+sw_knob_x_on = sw_niche_x1 - kbd_sw_niche_w + kbd_sw_knob_end_gap + kbd_sw_knob_w / 2
+sw_knob_x_off = sw_knob_x_on + kbd_sw_travel
+sw_clr = 0.20        # sliding fits, per side
+sw_prong_t = 1.20
+# Free travel past the knob's own at each end. It absorbs the 12-13 reading of
+# the niche's position: the knob's detent sets where the shuttle stops, not the slot.
+sw_overtravel = 0.50
+sw_fork_gap = kbd_sw_knob_w + 2 * sw_clr
+sw_head_w = sw_fork_gap + 2 * sw_prong_t
+sw_head_y0 = kbd_rear_y + 0.15             # prong tips, just behind the rear face
+sw_notch_y1 = kbd_rear_y + 1.00 + sw_clr   # past the knob at its most proud
+sw_head_y1 = kbd_rear_y + clr_kbd + wall_t + 0.15
+# Prongs span 2.4 to 7.0 above the rest plane, covering the knob at either Z
+# reading. Their top stays under the station posts, which start at 8.54.
+sw_z0 = base_floor_t + 2.40
+sw_head_z1 = base_floor_t + 7.00
+# Stem flush with the head's underside, so the shuttle prints flat on its back
+# with no overhang. The head stands 1.4 above the tunnel's roof, which is what
+# keeps the shuttle from being pulled out through the rear.
+sw_stem_w = 4.00
+sw_stem_h = 3.00
+sw_thumb_recess = 0.20   # stem's end short of the rear face
+sw_nail_groove = 0.80    # vertical groove across the thumb end, for a fingernail
 
 # --- 8. masses and balance (ALL ESTIMATES - risk R3) ----------------------
 # Bracketed, not guessed. The lower bound was the original hand estimate; the

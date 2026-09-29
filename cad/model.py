@@ -270,6 +270,49 @@ def usbc_cut():
     )
 
 
+def box_between(x0, x1, y0, y1, z0, z1):
+    return Pos((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2) * Box(x1 - x0, y1 - y0, z1 - z0)
+
+
+def switch_cut():
+    """Slot in the rear wall for the shuttle's fork, and a tunnel back through
+    the tail to the rear face for its stem. Both run under the right station."""
+    lo = p.sw_knob_x_on - p.sw_overtravel
+    hi = p.sw_knob_x_off + p.sw_overtravel
+    c = p.sw_clr
+    slot = box_between(lo - p.sw_head_w / 2 - c, hi + p.sw_head_w / 2 + c,
+                       p.kbd_rear_y - 0.5, p.sw_head_y1 + c,
+                       p.sw_z0 - c, p.sw_head_z1 + c)
+    tunnel = box_between(lo - p.sw_stem_w / 2 - c, hi + p.sw_stem_w / 2 + c,
+                         p.sw_head_y1 - 0.5, p.base_y + 1.0,
+                         p.sw_z0 - c, p.sw_z0 + p.sw_stem_h + c)
+    return slot + tunnel
+
+
+def switch_shuttle(x=None):
+    """The pusher, in place, its fork centred on X (the knob's ON position by
+    default). Prints flat on its underside: head and stem share that face."""
+    x = p.sw_knob_x_on if x is None else x
+    head = box_between(x - p.sw_head_w / 2, x + p.sw_head_w / 2,
+                       p.sw_head_y0, p.sw_head_y1, p.sw_z0, p.sw_head_z1)
+    head -= box_between(x - p.sw_fork_gap / 2, x + p.sw_fork_gap / 2,
+                        p.sw_head_y0 - 1.0, p.sw_notch_y1, p.sw_z0 - 1.0, p.sw_head_z1 + 1.0)
+    y_end = p.base_y - p.sw_thumb_recess
+    stem = box_between(x - p.sw_stem_w / 2, x + p.sw_stem_w / 2,
+                       p.sw_head_y1 - 0.5, y_end, p.sw_z0, p.sw_z0 + p.sw_stem_h)
+    stem -= box_between(x - p.sw_nail_groove / 2, x + p.sw_nail_groove / 2,
+                        y_end - 0.8, y_end + 1.0, p.sw_z0 - 1.0, p.sw_z0 + p.sw_stem_h + 1.0)
+    return head + stem
+
+
+def switch_knob(x, z_centre):
+    """The keyboard's switch knob, for fit checks: the part standing proud of the
+    rear face, at its most proud reading."""
+    return box_between(x - p.kbd_sw_knob_w / 2, x + p.kbd_sw_knob_w / 2,
+                       p.kbd_rear_y - 0.5, p.kbd_rear_y + 1.0,
+                       z_centre - p.kbd_sw_knob_h / 2, z_centre + p.kbd_sw_knob_h / 2)
+
+
 def soften(part, radius, name, half_x, y_at):
     """Break the outer vertical corners.
 
@@ -301,6 +344,7 @@ def build(fillets=True, nut_depth=None):
         lid = lid - station_envelope(x0) + lid_knuckle(x0) - bore(x0)
         lid -= head_access(x0)
     base -= usbc_cut()
+    base -= switch_cut()
     if fillets:
         base = soften(base, p.corner_r, "base", p.base_x / 2, (0.0, p.base_y))
         lid = soften(lid, p.corner_r, "lid", p.lid_x / 2, (0.0,))

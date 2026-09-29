@@ -23,7 +23,7 @@ within the constraints below.
 | F2 | Holds the Jomaa keyboard in the base |
 | F3 | Opens and stays open, hands-free, at any angle within the supported range |
 | F4 | Does not tip over backwards at any supported opening angle, on a desk |
-| F5 | Keyboard USB-C reachable without disassembly. The power switch stays permanently ON and needs no access in normal use; the status LEDs are not required to be visible |
+| F5 | Keyboard USB-C reachable without disassembly. The power switch is worked from the base's rear face through a printed shuttle, so a keyboard that glitches can be power-cycled without disassembly (added 2026-09-29; it was first left permanently ON); the status LEDs are not required to be visible |
 | F6 | Phone USB-C reachable for charging while the device is open and in use |
 | F7 | **Relaxed.** The phone is taped into the lid, as Mk2's was, so it comes out with a pry and some patience rather than in 30 seconds. An accepted trade, not a requirement met — see [ADR-0004](adr/0004-phone-retention.md) |
 | F8 | Stays shut when closed, including inverted in a bag — see [ADR-0009](adr/0009-closure-retention.md) |

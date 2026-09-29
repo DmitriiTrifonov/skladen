@@ -45,6 +45,31 @@ from others here · `A` assumed, not yet verified
 | `usbc_cut_h` | 7.5 | D | along Z |
 
 
+## Keyboard power switch — on the REAR face, under the right station
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `kbd_sw_niche_from_right` | 12.5 | M | right side face to the niche's near end; read as 12-13 |
+| `kbd_sw_niche_w` | 7.45 | M |  |
+| `kbd_sw_niche_h` | 4.1 | M |  |
+| `kbd_sw_knob_w` | 4.24 | M |  |
+| `kbd_sw_knob_h` | 3.1 | M |  |
+| `kbd_sw_knob_end_gap` | 1 | M | knob to the niche's end, at either end of travel |
+| `kbd_sw_knob_proud` | 0.75 | M | owner reckons nearer 1.0; checks use 1.0 |
+| `kbd_sw_knob_z` | 4.25 | M | centre above the rest plane; the niche's edges say ~5.1 |
+| `kbd_sw_travel` | 1.21 | C | ON toward -X, OFF toward +X |
+| `sw_knob_x_on` | 80.17 | C | in device coordinates |
+| `sw_knob_x_off` | 81.38 | C |  |
+| `sw_clr` | 0.2 | D | shuttle sliding fits, per side |
+| `sw_prong_t` | 1.2 | D |  |
+| `sw_overtravel` | 0.5 | D | per end; absorbs the niche's X reading |
+| `sw_head_w` | 7.04 | C | fork, across both prongs |
+| `sw_z0` | 3.6 | D | prongs' lower end, device Z |
+| `sw_head_z1` | 8.2 | D | prongs' top, under the station posts at 8.54 |
+| `sw_stem_w` | 4 | D |  |
+| `sw_stem_h` | 3 | D |  |
+
+
 ## Phone — Pixel 3a XL
 
 | Name | Value | St | Note |
