@@ -68,6 +68,7 @@ from others here · `A` assumed, not yet verified
 | `sw_head_z1` | 8.2 | D | prongs' top, under the station posts at 8.54 |
 | `sw_stem_w` | 4 | D |  |
 | `sw_stem_h` | 3 | D |  |
+| `sw_stem_proud` | 0.5, 1, 1.5, 2, 3 | D | stem's end out of the rear face; one print per value |
 
 
 ## Phone — Pixel 3a XL

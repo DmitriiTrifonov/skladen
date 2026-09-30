@@ -61,6 +61,7 @@ SECTIONS = [
         ("sw_head_z1", "D", "prongs' top, under the station posts at 8.54"),
         ("sw_stem_w", "D", ""),
         ("sw_stem_h", "D", ""),
+        ("sw_stem_proud", "D", "stem's end out of the rear face; one print per value"),
     ]),
     ("Phone — Pixel 3a XL", [
         ("phone_x", "S", "long axis, horizontal in the lid"),

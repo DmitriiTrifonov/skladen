@@ -289,15 +289,17 @@ def switch_cut():
     return slot + tunnel
 
 
-def switch_shuttle(x=None):
+def switch_shuttle(x=None, proud=None):
     """The pusher, in place, its fork centred on X (the knob's ON position by
-    default). Prints flat on its underside: head and stem share that face."""
+    default), its stem standing PROUD out of the rear face (the longest variant
+    by default). Prints flat on its underside: head and stem share that face."""
     x = p.sw_knob_x_on if x is None else x
+    proud = max(p.sw_stem_proud) if proud is None else proud
     head = box_between(x - p.sw_head_w / 2, x + p.sw_head_w / 2,
                        p.sw_head_y0, p.sw_head_y1, p.sw_z0, p.sw_head_z1)
     head -= box_between(x - p.sw_fork_gap / 2, x + p.sw_fork_gap / 2,
                         p.sw_head_y0 - 1.0, p.sw_notch_y1, p.sw_z0 - 1.0, p.sw_head_z1 + 1.0)
-    y_end = p.base_y - p.sw_thumb_recess
+    y_end = p.base_y + proud
     stem = box_between(x - p.sw_stem_w / 2, x + p.sw_stem_w / 2,
                        p.sw_head_y1 - 0.5, y_end, p.sw_z0, p.sw_z0 + p.sw_stem_h)
     stem -= box_between(x - p.sw_nail_groove / 2, x + p.sw_nail_groove / 2,

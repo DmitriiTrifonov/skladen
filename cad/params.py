@@ -320,7 +320,11 @@ sw_head_z1 = base_floor_t + 7.00
 # keeps the shuttle from being pulled out through the rear.
 sw_stem_w = 4.00
 sw_stem_h = 3.00
-sw_thumb_recess = 0.20   # stem's end short of the rear face
+# How far the stem's end stands out of the rear face. Flush-minus-0.2 left it
+# sunk in the tunnel with nothing to push against, so it now stands proud; the
+# first print that failed that way asked for a set to choose from. The largest
+# is the one checked against the lid, as it reaches furthest.
+sw_stem_proud = (0.5, 1.0, 1.5, 2.0, 3.0)
 sw_nail_groove = 0.80    # vertical groove across the thumb end, for a fingernail
 
 # --- 8. masses and balance (ALL ESTIMATES - risk R3) ----------------------

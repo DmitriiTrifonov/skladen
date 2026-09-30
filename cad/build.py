@@ -202,10 +202,24 @@ def main():
     n = len(base.solids())
     if n != 1:
         FAIL.append("base split by switch cut")
-    # Moved to the origin by whole millimetres: an exact offset leaves vertices a
-    # rounding error either side of zero, and the STL opens along them.
-    sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
-    save(sh_print, "switch", "switch-shuttle")
+    # The stem stands out of the rear face, so the lid must clear it all the way open.
+    for opening in (0, 30, 60, 90, 120, 150, 180):
+        clash = (sh & lid.rotate(axis, -(opening + p.close_tilt))).volume
+        if clash >= 0.01:
+            print(f"  {f'vs lid at {opening} deg':32s} {clash:8.3f} mm3  want 0.00   COLLISION")
+            FAIL.append(f"shuttle meets lid at {opening} deg")
+    print(f"  {'clear of the lid, 0-180 deg':32s} {'':8s}      "
+          f"{'ok' if not any('meets lid' in f for f in FAIL) else 'COLLISION'}")
+    # One per stem length, to print as a set and pick from. Moved to the origin
+    # by whole millimetres: an exact offset leaves vertices a rounding error
+    # either side of zero, and the STL opens along them.
+    for f in (m.OUT / "switch").glob("mk3-switch-shuttle*"):
+        f.unlink()
+    for proud in p.sw_stem_proud:
+        sh = m.switch_shuttle(proud=proud)
+        sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
+        save(sh_print, "switch", f"switch-shuttle-proud{proud:.1f}")
+    print(f"  exported stems proud by {', '.join(f'{v:.1f}' for v in p.sw_stem_proud)}")
 
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")
