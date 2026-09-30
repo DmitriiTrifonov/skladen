@@ -41,11 +41,12 @@ def open_edges(stl):
     return int((count != 2).sum())
 
 
-def save(part, sub, name):
+def save(part, sub, name, step=True):
     """STEP and STL side by side, one folder per thing you would print together."""
     d = m.OUT / sub
-    d.mkdir(exist_ok=True)
-    export_step(part, str(d / f"mk3-{name}.step"))
+    d.mkdir(parents=True, exist_ok=True)
+    if step:
+        export_step(part, str(d / f"mk3-{name}.step"))
     export_stl(part, str(d / f"mk3-{name}.stl"))
     bad = open_edges(d / f"mk3-{name}.stl")
     if bad:
@@ -238,13 +239,17 @@ def main():
     # One per stem length, to print as a set and pick from. Moved to the origin
     # by whole millimetres: an exact offset leaves vertices a rounding error
     # either side of zero, and the STL opens along them.
-    for f in (m.OUT / "switch").glob("mk3-switch-shuttle*"):
+    for f in (m.OUT / "switch").rglob("mk3-switch-shuttle*"):
         f.unlink()
+    for d in (m.OUT / "switch").glob("finger*"):
+        d.rmdir()
     for finger in p.sw_finger_len:
         for proud in p.sw_stem_proud:
             sh = m.switch_shuttle(proud=proud, finger=finger)
             sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
-            save(sh_print, "switch", f"switch-shuttle-finger{finger:.1f}-proud{proud:.1f}")
+            # A folder per finger length, STL only: these are printed, never edited.
+            save(sh_print, f"switch/finger{finger:.1f}",
+                 f"switch-shuttle-finger{finger:.1f}-proud{proud:.1f}", step=False)
     print(f"  exported fingers {', '.join(f'{v:.1f}' for v in p.sw_finger_len)} into the niche,"
           f" each with stems proud by {', '.join(f'{v:.1f}' for v in p.sw_stem_proud)}")
 
