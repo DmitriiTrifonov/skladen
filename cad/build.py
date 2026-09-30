@@ -181,15 +181,40 @@ def main():
             knob = m.switch_knob(x, p.base_floor_t + z)
             hit = (knob & sh).volume + (knob & base).volume
             # Pushed half a clearance toward the knob, a prong must meet it.
-            push = m.switch_shuttle(x + (p.sw_clr + 0.05) * (1 if label == "ON" else -1))
+            push = m.switch_shuttle(x + (p.sw_fork_clr + 0.05) * (1 if label == "ON" else -1))
             drives = (knob & push).volume > 0.01
             ok = hit < 0.01 and drives
             print(f"  {f'knob {label}, centre Z {z:.2f}':32s} {hit:8.3f} mm3  "
                   f"{'drives' if drives else 'MISSES'}      {'ok' if ok else 'FAIL'}")
             if not ok:
                 FAIL.append(f"knob {label} at Z {z:.2f}")
+    # Fingers in the niche, beside the knob, at either end of its travel and at
+    # either reading of the niche's height. The keyboard around the niche is a slab
+    # behind its rear face with the niche taken out.
+    for z in niche_z:
+        zc = p.base_floor_t + z
+        for label, x in (("ON", p.sw_knob_x_on), ("OFF", p.sw_knob_x_off)):
+            face = m.box_between(x - 10, x + 10, p.kbd_rear_y - 3, p.kbd_rear_y,
+                                 p.base_floor_t, p.base_floor_t + p.kbd_h_rear)
+            face -= m.box_between(p.sw_niche_x1 - p.kbd_sw_niche_w, p.sw_niche_x1,
+                                  p.kbd_rear_y - 4, p.kbd_rear_y + 1,
+                                  zc - p.kbd_sw_niche_h / 2, zc + p.kbd_sw_niche_h / 2)
+            hit = (face & m.switch_shuttle(x)).volume
+            print(f"  {f'fingers in niche {label}, Z {z:.2f}':32s} {hit:8.3f} mm3  want 0.00   "
+                  f"{'ok' if hit < 0.01 else 'JAMS'}")
+            if hit >= 0.01:
+                FAIL.append(f"fingers jam niche {label} at Z {z:.2f}")
+    # Pulled back to seat the keyboard: clear of it, and still free in the base.
+    sh = m.switch_shuttle(back=p.sw_retract)
+    reach = p.kbd_rear_y - sh.bounding_box().min.Y
+    clash = (base & sh).volume
+    ok = reach < 0 and clash < 0.01
+    print(f"  {'pulled back, fingers out':32s} {-reach:8.2f} mm   clear of the keyboard, "
+          f"{clash:.3f} mm3 vs base   {'ok' if ok else 'FAIL'}")
+    if not ok:
+        FAIL.append("shuttle cannot clear the keyboard")
     sh = m.switch_shuttle()
-    pulled = (base & Pos(0, 1.0, 0) * sh).volume
+    pulled = (base & Pos(0, p.sw_retract + 1.0, 0) * sh).volume
     print(f"  {'held from leaving by the rear':32s} {pulled:8.1f} mm3  want > 0   "
           f"{'ok' if pulled > 1.0 else 'FALLS OUT'}")
     if pulled <= 1.0:
@@ -215,11 +240,13 @@ def main():
     # either side of zero, and the STL opens along them.
     for f in (m.OUT / "switch").glob("mk3-switch-shuttle*"):
         f.unlink()
-    for proud in p.sw_stem_proud:
-        sh = m.switch_shuttle(proud=proud)
-        sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
-        save(sh_print, "switch", f"switch-shuttle-proud{proud:.1f}")
-    print(f"  exported stems proud by {', '.join(f'{v:.1f}' for v in p.sw_stem_proud)}")
+    for finger in p.sw_finger_len:
+        for proud in p.sw_stem_proud:
+            sh = m.switch_shuttle(proud=proud, finger=finger)
+            sh_print = Pos(-round(p.sw_knob_x_on), -round(p.sw_head_y0), -round(p.sw_z0)) * sh
+            save(sh_print, "switch", f"switch-shuttle-finger{finger:.1f}-proud{proud:.1f}")
+    print(f"  exported fingers {', '.join(f'{v:.1f}' for v in p.sw_finger_len)} into the niche,"
+          f" each with stems proud by {', '.join(f'{v:.1f}' for v in p.sw_stem_proud)}")
 
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")

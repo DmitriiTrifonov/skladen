@@ -306,11 +306,36 @@ sw_prong_t = 1.20
 # Free travel past the knob's own at each end. It absorbs the 12-13 reading of
 # the niche's position: the knob's detent sets where the shuttle stops, not the slot.
 sw_overtravel = 0.50
-sw_fork_gap = kbd_sw_knob_w + 2 * sw_clr
+sw_fork_gap = kbd_sw_knob_w + 2 * sw_clr   # sizes the base's slot only
 sw_head_w = sw_fork_gap + 2 * sw_prong_t
-sw_head_y0 = kbd_rear_y + 0.15             # prong tips, just behind the rear face
+sw_head_y0 = kbd_rear_y + 0.15             # where the base's slot was sized from
 sw_notch_y1 = kbd_rear_y + 1.00 + sw_clr   # past the knob at its most proud
 sw_head_y1 = kbd_rear_y + clr_kbd + wall_t + 0.15
+# The fork grips the knob only by what stands proud of the face, 0.75, and the
+# first print slipped off it. So the shuttle, not the base, is tightened: the
+# prongs reach almost to the face, the head runs back to within SW_BACK_PLAY of
+# the slot's end, and the fork closes on the knob. That holds 0.60 of knob in
+# the fork against 0.40 before, and fits a base already printed. The outside of
+# the head is unchanged, so a tighter fork means thicker prongs.
+sw_tip_gap = 0.05
+sw_back_play = 0.10
+sw_fork_clr = 0.10   # per side
+# Even so, a flat prong against a rounded knob only 0.75 proud cams off it. So
+# fingers carry the prongs on into the niche, beside the knob, where they bear on
+# its full flank. At either end of travel the knob stands KNOB_END_GAP (1.00) from
+# the niche's end, so a finger and the fork's clearance must fit in that. The
+# niche narrows toward its bottom, so the fingers taper toward their tips. Their
+# height is where the niche lies at BOTH of its Z readings (3.24-6.30 above the
+# rest plane), with a margin. The niche's depth was never measured, hence a set.
+sw_finger_len = (0.5, 1.0, 1.5)   # into the niche; one print per value
+sw_finger_root = 0.80             # thickness in X at the keyboard's face
+sw_finger_tip = 0.50
+sw_finger_z0 = base_floor_t + 3.50
+sw_finger_z1 = base_floor_t + 6.00
+# The fingers stand in the keyboard's way as it drops into the base. So the slot
+# runs this much further back, and the shuttle is pulled back to seat the
+# keyboard, then pushed home into the niche.
+sw_retract = max(sw_finger_len) + 0.30
 # Prongs span 2.4 to 7.0 above the rest plane, covering the knob at either Z
 # reading. Their top stays under the station posts, which start at 8.54.
 sw_z0 = base_floor_t + 2.40

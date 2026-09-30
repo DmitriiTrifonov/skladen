@@ -61,7 +61,16 @@ from others here · `A` assumed, not yet verified
 | `sw_knob_x_on` | 80.17 | C | in device coordinates |
 | `sw_knob_x_off` | 81.38 | C |  |
 | `sw_clr` | 0.2 | D | shuttle sliding fits, per side |
-| `sw_prong_t` | 1.2 | D |  |
+| `sw_prong_t` | 1.2 | D | at the base's slot; thicker on a tighter fork |
+| `sw_tip_gap` | 0.05 | D | prong tips to the keyboard's rear face |
+| `sw_back_play` | 0.1 | D | head's back face to the slot's end |
+| `sw_fork_clr` | 0.1 | D | fork to knob, per side |
+| `sw_finger_len` | 0.5, 1, 1.5 | D | fingers into the niche; one print per value |
+| `sw_finger_root` | 0.8 | D | at the keyboard's face |
+| `sw_finger_tip` | 0.5 | D |  |
+| `sw_finger_z0` | 4.7 | D | device Z |
+| `sw_finger_z1` | 7.2 | D |  |
+| `sw_retract` | 1.8 | C | how far the shuttle pulls back to seat the keyboard |
 | `sw_overtravel` | 0.5 | D | per end; absorbs the niche's X reading |
 | `sw_head_w` | 7.04 | C | fork, across both prongs |
 | `sw_z0` | 3.6 | D | prongs' lower end, device Z |

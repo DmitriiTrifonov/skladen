@@ -281,7 +281,7 @@ def switch_cut():
     hi = p.sw_knob_x_off + p.sw_overtravel
     c = p.sw_clr
     slot = box_between(lo - p.sw_head_w / 2 - c, hi + p.sw_head_w / 2 + c,
-                       p.kbd_rear_y - 0.5, p.sw_head_y1 + c,
+                       p.kbd_rear_y - 0.5, p.sw_head_y1 + c + p.sw_retract,
                        p.sw_z0 - c, p.sw_head_z1 + c)
     tunnel = box_between(lo - p.sw_stem_w / 2 - c, hi + p.sw_stem_w / 2 + c,
                          p.sw_head_y1 - 0.5, p.base_y + 1.0,
@@ -289,22 +289,36 @@ def switch_cut():
     return slot + tunnel
 
 
-def switch_shuttle(x=None, proud=None):
+def switch_shuttle(x=None, proud=None, finger=None, back=0.0):
     """The pusher, in place, its fork centred on X (the knob's ON position by
-    default), its stem standing PROUD out of the rear face (the longest variant
-    by default). Prints flat on its underside: head and stem share that face."""
+    default), its stem standing PROUD out of the rear face and its fingers
+    FINGER into the niche (the longest of each by default), pulled BACK from
+    home. Prints flat on its underside: head and stem share that face."""
     x = p.sw_knob_x_on if x is None else x
     proud = max(p.sw_stem_proud) if proud is None else proud
+    finger = max(p.sw_finger_len) if finger is None else finger
+    head_y0 = p.kbd_rear_y + p.sw_tip_gap
+    head_y1 = p.sw_head_y1 + p.sw_clr - p.sw_back_play
     head = box_between(x - p.sw_head_w / 2, x + p.sw_head_w / 2,
-                       p.sw_head_y0, p.sw_head_y1, p.sw_z0, p.sw_head_z1)
-    head -= box_between(x - p.sw_fork_gap / 2, x + p.sw_fork_gap / 2,
-                        p.sw_head_y0 - 1.0, p.sw_notch_y1, p.sw_z0 - 1.0, p.sw_head_z1 + 1.0)
+                       head_y0, head_y1, p.sw_z0, p.sw_head_z1)
+    gap = p.kbd_sw_knob_w + 2 * p.sw_fork_clr
+    head -= box_between(x - gap / 2, x + gap / 2,
+                        p.kbd_rear_y - 1.0, p.sw_notch_y1, p.sw_z0 - 1.0, p.sw_head_z1 + 1.0)
+    # Fingers: inner face flush with the prong's, tapering on the outer.
+    root, tip, y1 = gap / 2, p.kbd_rear_y - finger, head_y0 + 0.10
+    for side in (-1, 1):
+        pts = [(x + side * root, y1), (x + side * (root + p.sw_finger_root), y1),
+               (x + side * (root + p.sw_finger_tip), tip), (x + side * root, tip)]
+        # Upward whichever way the outline winds: the two sides wind oppositely.
+        head += Pos(0, 0, p.sw_finger_z0) * extrude(Polygon(*pts, align=None),
+                                                    p.sw_finger_z1 - p.sw_finger_z0,
+                                                    dir=(0, 0, 1))
     y_end = p.base_y + proud
     stem = box_between(x - p.sw_stem_w / 2, x + p.sw_stem_w / 2,
-                       p.sw_head_y1 - 0.5, y_end, p.sw_z0, p.sw_z0 + p.sw_stem_h)
+                       head_y1 - 0.5, y_end, p.sw_z0, p.sw_z0 + p.sw_stem_h)
     stem -= box_between(x - p.sw_nail_groove / 2, x + p.sw_nail_groove / 2,
                         y_end - 0.8, y_end + 1.0, p.sw_z0 - 1.0, p.sw_z0 + p.sw_stem_h + 1.0)
-    return head + stem
+    return Pos(0, back, 0) * (head + stem)
 
 
 def switch_knob(x, z_centre):

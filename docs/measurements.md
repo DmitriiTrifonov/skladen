@@ -94,6 +94,8 @@ keyboard's left, OFF toward its right.
 | Niche, right side face to its near end | 12-13, taken as 12.5 | M |
 | Niche, width x height | 7.45 x 4.10 | M |
 | Knob, width x height | 4.24 x 3.10 | M |
+| Knob, shape | rounded, ellipsoidal — the same size throughout | M |
+| Niche, shape | narrows toward its bottom | M |
 | Knob to the niche's end, at either end of travel | 1.00 | M |
 | Knob travel (derived) | 1.21 | C |
 | Knob, proud of the rear face | 0.75, nearer 1.0 by feel | M |
@@ -104,6 +106,11 @@ The two Z readings disagree by about a millimetre: the niche's edges put its
 centre near 5.1, against 4.25 read at the knob. The shuttle's prongs span 2.4
 to 7.0 above the rest plane, so `build.py` checks that they drive the knob at
 both, and the question does not have to be settled before printing.
+
+The knob being rounded is why the first shuttle slipped off it: a flat prong
+meets a curved flank, and pushing sideways drives the fork back off the face.
+The fork only holds while something keeps it against the face, which the base's
+slot does and a hand does not.
 
 ### Not yet known (requires teardown)
 
