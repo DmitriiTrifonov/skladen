@@ -135,4 +135,4 @@ released under that licence: all rights reserved. They are in the repository so 
 reuse. A device you make and distribute from this design should use the plain lid
 in `export/device/`, which carries no logo, or one of your own.
 
-Source location: <https://github.com/DmitriiTrifonov/palmtop-mk3>
+Source location: <https://github.com/DmitriiTrifonov/skladen>

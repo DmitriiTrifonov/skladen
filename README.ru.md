@@ -142,4 +142,4 @@ Copyright Dmitrii Trifonov 2026.
 
 Этот перевод — для удобства; юридически значим английский текст лицензии.
 
-Исходники: <https://github.com/DmitriiTrifonov/palmtop-mk3>
+Исходники: <https://github.com/DmitriiTrifonov/skladen>
