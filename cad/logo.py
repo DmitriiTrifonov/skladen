@@ -2,15 +2,14 @@
 
 The logo itself is not under the design's licence - see the README.
 
-The artwork is logo/mitya-shiba.svg, the brand's dog without its lettering, a
-copy of the master. Fills come
-through import_svg as faces, but strokes come through as bare centrelines - and
-the tail ring, the collar and the leg lines are all strokes - so they are
-thickened here. The collar is also clipped to the dog in the artwork, which
-import_svg ignores, so that is redone here too.
+The artwork is logo/mitya-shiba-green.svg, the dog traced from a printed test
+inlay: head, body and ring tail in one green, with the eye, the nut and the leg
+lines as holes in it. Fills come through import_svg as faces, but strokes come
+through as bare centrelines - the leg lines are strokes - so they are thickened
+here.
 
-The result is one flat region per colour. Each becomes a body logo_depth thick,
-sitting flush in a recess cut to the union of all of them.
+The result is one flat green region, with the holes taken out. It becomes a body
+logo_depth thick, sitting flush in a recess of the same shape.
 """
 
 import re
@@ -22,15 +21,14 @@ from build123d import *
 sys.path.insert(0, str(Path(__file__).parent))
 import params as p
 
-SVG = Path(__file__).parent / "logo" / "mitya-shiba.svg"
+SVG = Path(__file__).parent / "logo" / "mitya-shiba-green.svg"
 
 # Colours in the artwork, and the stroke width each colour's strokes use there,
-# in the artwork's own units. One stroke width per colour holds for this logo:
-# black is only the tail, teal only the collar, white only the leg lines.
+# in the artwork's own units. White is not a colour of the part but the holes in
+# it; only the leg lines are strokes.
 COLOURS = {
-    "black": ((0x11, 0x11, 0x11), 14.0),
-    "teal": ((0x1F, 0xB5, 0xA0), 9.0),
-    "white": ((0xFF, 0xFF, 0xFF), 3.5),
+    "green": ((0x4C, 0xC9, 0x5C), 0.0),
+    "hole": ((0xFF, 0xFF, 0xFF), 14.0),
 }
 
 
@@ -43,8 +41,6 @@ def _colour_of(shape):
 
 
 def _thicken(wire, width):
-    if wire.is_closed:   # a ring: the tail
-        return Face(wire.offset_2d(width / 2)) - Face(wire.offset_2d(-width / 2))
     return Face(wire.offset_2d(width / 2, kind=Kind.ARC, side=Side.BOTH, closed=True))
 
 
@@ -75,21 +71,11 @@ def regions():
             continue   # the white background
         (fills if isinstance(s, Face) else strokes)[_colour_of(s)].append(s)
 
-    thick = {k: [_thicken(w, COLOURS[k][1] * canvas / _viewbox_w()) for w in ws]
-             for k, ws in strokes.items()}
-    black = _union(fills["black"] + thick["black"])
-    # The collar is clipped to the dog's filled body in the artwork, not to the
-    # tail, which is a stroke.
-    teal = _union(thick["teal"]) & _union(fills["black"])
-    white = _union(fills["white"] + thick["white"])
-    # A white shape with a black one inside it (the nut and its hole) keeps the
-    # black: black fills that lie wholly inside white are holes in the white.
-    holes = [f for f in fills["black"] if (f - white).area < 1e-6]
-    if holes:
-        white = white - _union(holes)
-    black = black - teal - white
+    holes = _union(fills["hole"] + [_thicken(w, COLOURS["hole"][1] * canvas / _viewbox_w())
+                                    for w in strokes["hole"]])
+    green = _union(fills["green"]) - holes
 
-    out = {"black": black, "teal": teal, "white": white}
+    out = {"green": green}
     bb = _union(list(out.values())).bounding_box()
     k = p.logo_height / bb.size.Y
     # Scale about the origin first, then move: scale() drops a location that

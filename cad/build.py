@@ -262,7 +262,7 @@ def main():
         save(part, sub, name)
     print(f"exported to {m.OUT}")
 
-    # Logo: the lid with a recess, and one inlay per colour to fill it. The
+    # Logo: the lid with a recess, and the inlay to fill it. The
     # device/ lid is left plain; this is a variant of it, printed instead.
     inlays = logo.inlays()
     recess = None
@@ -287,18 +287,7 @@ def main():
             if clash >= 0.01:
                 print(f"  inlays {a} and {b} overlap by {clash:.3f} mm3")
                 FAIL.append(f"logo {a}/{b} overlap")
-    # Engraved, for one filament: only the black is cut, so the collar, nut, eye
-    # and legs stay at the surface and read inside the engraving. Cutting the
-    # whole recess instead merges them into one plain silhouette.
-    lid_engraved = lid - inlays["black"]
-    n = len(lid_engraved.solids())
-    print(f"  {'engraved lid solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
-    if n != 1:
-        FAIL.append("engraved lid is not one solid")
-    check("engraving taken vs black", lid.volume - lid_engraved.volume,
-          inlays["black"].volume, tol=0.05, unit="mm3")
     save(lid_logo, "logo", "lid-logo")
-    save(lid_engraved, "logo", "lid-logo-engraved")
     for name, part in inlays.items():
         save(part, "logo", f"logo-{name}")
         print(f"  {'inlay ' + name:32s} {part.volume:8.1f} mm3")

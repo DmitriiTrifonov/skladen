@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 720" width="620" height="720">
+<!-- Traced from a photo of the printed test inlay. One green part set; the
+     white shapes are holes through it (the lid shows through), not a colour. -->
+<rect width="620" height="720" fill="#fff"/>
+<g fill="#4cc95c">
+<path d="M213,35 L335,200 L333,262 Q250,285 160,294 Q100,285 75,272 Q48,255 50,225 Q60,205 105,196 Q135,185 160,150 Z"/>
+<path d="M138,335 L385,290 L480,300 L510,440 L520,520 L528,668 L136,668 Z"/>
+<circle cx="481" cy="324" r="96"/>
+</g>
+<g fill="#fff">
+<path d="M430,312 C430,290 452,278 478,280 C510,280 528,305 528,335 C528,355 515,375 500,386 L452,350 C438,340 430,328 430,312 Z"/>
+<circle cx="180" cy="190" r="10"/>
+<polygon points="195,341 224,358 224,392 195,409 166,392 166,358"/>
+</g>
+<g fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round">
+<path d="M243,487 V648"/>
+<path d="M462,468 Q352,520 340,648"/>
+</g>
+</svg>

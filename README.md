@@ -1,6 +1,6 @@
 <p align="center">
   <img src="docs/img/mitya-computer.svg" width="520"
-       alt="Mitya Computer logo: a seated shiba in black with a teal collar and a hex nut for a tag, beside the words Mitya Computer">
+       alt="Mitya Computer logo: a seated shiba in green, its head apart from the body, with a hex nut cut out of it, beside the words Mitya Computer">
 </p>
 
 <p align="center"><b>English</b> · <a href="README.ru.md">Русский</a></p>
@@ -114,8 +114,8 @@ export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
 export/coupon21/  hinge-station coupons; the base's also carries the switch slot
 export/switch/    shuttle that works the keyboard's power switch from the rear face,
                   three finger lengths by five stem lengths: print the set, keep what works
-export/logo/      Mitya Computer logo: lid-logo + one inlay per colour for a
-                  multi-material print, or lid-logo-engraved alone on one filament
+export/logo/      Mitya Computer logo: lid-logo (recessed) + the green inlay
+                  that fills it, for a two-filament print
 export/drawings/  SVG views and sections
 ```
 
