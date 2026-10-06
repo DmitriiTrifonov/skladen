@@ -75,7 +75,14 @@ plastic each), was not taken.
 - **The fingerprint reader is under the lid's rear wall,** as the Pixel's was.
   The Pocophone's is on the back as well. The owner does not need it, so no
   window is cut.
-- **Everything measured on Mk3 still holds:** the keyboard, the hinge torque, the
+- **The hinge must hold more.** The torque to hold the lid at 90 deg is
+  0.118 N*m, from Mk3's 0.091 (lid and phone ~0.249 kg at 48.1 mm, against 0.207 kg
+  at 45). The lid is also 1.05 thicker, so the axis sits 0.5 higher and the
+  stations' reliefs are 0.5 larger; the hinge parts themselves are unchanged. The
+  Mk3 coupon results (22-25 N clamp per station) were for 0.091, so
+  `export/coupon21/` must be re-measured against 0.118 before the hinge is
+  trusted. The bolt and washer set the force, so the remedy is a tighter bolt.
+- **Everything else measured on Mk3 still holds:** the keyboard, the
   stations, the switch shuttle. But **Skladen 2 has not been printed.** The first
   article and the coupons in `export/coupon21/` are the next steps; the Mk3 print
   results in ADR-0010 are inherited lessons, not results for this build.

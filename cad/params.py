@@ -224,7 +224,9 @@ hinge_axis_y = base_depth_to_axis
 lid_bottom_rear = rim_rear
 hinge_axis_z = (lid_bottom_rear + closed_h_rear) / 2
 lid_rear_radius = (closed_h_rear - lid_bottom_rear) / 2  # lid's rounded rear edge
-hinge_torque_req = 0.091  # N*m at 90 deg
+# N*m at 90 deg. Mk3's was 0.091 (0.207 kg at 45 mm). Skladen 2: the lid and
+# phone are ~0.249 kg (printed estimate) at 48.1 mm, 0.249 * 9.81 * 0.0481.
+hinge_torque_req = 0.118
 
 # Knuckle OD is set by packaging, not by load: it must fit between the lid's
 # faces at the axis. The lid weighs ~2 N, so even a small annulus is ample.

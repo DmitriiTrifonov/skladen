@@ -175,7 +175,7 @@ from others here · `A` assumed, not yet verified
 |---|---|---|---|
 | `hinge_axis_y` | 90.05 | C |  |
 | `hinge_axis_z` | 18.565 | C | lid mid-thickness, NOT the parting plane |
-| `hinge_torque_req` | 0.091 | C | N*m at 90 deg |
+| `hinge_torque_req` | 0.118 | C | N*m at 90 deg |
 | `knuckle_od` | 9 | D | capped by the lid's thickness at the axis |
 | `knuckle_id` | 3.5 | D | M3 clearance |
 | `knuckle_clr` | 0.2 | D | per face |
