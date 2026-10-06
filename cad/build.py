@@ -276,6 +276,15 @@ def main():
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")
 
+    # Phone-fit coupon: the lid's left end only, with everything new in Skladen 2.
+    pc = m.phone_coupon(lid)
+    n = len(pc.solids())
+    print(f"phone coupon   lid {pc.volume/1000:.1f} cm3   {pc.volume*p.mat_density:.0f} g solid   "
+          f"{'one solid' if n == 1 else f'{n} SOLIDS'}")
+    if n != 1:
+        FAIL.append("phone coupon is not one solid")
+    save(pc, "coupon-phone", "coupon-phone-lid")
+
     for sub, name, part in (("device", "base", base), ("device", "lid", lid),
                             ("coupon21", "coupon21-base", cb),
                             ("coupon21", "coupon21-lid", cl)):

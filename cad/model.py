@@ -383,3 +383,14 @@ def coupon(base, lid, x0=55.0, x1=100.0):
         x1 - x0, p.base_y + 10, p.closed_h_rear + 10
     )
     return base & box, lid & box
+
+
+def phone_coupon(lid, x0=-p.lid_x / 2, x1=-4.0):
+    """The lid's phone end: the jack slot, the camera cutout, the button window
+    and the pocket's corner, in the one piece, to try the real phone in before
+    the whole lid is printed. Left end of the lid, X from the end to just past
+    the button window (which stops at -7.5)."""
+    box = Pos((x0 + x1) / 2, p.lid_y / 2, p.closed_h_rear / 2) * Box(
+        x1 - x0, p.lid_y + 20, p.closed_h_rear + 10
+    )
+    return lid & box

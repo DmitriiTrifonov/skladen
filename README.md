@@ -96,6 +96,8 @@ cad/logo/      the logo artwork the lid inlays are cut from
 export/device/    STL and STEP for the device: lid + base (DIN 985 nylon nut)
 export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
 export/coupon21/  hinge-station coupons; the base's also carries the switch slot
+export/coupon-phone/  the lid's left end: jack slot, camera cutout, button window and
+                  pocket corner, to try the real phone in before printing the lid
 export/switch/    shuttle that works the keyboard's power switch from the rear face,
                   three finger lengths by five stem lengths: print the set, keep what works
 export/logo/      Mitya Computer logo: lid-logo (recessed) + the green inlay
