@@ -1,0 +1,10 @@
+*.FCBak
+*.FCStd1
+.DS_Store
+
+# Local reference material: component photos, borrowed models
+reference/
+
+# Python
+.venv/
+__pycache__/

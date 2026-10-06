@@ -1,0 +1,448 @@
+"""Driving dimensions for Skladen 2 (Xiaomi Pocophone F1).
+
+Mirrors docs/parameters.md, which is the human-readable source of truth.
+Keep the two in step: a number that changes here changes there.
+
+All lengths mm, masses g, angles deg.
+"""
+
+from math import atan, degrees
+
+# --- sentinel -------------------------------------------------------------
+# Values still blocked on a measurement. Massing uses the ASSUMED twin below;
+# nothing that matters structurally may depend on one.
+BLOCKED = {
+    "kbd_rim_recess": "task 0.4",
+    "phone_camera_bump": "task 0.6",
+    "phone_z": "caliper on the real phone: spec says 8.8, refs/fun.fbx says 7.9",
+    "phone_jack_z": "the FBX has no usable jack opening; assumed at mid-thickness",
+}
+
+# --- 1. keyboard (measured) ----------------------------------------------
+kbd_span_x = 194.00  # re-measured 2026-09-25 against a printed base; was 193.00
+kbd_depth_y = 86.25
+kbd_h_rear = 9.52
+kbd_h_front = 5.54
+kbd_keycap_rear = 1.82
+kbd_keycap_front = 1.82  # owner: same as rear
+kbd_mass = 95.0
+kbd_rim_width = 1.68
+
+# --- USB-C, on the keyboard's RIGHT SIDE face -----------------------------
+# NOT on the rear edge. Earlier drafts put it there from a misread photograph,
+# which invented the whole hinge-versus-I/O conflict in ADR-0006.
+# Datum: distance back from the keyboard's REAR (high) edge; Z from the plane
+# the keyboard rests on.
+kbd_usbc_rear_inset = 8.00    # rear edge to the near end of the connector
+kbd_usbc_z_bottom = 3.00      # opening's lower edge above the rest plane
+kbd_usbc_z_top_inset = 2.00   # opening's upper edge below the top of that face
+kbd_usbc_w_ASSUMED = 9.0      # along the keyboard's depth; receptacle is 8.34
+# CONFIRMED BY FIT 2026-09-22: the printed coupon's window lines up with the real
+# keyboard's port. The width itself is still not measured, but it no longer needs
+# to be - the opening clears it, which is the only thing the number was for.
+
+# How much that assumption can be wrong, from the cut geometry further down:
+# the opening through the wall spans 6.0 to 19.0 mm back from the keyboard's
+# rear edge, while the connector's near end sits at the MEASURED 8.00. Any true
+# width up to 11.0 mm is therefore cleared, with 2.0 mm spare at the rear end.
+# The receptacle itself is 8.34 and a bezel around it still fits, so the
+# assumption is not on the critical path - coupon 2.1 confirms it against the
+# real keyboard before anything large is printed.
+
+# The side face is a wedge, so its local height depends where you are along it.
+def _kbd_side_h(from_rear):
+    return kbd_h_rear - (from_rear / kbd_depth_y) * (kbd_h_rear - kbd_h_front)
+
+kbd_usbc_face_h = _kbd_side_h(kbd_usbc_rear_inset + kbd_usbc_w_ASSUMED / 2)
+kbd_usbc_z_top = kbd_usbc_face_h - kbd_usbc_z_top_inset
+kbd_usbc_h = kbd_usbc_z_top - kbd_usbc_z_bottom
+kbd_wedge_angle = degrees(atan((kbd_h_rear - kbd_h_front) / kbd_depth_y))
+
+# --- power switch, on the keyboard's REAR face ----------------------------
+# A slide switch in a niche, right under the right-hand hinge station. ON is
+# toward -X (the keyboard's left), OFF toward +X. Measured 2026-09-29.
+# Datum: X back from the keyboard's right side face; Z from the rest plane.
+kbd_sw_niche_from_right = 12.50  # read as 12-13 to the niche's near end
+kbd_sw_niche_w = 7.45
+kbd_sw_niche_h = 4.10
+kbd_sw_knob_w = 4.24
+kbd_sw_knob_h = 3.10
+kbd_sw_knob_end_gap = 1.00   # knob to the niche's end, at either end of travel
+kbd_sw_knob_proud = 0.75     # beyond the rear face; owner reckons nearer 1.0
+# The readings disagree by ~1 mm: the niche's edges (3.24 up, 2.60 down) put its
+# centre at 5.1, the knob's centre was read directly as 4.25. The fork's prongs
+# are tall enough to take either, so neither has to be settled first.
+kbd_sw_knob_z = 4.25
+kbd_sw_travel = kbd_sw_niche_w - kbd_sw_knob_w - 2 * kbd_sw_knob_end_gap
+
+# --- 2. phone (Xiaomi Pocophone F1: refs/fun.fbx, and spec) --------------
+# Plan size and every feature position below were read off refs/fun.fbx (world
+# mm, the model's own scale applied). Its plan outline agrees with the spec
+# sheet, 155.5 x 75.3, to 0.1. Its THICKNESS does not: the file squashes Z by
+# 0.856 and reads 6.8 mm of body plus a 1.0 camera plateau, against the spec's
+# 8.8. The pocket takes the spec figure - too thin a pocket is a fail, too thick
+# costs a fraction of a millimetre - until a caliper settles it (BLOCKED).
+phone_x = 155.5   # long axis, horizontal in the lid; top edge toward -X
+phone_y = 75.3    # across the buttons; the button side faces the lid's front
+phone_z = 8.80
+phone_mass = 182.0
+# Plan-view corner radius, fitted to the FBX outline: all four corners agree at
+# about 9.5 (the Pixel's front and rear differed; this phone's do not).
+phone_corner_r_front = 9.50
+phone_corner_r_rear = 9.50
+
+# --- 3. materials and clearances -----------------------------------------
+mat_density = 1.27e-3  # g/mm3, PETG, SOLID
+
+# `volume * mat_density` is the 100%-infill upper bound, not what comes off the
+# printer. Thin walls (1.2-1.6) print essentially solid; chunky blocks - the
+# lid's side spacers, the tail - take infill and land near 40%. Treating solid
+# mass as printed mass once produced a spurious "over budget" flag and made the
+# tipping margins look better than they are. Both figures are reported; the
+# authoritative one comes from slicing the STL.
+infill_chunky = 0.42
+wall_t = 1.60
+clr_kbd = 0.30
+# Across the span the pocket needs more than clr_kbd. The first full base
+# printed its pocket 193.0 wide against 193.6 modelled - 0.6 of shrinkage and
+# elephant's foot over a 194 mm run, which a 0.3 per-side gap cannot absorb.
+# Depth is short enough (86 mm) that clr_kbd still holds there.
+clr_kbd_x = 0.60
+clr_phone = 0.30
+
+# The phone is held by double-sided tape, as Mk2's was - no retention lips, so
+# the pocket is a plain recess. The tape goes on the pocket's FLOOR, behind the
+# phone, and the pocket is that much deeper. It was first put on the side walls
+# to save the 1.0 of height, but the assembled device got floor tape anyway: the
+# phone stood 1 mm proud, landed on the keycaps, and held the lid ~4 mm open at
+# the front. The owner took the height instead (N1 restated to 24.5). The side
+# widening is kept, so tape on the ends still fits. Holding an inverted phone
+# takes 1.64 N, so adhesion is not the constraint anywhere.
+tape_t = 1.00
+# Gap between the keycap tops and the lid. The lid lands on the base's RIM, not
+# on the keys: the base's walls stand this much proud of the keycap plane, so
+# pressing a closed lid loads the walls instead of typing. The tail does NOT
+# rise with them - it keeps clear of the lid's swept cylinder by exactly this.
+keycap_gap = 0.30
+
+# --- 4. base --------------------------------------------------------------
+base_floor_t = 1.20  # ADR-0008
+hinge_setback = 15.00  # ADR-0003
+
+base_x = kbd_span_x + 2 * (wall_t + clr_kbd_x)
+base_depth_to_axis = wall_t + clr_kbd + kbd_depth_y + clr_kbd + wall_t
+base_y = base_depth_to_axis + hinge_setback
+
+# --- 5. lid ---------------------------------------------------------------
+lid_rear_wall = 1.20  # ADR-0004, closed pocket
+lid_x = base_x
+lid_y = base_depth_to_axis  # ends at the hinge axis; see clamshell-geometry.md
+pocket_z = phone_z + tape_t  # phone flush with the lid's face, tape behind it
+lid_t = lid_rear_wall + pocket_z
+
+lid_lip_depth_ASSUMED = 2.50  # task 0.8
+
+# The phone is biased FORWARD in the lid, not centred: thin wall where the power
+# and volume buttons need reaching, thick wall on the hinge side where the
+# station reliefs live. Mk2 did the same - 4.70 front, 9.60 rear, measured off
+# its STL. Mk3 uses a little more bias because Mk2's full-width hinge barrel
+# needed no station reliefs and Mk3's stations do.
+phone_front_wall = 4.00
+
+# Button window. One opening over volume and power together, as Mk2 and Mk3 had.
+# In the FBX the three buttons stand on the +X long side: volume at Y 28.4-49.9
+# from the phone's centre toward its top, power at 10.0-19.8. The phone's top
+# edge is the lid's -X end and the phone is centred on X = 0, so lid X = -Y.
+# Buttons span X -49.9 to -10.0; the window gives each end 2.5 of margin.
+# They stand 0.5 proud of the side, and sit on the phone's mid-plane.
+button_win_x0, button_win_x1 = -52.50, -7.50
+
+# --- camera cutout --------------------------------------------------------
+# The FBX camera plateau, 1.0 proud of the back: X -6.0 to 5.9 across the phone
+# (centred), Y 31.6 to 63.2 toward the top - one tall module over both lenses and
+# the flash. 1.0 of clearance all round. X in the lid is -Y here; the other axis
+# is referenced to the phone's own button-side edge, as before.
+cam_margin = 1.00
+cam_x0, cam_x1 = -63.20 - cam_margin, -31.60 + cam_margin
+_half_w = phone_y / 2          # button-side edge sits at FBX x = +37.65
+cam_from_edge0 = _half_w - 5.94 - cam_margin
+cam_from_edge1 = _half_w + 6.00 + cam_margin
+
+# --- 3.5 mm headphone jack ------------------------------------------------
+# New in Skladen 2. The jack is in the phone's TOP edge, which is the lid's -X
+# end, 21.8 from the phone's centre toward the button side (the FBX hole spans
+# 20.1-23.5). Like the USB-C it is a slot open to the screen side, so there is no
+# bridge to sag, sized for a plug's overmould rather than the 3.5 tip. The wall
+# is 20 thick, so the plug lies in the slot for most of its length: nothing
+# narrower than 9 will take a typical straight plug.
+phone_jack_from_edge = _half_w - 21.80   # to the jack's centre, from the button-side edge
+phone_jack_cut_w = 9.0    # along Y
+phone_jack_cut_h = 8.0    # along Z, centred on the phone's mid-plane, open on the screen side
+
+# Phone USB-C cutout. Position follows from the fixed orientation (ADR-0004):
+# the phone's bottom edge becomes the lid's RIGHT short edge, +X. Centred along
+# that edge: the FBX port sits at X -4 to +4 about the centre.
+phone_usbc_centred = True
+phone_usbc_cut_w = 12.0  # along Y, sized for a cable overmould not just the plug
+phone_usbc_cut_h = 7.0   # along Z: sets the FLOOR side only - the slot is open
+                         # to the screen side, so 3.5 below the port centre is
+                         # the one limit left on overmould thickness
+
+# --- logo -----------------------------------------------------------------
+# The Mitya Computer dog, inlaid flush in the lid's outer face as one green
+# body, with the eye, nut and leg lines as holes showing the lid. See cad/logo.py.
+logo_height = 40.0  # ear tip to paws; the leg slots, the thinnest strokes, come out 0.85
+logo_depth = 0.60   # half the rear wall, and three 0.2 layers
+logo_centre_y = phone_front_wall + (phone_y + 2 * clr_phone) / 2   # over the phone
+# Upright to someone facing the OPEN lid, as Apple's is: the lid's front edge is
+# then the top. False reads upright on the closed device, front edge nearest.
+logo_reads_open = True
+
+# --- 6. derived stack -----------------------------------------------------
+parting_rear = base_floor_t + kbd_h_rear + kbd_keycap_rear
+parting_front = base_floor_t + kbd_h_front + kbd_keycap_front
+rim_rear = parting_rear + keycap_gap     # where the lid lands
+rim_front = parting_front + keycap_gap
+closed_h_rear = rim_rear + lid_t
+closed_h_front = rim_front + lid_t
+close_tilt = degrees(atan((parting_rear - parting_front) / base_depth_to_axis))
+
+N1_TARGET = 20.00
+N1_HARD_LIMIT = 24.50  # restated 2026-09-29 by the owner, see requirements.md
+# Mk3's was 400. The Pocophone F1 weighs 15 g more than the Pixel 3a XL and the
+# estimate lands at ~401, so the build fails against 400 by a gram that the
+# estimate cannot resolve. 420 was approved by the owner on 2026-10-06; see ADR-0011.
+N4_BUDGET = 420.0
+
+# --- 7. hinge -------------------------------------------------------------
+# The axis sits at the lid's MID-THICKNESS, not on the parting plane. With it on
+# the parting plane the lid's rear-top corner is 9.7 mm from the axis and sweeps
+# down into the tail past ~90 deg of opening - caught by the opening sweep in
+# build.py. At mid-thickness the furthest corner is only half the lid thickness
+# away, and the swept cylinder clears the tail entirely.
+hinge_axis_y = base_depth_to_axis
+lid_bottom_rear = rim_rear
+hinge_axis_z = (lid_bottom_rear + closed_h_rear) / 2
+lid_rear_radius = (closed_h_rear - lid_bottom_rear) / 2  # lid's rounded rear edge
+hinge_torque_req = 0.091  # N*m at 90 deg
+
+# Knuckle OD is set by packaging, not by load: it must fit between the lid's
+# faces at the axis. The lid weighs ~2 N, so even a small annulus is ample.
+knuckle_od = 9.0   # must fit inside the lid's thickness at the axis
+knuckle_id = 3.50
+knuckle_clr = 0.20  # per face, between interleaved knuckles
+
+# One station: base | lid | base, interleaved. The outer knuckles are 6.0 rather
+# than the 4.4 that packaging alone would need, so each can host a fastener
+# pocket without being reduced to a shell.
+station_outer_w = 6.00   # each base knuckle
+
+# The lid's relief at a station is larger than its own rear radius. It has to be:
+# at 180 deg the lid's underside behind the axis sits at (axis - lid_rear_radius),
+# so no base material may rise above that line except inside this relief. The
+# knuckle posts reach the axis through the relief, directly underneath it.
+# Tied to the lid's radius, not fixed: a fixed 5.70 left the posts' front faces
+# clipping the lid's underside once the lid thickened for floor tape.
+station_relief_r = lid_rear_radius + 1.00
+# The posts reach 0.60 into the keyboard's box envelope, over its top rear edge
+# (Z 8.54-10.72). Harmless: that edge is rounded on the real keyboard, which
+# seats in the printed base.
+post_half_y = 2.50
+station_inner_w = 5.80   # the lid knuckle
+station_w = 2 * station_outer_w + station_inner_w + 2 * 0.20
+
+# M3 through all three knuckles: head one side, nut the other, so tightening
+# squeezes the stack. The friction surfaces are the PETG knuckle end faces; the
+# compliant element sits under the head, OUTSIDE the stack, so the spring and
+# the sliding surface are separate parts each doing one job.
+nut_af = 5.70            # across flats, M3 nut 5.5 plus fit
+# DIN 985 nylon-insert nut, 4.00 tall, not a plain DIN 934 with threadlocker.
+# The joint runs at low preload - the O-ring sets 22-25 N - which is exactly
+# where plain threads walk loose, and the nut faces inboard where no one can
+# reach it to re-apply a locker. The wall left behind the pocket is 1.70; at
+# 25 N over the 24 mm2 under the hex that is 1 MPa, against PETG's ~50.
+# The nut's outer face stays at -8.80, so the M3 x 16 still runs 1.10 past it:
+# two threads into the insert. Nylon side OUT, metal face on the pocket floor.
+nut_depth = 4.30
+# Plain DIN 934 (2.40 tall) kept as a second base while the nylon nuts are on
+# order: export/plainnut/. It wants threadlocker, which cannot be re-applied
+# once the lid is nested - fine for a coupon, not what the device should ship with.
+nut_depth_plain = 2.70
+head_dia = 5.80          # M3 socket cap 5.5 plus fit
+head_depth = 3.80        # head 3.0 plus a wave washer
+
+corner_r = 3.0   # outer vertical corners
+
+# --- feet ------------------------------------------------------------------
+# Locating recesses for stick-on bumpons. The REAR pair sets the tipping contact
+# line, which the whole balance analysis measures the setback from: move them
+# 5 mm inboard and the effective setback drops 15 -> 10 and the device tips.
+# They sit as far back as a pad can go.
+foot_dia = 10.0
+foot_recess = 0.40
+foot_inset_x = 12.0
+foot_y_front = 8.0
+foot_y_rear = None   # set below, hard against the tail's rear edge
+
+# --- ballast ---------------------------------------------------------------
+# No pocket. ADR-0003 carried one as insurance against a mass *bracket* that has
+# since been replaced by measured geometry, and the margins now pass on the
+# pessimistic printed estimate. Hosting a pocket would mean thickening the front
+# wall by ~6 mm, since the keyboard fills the base almost edge to edge.
+# If the built device ever needs ballast, a steel strip tapes to the UNDERSIDE of
+# the base at the front, between the feet - free in closed height, because the
+# front is the thin end of the wedge.
+
+# Station X positions. The rear edge carries nothing else, so these are placed
+# purely for anti-racking span: as far apart as the side walls allow.
+# Two stations, not three. The centre one cannot be assembled: the lid's rounded
+# rear is a solid cylinder about the hinge axis running the full 196.8, so no
+# axial path exists from outside the device to a bolt head at X=0. Rotating the
+# lid does not help - the obstruction is coaxial with the rotation. Both survivors
+# open OUTBOARD, where only 1.6 mm of lid stands in the way. See ADR-0010; whether
+# two stations are stiff enough across the span is what the first article decides.
+station_x = (-87.5, 87.5)
+
+# Clearance bored through the lid outboard of each station so the Ø5.5 head can
+# travel down the axis into its pocket. Ø3.5 - the bolt's own bore - will not.
+head_access_dia = 6.40
+foot_y_rear = base_y - foot_dia / 2 - 1.0
+
+# The tunnel is now a plain opening through the base's right wall - 1.9 mm of
+# material, not 15 mm of tail. Sized for a cable overmould, not just the plug.
+usbc_cut_w, usbc_cut_h = 13.0, 7.5   # along Y and Z
+usbc_centre_y = (wall_t + clr_kbd + kbd_depth_y) - (
+    kbd_usbc_rear_inset + kbd_usbc_w_ASSUMED / 2
+)
+usbc_centre_z = base_floor_t + (kbd_usbc_z_bottom + kbd_usbc_z_top) / 2
+
+# Power-switch pusher: a printed shuttle that reaches the keyboard's switch from
+# the base's rear face. A fork straddles the knob; a stem runs back through the
+# tail, under the right station, to a thumb end in a window in the rear face.
+# The switch keeps its own detent, so the shuttle needs no spring and no stops.
+kbd_rear_y = wall_t + clr_kbd + kbd_depth_y
+sw_niche_x1 = kbd_span_x / 2 - kbd_sw_niche_from_right
+sw_knob_x_on = sw_niche_x1 - kbd_sw_niche_w + kbd_sw_knob_end_gap + kbd_sw_knob_w / 2
+sw_knob_x_off = sw_knob_x_on + kbd_sw_travel
+sw_clr = 0.20        # sliding fits, per side
+sw_prong_t = 1.20
+# Free travel past the knob's own at each end. It absorbs the 12-13 reading of
+# the niche's position: the knob's detent sets where the shuttle stops, not the slot.
+sw_overtravel = 0.50
+sw_fork_gap = kbd_sw_knob_w + 2 * sw_clr   # sizes the base's slot only
+sw_head_w = sw_fork_gap + 2 * sw_prong_t
+sw_head_y0 = kbd_rear_y + 0.15             # where the base's slot was sized from
+sw_notch_y1 = kbd_rear_y + 1.00 + sw_clr   # past the knob at its most proud
+sw_head_y1 = kbd_rear_y + clr_kbd + wall_t + 0.15
+# The fork grips the knob only by what stands proud of the face, 0.75, and the
+# first print slipped off it. So the shuttle, not the base, is tightened: the
+# prongs reach almost to the face, the head runs back to within SW_BACK_PLAY of
+# the slot's end, and the fork closes on the knob. That holds 0.60 of knob in
+# the fork against 0.40 before, and fits a base already printed. The outside of
+# the head is unchanged, so a tighter fork means thicker prongs.
+sw_tip_gap = 0.05
+sw_back_play = 0.10
+sw_fork_clr = 0.10   # per side
+# Even so, a flat prong against a rounded knob only 0.75 proud cams off it. So
+# fingers carry the prongs on into the niche, beside the knob, where they bear on
+# its full flank. At either end of travel the knob stands KNOB_END_GAP (1.00) from
+# the niche's end, so a finger and the fork's clearance must fit in that. The
+# niche narrows toward its bottom, so the fingers taper toward their tips. Their
+# height is where the niche lies at BOTH of its Z readings (3.24-6.30 above the
+# rest plane), with a margin. The niche's depth was never measured, hence a set.
+sw_finger_len = (0.5, 1.0, 1.5)   # into the niche; one print per value
+sw_finger_root = 0.80             # thickness in X at the keyboard's face
+sw_finger_tip = 0.50
+sw_finger_z0 = base_floor_t + 3.50
+sw_finger_z1 = base_floor_t + 6.00
+# The fingers stand in the keyboard's way as it drops into the base. So the slot
+# runs this much further back, and the shuttle is pulled back to seat the
+# keyboard, then pushed home into the niche.
+sw_retract = max(sw_finger_len) + 0.30
+# Prongs span 2.4 to 7.0 above the rest plane, covering the knob at either Z
+# reading. Their top stays under the station posts, which start at 8.54.
+sw_z0 = base_floor_t + 2.40
+sw_head_z1 = base_floor_t + 7.00
+# Stem flush with the head's underside, so the shuttle prints flat on its back
+# with no overhang. The head stands 1.4 above the tunnel's roof, which is what
+# keeps the shuttle from being pulled out through the rear.
+sw_stem_w = 4.00
+sw_stem_h = 3.00
+# How far the stem's end stands out of the rear face. Flush-minus-0.2 left it
+# sunk in the tunnel with nothing to push against, so it now stands proud; the
+# first print that failed that way asked for a set to choose from. The largest
+# is the one checked against the lid, as it reaches furthest.
+sw_stem_proud = (0.5, 1.0, 1.5, 2.0, 3.0)
+sw_nail_groove = 0.80    # vertical groove across the thumb end, for a fingernail
+
+# --- 8. masses and balance (ALL ESTIMATES - risk R3) ----------------------
+# Bracketed, not guessed. The lower bound was the original hand estimate; the
+# upper bound is what massing.py measures with both halves fully solid. The real
+# part sits between, depending on how much of the lid's dead side material is
+# hollowed out. See docs/analysis/balance.md.
+lid_shell_mass_min, lid_shell_mass_max = 40.0, 83.0
+base_shell_mass_min, base_shell_mass_max = 42.0, 72.0
+
+lid_shell_mass = 60.0   # working value: side regions partly hollowed
+base_shell_mass = 55.0  # working value
+lid_mass_total = lid_shell_mass + phone_mass
+base_mass_total = base_shell_mass + kbd_mass
+r_lid = 45.0
+d_base = 41.0
+
+
+def tipping_margin(s=hinge_setback, opening=180.0, lid_shell=None, base_shell=None):
+    """Ratio of restoring to overturning moment at a given opening angle.
+
+    >= 1.0 means the device cannot be tipped backwards at that angle.
+    opening=180 is the theoretical worst case; 150 is a realistic maximum.
+    See docs/analysis/balance.md.
+    """
+    from math import radians, sin
+
+    L = (lid_shell if lid_shell is not None else lid_shell_mass) + phone_mass
+    B = (base_shell if base_shell is not None else base_shell_mass) + kbd_mass
+    restoring = B * d_base + s * (B + L)
+    overturning = L * r_lid * sin(radians(opening - 90.0))
+    return restoring / overturning
+
+
+def setback_for_no_tip(lid_shell=None, base_shell=None):
+    """Rear setback at which tipping becomes impossible at any angle."""
+    L = (lid_shell if lid_shell is not None else lid_shell_mass) + phone_mass
+    B = (base_shell if base_shell is not None else base_shell_mass) + kbd_mass
+    return (L * r_lid - B * d_base) / (B + L)
+
+
+def balance_sweep(s=hinge_setback):
+    """Print tipping margin across the plausible mass bracket."""
+    cases = [
+        (lid_shell_mass_min, base_shell_mass_min, "both light"),
+        (lid_shell_mass_max, base_shell_mass_max, "both solid"),
+        (lid_shell_mass, base_shell_mass, "working values"),
+        (lid_shell_mass_max, base_shell_mass_min, "heavy lid, light base  <-- worst"),
+        (lid_shell_mass_min, base_shell_mass_max, "light lid, heavy base"),
+    ]
+    print(f"  {'lid':>5} {'base':>5} {'@180':>6} {'@150':>6} {'s_req':>6}   case")
+    for ls, bs, note in cases:
+        print(f"  {ls:5.0f} {bs:5.0f}"
+              f" {tipping_margin(s, 180, ls, bs):6.3f}"
+              f" {tipping_margin(s, 150, ls, bs):6.2f}"
+              f" {setback_for_no_tip(ls, bs):6.1f}   {note}")
+
+
+def report():
+    print(f"base           {base_x:.2f} x {base_y:.2f}")
+    print(f"lid            {lid_x:.2f} x {lid_y:.2f} x {lid_t:.2f}")
+    print(f"parting plane  {parting_front:.2f} front -> {parting_rear:.2f} rear")
+    print(f"closed height  {closed_h_front:.2f} front -> {closed_h_rear:.2f} rear")
+    print(f"close tilt     {close_tilt:.2f} deg  (keyboard wedge {kbd_wedge_angle:.2f})")
+    margin = N1_HARD_LIMIT - closed_h_rear
+    print(f"N1             target {N1_TARGET}, limit {N1_HARD_LIMIT}, margin {margin:+.2f}")
+    print(f"blocked        {len(BLOCKED)} parameters")
+    print(f"\nbalance sweep at s={hinge_setback:.0f} mm  (margin >= 1.0 means it cannot tip)")
+    balance_sweep()
+
+
+if __name__ == "__main__":
+    report()

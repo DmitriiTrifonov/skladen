@@ -1,0 +1,213 @@
+# Parameters
+
+**Generated from `cad/params.py` — do not edit by hand.**
+Regenerate with `.venv/bin/python cad/gen_params_doc.py`.
+
+The Python is the source of truth; this file exists so the numbers are readable
+and reviewable in a diff, as [ADR-0007](adr/0007-cad-toolchain.md) requires.
+
+All lengths mm, masses g, angles deg.
+
+Status: `M` measured · `S` from spec · `D` decided in an ADR · `C` calculated
+from others here · `A` assumed, not yet verified
+
+---
+
+
+## Keyboard — Jomaa KEYBOARD098RU
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `kbd_span_x` | 194 | M |  |
+| `kbd_depth_y` | 86.25 | M |  |
+| `kbd_h_rear` | 9.52 | M | thickest, rear of the wedge |
+| `kbd_h_front` | 5.54 | M | thinnest, front |
+| `kbd_keycap_rear` | 1.82 | M |  |
+| `kbd_keycap_front` | 1.82 | M | owner: same as rear |
+| `kbd_mass` | 95 | M |  |
+| `kbd_rim_width` | 1.68 | M | perimeter rim on the underside |
+| `kbd_wedge_angle` | 2.642 | C | atan((h_rear - h_front) / depth) |
+
+
+## Keyboard USB-C — on the RIGHT SIDE face, not the rear edge
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `kbd_usbc_rear_inset` | 8 | M | rear edge to the near end of the connector |
+| `kbd_usbc_z_bottom` | 3 | M | opening's lower edge above the rest plane |
+| `kbd_usbc_z_top_inset` | 2 | M | opening's upper edge below the top of that face |
+| `kbd_usbc_face_h` | 8.9432 | C | the side face is a wedge |
+| `kbd_usbc_h` | 3.9432 | C | derived opening height |
+| `kbd_usbc_w_ASSUMED` | 9 | A | task 0.1 — the last measurement outstanding |
+| `usbc_centre_y` | 75.65 | C | in device coordinates |
+| `usbc_centre_z` | 6.1716 | C |  |
+| `usbc_cut_w` | 13 | D | opening in the base's right wall, along Y |
+| `usbc_cut_h` | 7.5 | D | along Z |
+
+
+## Keyboard power switch — on the REAR face, under the right station
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `kbd_sw_niche_from_right` | 12.5 | M | right side face to the niche's near end; read as 12-13 |
+| `kbd_sw_niche_w` | 7.45 | M |  |
+| `kbd_sw_niche_h` | 4.1 | M |  |
+| `kbd_sw_knob_w` | 4.24 | M |  |
+| `kbd_sw_knob_h` | 3.1 | M |  |
+| `kbd_sw_knob_end_gap` | 1 | M | knob to the niche's end, at either end of travel |
+| `kbd_sw_knob_proud` | 0.75 | M | owner reckons nearer 1.0; checks use 1.0 |
+| `kbd_sw_knob_z` | 4.25 | M | centre above the rest plane; the niche's edges say ~5.1 |
+| `kbd_sw_travel` | 1.21 | C | ON toward -X, OFF toward +X |
+| `sw_knob_x_on` | 80.17 | C | in device coordinates |
+| `sw_knob_x_off` | 81.38 | C |  |
+| `sw_clr` | 0.2 | D | shuttle sliding fits, per side |
+| `sw_prong_t` | 1.2 | D | at the base's slot; thicker on a tighter fork |
+| `sw_tip_gap` | 0.05 | D | prong tips to the keyboard's rear face |
+| `sw_back_play` | 0.1 | D | head's back face to the slot's end |
+| `sw_fork_clr` | 0.1 | D | fork to knob, per side |
+| `sw_finger_len` | 0.5, 1, 1.5 | D | fingers into the niche; one print per value |
+| `sw_finger_root` | 0.8 | D | at the keyboard's face |
+| `sw_finger_tip` | 0.5 | D |  |
+| `sw_finger_z0` | 4.7 | D | device Z |
+| `sw_finger_z1` | 7.2 | D |  |
+| `sw_retract` | 1.8 | C | how far the shuttle pulls back to seat the keyboard |
+| `sw_overtravel` | 0.5 | D | per end; absorbs the niche's X reading |
+| `sw_head_w` | 7.04 | C | fork, across both prongs |
+| `sw_z0` | 3.6 | D | prongs' lower end, device Z |
+| `sw_head_z1` | 8.2 | D | prongs' top, under the station posts at 8.54 |
+| `sw_stem_w` | 4 | D |  |
+| `sw_stem_h` | 3 | D |  |
+| `sw_stem_proud` | 0.5, 1, 1.5, 2, 3 | D | stem's end out of the rear face; one print per value |
+
+
+## Phone — Xiaomi Pocophone F1
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `phone_x` | 155.5 | M | long axis, horizontal in the lid; from refs/fun.fbx |
+| `phone_y` | 75.3 | M | from refs/fun.fbx; agrees with the spec sheet |
+| `phone_z` | 8.8 | S | spec 8.8; refs/fun.fbx reads 7.9 — see params.py |
+| `phone_mass` | 182 | S |  |
+| `phone_corner_r_front` | 9.5 | M | plan view, fitted to the FBX outline |
+| `phone_corner_r_rear` | 9.5 | M | all four corners agree |
+| `phone_front_wall` | 4 | D | biased forward so the buttons are reachable |
+| `tape_t` | 1 | D | double-sided tape, on the pocket's FLOOR |
+| `pocket_z` | 9.8 | C | phone_z + tape_t |
+| `button_win_x0` | -52.5 | M | button window; buttons span X -49.9 to -10.0 |
+| `button_win_x1` | -7.5 | M |  |
+| `cam_x0` | -64.2 | M | camera plateau in the FBX, plus cam_margin |
+| `cam_x1` | -30.6 | M |  |
+| `cam_from_edge0` | 30.71 | C | referenced to the phone's own button-side edge |
+| `cam_from_edge1` | 44.65 | C |  |
+| `phone_usbc_cut_w` | 12 | D | phone's own port, lid's right wall |
+| `phone_usbc_cut_h` | 7 | D |  |
+| `phone_jack_from_edge` | 15.85 | M | 3.5 mm jack, lid's left wall; from the button-side edge |
+| `phone_jack_cut_w` | 9 | D | slot open to the screen side, sized for a plug's overmould |
+| `phone_jack_cut_h` | 8 | D | centred on the phone's mid-plane (assumed) |
+
+
+## Materials and clearances
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `mat_density` | 0.00127 | S | g/mm3, PETG, SOLID — see the note in params.py |
+| `wall_t` | 1.6 | A |  |
+| `clr_kbd` | 0.3 | A | per side, depth |
+| `clr_kbd_x` | 0.6 | M | per side, span: absorbs measured print shrinkage |
+| `clr_phone` | 0.3 | A | per side |
+| `keycap_gap` | 0.3 | D | held open by the base's rim, not by a liner |
+| `corner_r` | 3 | D | outer vertical corners |
+
+
+## Base
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `base_floor_t` | 1.2 | D | ADR-0008 |
+| `base_x` | 198.4 | C | kbd_span_x + 2*(wall_t + clr_kbd_x) |
+| `base_depth_to_axis` | 90.05 | C |  |
+| `hinge_setback` | 15 | D | ADR-0003 |
+| `base_y` | 105.05 | C | base_depth_to_axis + hinge_setback |
+| `foot_dia` | 10 | D | locating recesses for bumpons |
+| `foot_recess` | 0.4 | D |  |
+| `foot_y_rear` | 99.05 | C | sets the tipping contact line — see ADR-0003 |
+| `foot_y_front` | 8 | D |  |
+| `foot_inset_x` | 12 | D |  |
+
+
+## Lid
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `lid_rear_wall` | 1.2 | D | ADR-0004, closed pocket |
+| `lid_x` | 198.4 | C | matches base_x |
+| `lid_y` | 90.05 | C | ends at the hinge axis |
+| `lid_t` | 11 | C | lid_rear_wall + pocket_z |
+| `lid_rear_radius` | 5.5 | C | half the lid thickness |
+
+
+## Logo — the Mitya Computer dog, inlaid in the lid's outer face
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `logo_height` | 40 | D | ear tip to paws |
+| `logo_depth` | 0.6 | D | half the rear wall; three 0.2 layers |
+| `logo_centre_y` | 41.95 | C | centred over the phone |
+| `logo_reads_open` | True | D | upright to someone facing the open lid |
+
+
+## Derived stack
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `parting_rear` | 12.54 | C | top of the keycaps |
+| `parting_front` | 8.56 | C |  |
+| `rim_rear` | 12.84 | C | where the lid lands |
+| `rim_front` | 8.86 | C |  |
+| `closed_h_rear` | 23.84 | C | **the N1 number** |
+| `closed_h_front` | 19.86 | C |  |
+| `close_tilt` | 2.5307 | C | the lid shuts nose-down onto the wedge |
+
+
+## Hinge
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `hinge_axis_y` | 90.05 | C |  |
+| `hinge_axis_z` | 18.34 | C | lid mid-thickness, NOT the parting plane |
+| `hinge_torque_req` | 0.091 | C | N*m at 90 deg |
+| `knuckle_od` | 9 | D | capped by the lid's thickness at the axis |
+| `knuckle_id` | 3.5 | D | M3 clearance |
+| `knuckle_clr` | 0.2 | D | per face |
+| `station_outer_w` | 6 | D | each base knuckle |
+| `station_inner_w` | 5.8 | D | the lid knuckle |
+| `station_w` | 18.2 | C |  |
+| `station_relief_r` | 6.5 | C | lid_rear_radius + 1.0, so a post can exist |
+| `post_half_y` | 2.5 | D |  |
+| `nut_af` | 5.7 | D | M3 nut across flats |
+| `nut_depth` | 4.3 | D |  |
+| `head_dia` | 5.8 | D |  |
+| `head_depth` | 3.8 | D | head plus a wave washer |
+
+
+## Masses and balance — estimates, risk R3
+
+| Name | Value | St | Note |
+|---|---|---|---|
+| `infill_chunky` | 0.42 | A | chunky blocks take infill; thin walls print solid |
+| `r_lid` | 45 | A | superseded in build.py by a value derived from the geometry |
+| `d_base` | 41 | A | keyboard mass is rear-biased |
+
+
+## Hinge stations
+
+At X = -87.5, 87.5, span 175.0 mm between the outermost.
+
+## Still blocked
+
+| Parameter | Waiting on |
+|---|---|
+| `kbd_rim_recess` | task 0.4 |
+| `phone_camera_bump` | task 0.6 |
+| `phone_z` | caliper on the real phone: spec says 8.8, refs/fun.fbx says 7.9 |
+| `phone_jack_z` | the FBX has no usable jack opening; assumed at mid-thickness |

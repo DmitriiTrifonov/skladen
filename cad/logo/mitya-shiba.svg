@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="600" height="600">
+<defs><clipPath id="dog"><path d="M60,180 V104 Q60,80 86,80 H116 Q158,100 158,148 V180 Z"/><circle cx="84" cy="68" r="28"/></clipPath></defs>
+<rect width="200" height="200" fill="#fff"/>
+<g fill="#111">
+<path d="M60,180 V104 Q60,80 86,80 H116 Q158,100 158,148 V180 Z"/>
+<circle cx="84" cy="68" r="28"/>
+<path d="M64,56 L38,64 Q32,78 44,82 L70,86 Z"/>
+<path d="M68,50 L80,16 L104,48 Z"/>
+</g>
+<circle cx="146" cy="96" r="20" fill="none" stroke="#111" stroke-width="14"/>
+<circle cx="70" cy="60" r="3.6" fill="#fff"/>
+<path d="M50,94 L140,77.6" fill="none" stroke="#1fb5a0" stroke-width="9" clip-path="url(#dog)"/>
+<polygon points="82.79,110.00 75.00,114.50 67.21,110.00 67.21,101.00 75.00,96.50 82.79,101.00" fill="#fff"/>
+<circle cx="75" cy="105.5" r="4" fill="#111"/>
+<g fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round">
+<path d="M88,134 V174"/>
+<path d="M112,174 Q112,142 142,130"/>
+</g>
+</svg>
