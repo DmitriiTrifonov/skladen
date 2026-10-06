@@ -79,9 +79,12 @@ plastic each), was not taken.
   0.118 N*m, from Mk3's 0.091 (lid and phone ~0.249 kg at 48.1 mm, against 0.207 kg
   at 45). The lid is also 1.05 thicker, so the axis sits 0.5 higher and the
   stations' reliefs are 0.5 larger; the hinge parts themselves are unchanged. The
-  Mk3 coupon results (22-25 N clamp per station) were for 0.091, so
-  `export/coupon21/` must be re-measured against 0.118 before the hinge is
-  trusted. The bolt and washer set the force, so the remedy is a tighter bolt.
+  22-25 N clamp per station in the README is a calculation for 0.091, not a
+  measurement: the Mk3 bolts were tightened by feel, and no torque was ever
+  measured. So there is no tested hinge figure to inherit. The bolt and washer
+  set the force, so the remedy for a weak hinge is a tighter bolt; the check is
+  whether the lid holds itself at 90 deg and at 150 deg, and survives being
+  carried closed.
 - **Everything else measured on Mk3 still holds:** the keyboard, the
   stations, the switch shuttle. But **Skladen 2 has not been printed.** The first
   article and the coupons in `export/coupon21/` are the next steps; the Mk3 print
