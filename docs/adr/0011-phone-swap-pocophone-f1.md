@@ -36,7 +36,8 @@ spec's 8.8.** The file squashes Z by 0.856; its plan size is right and its
 thickness is not. The owner measured the real phone at 9.25 on the flat body,
 away from the camera block, and 9.72 over it, so the block is 0.47 proud (the
 FBX has 1.0). The body is 1.05 more than the Pixel's 8.2. The closed
-height is **24.29 rear / 20.31 front**, only **0.21** under the 24.5 limit.
+height is **24.29 rear / 20.31 front**, which is 0.21 under Mk3's 24.5 limit. The owner has raised the hard limit to
+**25.0** (2026-10-06), leaving **0.71**.
 
 **2. Camera cutout from the FBX plateau.** The block is 0.47 proud, well inside the
 1.2 rear wall, so it is a plain through-hole. X -64.2 to -30.6, and 30.7 to 44.7 from
@@ -69,8 +70,8 @@ plastic each), was not taken.
   180 deg (Mk3: 1.08). The heavier phone is most of the change. It still holds at
   every angle on paper, but 0.2% at the theoretical worst case is no headroom; a steel
   strip taped under the front of the base is the remedy noted in `params.py`.
-- **The thickness contingency no longer fits.** Margin to 24.5 is 0.21; ADR-0008's
-  fallback of a 2.0 mm floor (+0.8) would break the limit.
+- **The thickness contingency no longer fits.** Margin to 25.0 is 0.71; ADR-0008's
+  fallback of a 2.0 mm floor (+0.8) would miss it by 0.09.
 - **The fingerprint reader is under the lid's rear wall,** as the Pixel's was.
   The Pocophone's is on the back as well. The owner does not need it, so no
   window is cut.

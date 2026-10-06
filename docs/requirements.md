@@ -36,7 +36,7 @@ within the constraints below.
 
 | # | Requirement |
 |---|---|
-| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 24.5. Design point is **24.29** (Mk3: 23.24; the Pocophone is 1.05 thicker) — the target is missed by 4.29 through deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md) (the lid's rear skin, and 1.0 of tape behind the phone). Limit restated by the owner, see below |
+| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 25.0 (Mk3: 24.5; raised by the owner 2026-10-06, [ADR-0011](adr/0011-phone-swap-pocophone-f1.md)). Design point is **24.29** (Mk3: 23.24; the Pocophone is 1.05 thicker) — the target is missed by 4.29 through deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md) (the lid's rear skin, and 1.0 of tape behind the phone). Limit restated by the owner, see below |
 | N2 | Footprint: base ~197 x 105 including the 15 mm rear setback; lid ~197 x 90, ending at the hinge axis, leaving the tail exposed when closed (see [clamshell geometry](analysis/clamshell-geometry.md)) |
 | N3 | Printable on a 256 x 256 bed without the base being split into multiple parts |
 | N4 | Total mass <= 420 (raised by the owner 2026-10-06; Mk3's was 400, the Pocophone adds 15 g). Currently ~403 as printed (~469 if it were solid) — measure against the slicer's figure, not `volume x density` |
@@ -87,8 +87,8 @@ Two responses, not exclusive:
 old figure, so the hard limit is now **24.5**. The first 1.0 of that went
 straight to tape behind the phone ([ADR-0004](adr/0004-phone-retention.md)),
 leaving 1.26 on Mk3 — enough to absorb the thicker-floor contingency above at 2.0,
-not at 2.5. On Skladen 2 the Pocophone takes 1.05 more, leaving 0.21: the 2.0
-floor no longer fits.
+not at 2.5. On Skladen 2 the Pocophone takes 1.05 more and the owner raised the limit to
+25.0, leaving 0.71: the 2.0 floor (+0.8) misses by 0.09, so it is still not free.
 
 ## Scope boundary with Mk4
 

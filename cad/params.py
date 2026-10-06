@@ -208,7 +208,7 @@ closed_h_front = rim_front + lid_t
 close_tilt = degrees(atan((parting_rear - parting_front) / base_depth_to_axis))
 
 N1_TARGET = 20.00
-N1_HARD_LIMIT = 24.50  # restated 2026-09-29 by the owner, see requirements.md
+N1_HARD_LIMIT = 25.00  # Mk3: 24.5, restated 2026-09-29; Skladen 2: 25.0, owner, 2026-10-06 (ADR-0011)
 # Mk3's was 400. The Pocophone F1 weighs 15 g more than the Pixel 3a XL and the
 # estimate lands at ~401, so the build fails against 400 by a gram that the
 # estimate cannot resolve. 420 was approved by the owner on 2026-10-06; see ADR-0011.

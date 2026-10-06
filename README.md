@@ -40,8 +40,8 @@ passes every check: one solid per part, no interference closed or through 0-180 
 the hinge bolts reachable, the power-switch shuttle clear, and a plug's path out of
 the phone's USB-C and headphone jack unobstructed. What it cannot check is the
 phone itself. The pocket thickness, 9.25 mm, is the owner's caliper reading;
-the spec says 8.8 and the FBX 7.9. Closed height is now within 0.21 mm of the
-24.5 limit, and the tipping margin is 1.00.
+the spec says 8.8 and the FBX 7.9. Closed height is now 0.71 mm under the
+25.0 limit (raised from Mk3's 24.5 by the owner), and the tipping margin is 1.00.
 
 The mass budget N4 is raised from 400 to 420 g (estimate ~403 g; owner-approved,
 [ADR-0011](docs/adr/0011-phone-swap-pocophone-f1.md)).
@@ -53,7 +53,7 @@ print) are inherited lessons, not results for this build.
 |---|---|---|
 | Phone | Pixel 3a XL, 160.1 x 76.1 x 8.2, 167 g | Pocophone F1, 155.5 x 75.3 x 9.25, 182 g |
 | Closed, rear / front | 23.24 / 19.26 mm | **24.29 / 20.31 mm** |
-| Margin to the 24.5 limit | 1.26 | **0.21** |
+| Margin to the hard limit | 1.26 (of 24.5) | **0.71** (of 25.0) |
 | Printed mass (est.) | ~380 g | ~403 g |
 | Tipping margin at 180 deg (est.) | 1.08 | 1.00 (holds on paper, no headroom) |
 | Jack | no cutout | slot, 9 x 8 |
