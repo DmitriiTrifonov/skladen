@@ -13,8 +13,6 @@ from math import atan, degrees
 # nothing that matters structurally may depend on one.
 BLOCKED = {
     "kbd_rim_recess": "task 0.4",
-    "phone_camera_bump": "task 0.6",
-    "phone_z": "caliper on the real phone: spec says 8.8, refs/fun.fbx says 7.9",
     "phone_jack_z": "the FBX has no usable jack opening; assumed at mid-thickness",
 }
 
@@ -75,16 +73,18 @@ kbd_sw_knob_proud = 0.75     # beyond the rear face; owner reckons nearer 1.0
 kbd_sw_knob_z = 4.25
 kbd_sw_travel = kbd_sw_niche_w - kbd_sw_knob_w - 2 * kbd_sw_knob_end_gap
 
-# --- 2. phone (Xiaomi Pocophone F1: refs/fun.fbx, and spec) --------------
+# --- 2. phone (Xiaomi Pocophone F1: refs/fun.fbx, caliper, and spec) -----
 # Plan size and every feature position below were read off refs/fun.fbx (world
 # mm, the model's own scale applied). Its plan outline agrees with the spec
 # sheet, 155.5 x 75.3, to 0.1. Its THICKNESS does not: the file squashes Z by
-# 0.856 and reads 6.8 mm of body plus a 1.0 camera plateau, against the spec's
-# 8.8. The pocket takes the spec figure - too thin a pocket is a fail, too thick
-# costs a fraction of a millimetre - until a caliper settles it (BLOCKED).
+# 0.856 and reads 7.9, against the spec's 8.8. The owner's caliper on the real
+# phone, away from the camera block, reads 9.25 (2026-10-06), and that is used.
 phone_x = 155.5   # long axis, horizontal in the lid; top edge toward -X
 phone_y = 75.3    # across the buttons; the button side faces the lid's front
-phone_z = 8.80
+phone_z = 9.25   # caliper, flat body, excluding the camera block
+phone_camera_bump = 0.47   # caliper: 9.72 over the block less 9.25; the FBX has 1.0
+# The block stands well inside the 1.2 rear wall, so the cutout is a plain
+# through-hole and nothing depends on this number.
 phone_mass = 182.0
 # Plan-view corner radius, fitted to the FBX outline: all four corners agree at
 # about 9.5 (the Pixel's front and rear differed; this phone's do not).

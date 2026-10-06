@@ -17,7 +17,7 @@ below were copied out of it into `params.py`.
 | | Pixel 3a XL | Pocophone F1 | Source |
 |---|---|---|---|
 | Body, plan | 160.1 x 76.1 | **155.5 x 75.3** | FBX; matches the spec sheet to 0.1 |
-| Thickness | 8.2 | **8.8** | spec — see the first decision |
+| Thickness | 8.2 | **9.25** | caliper — see the first decision |
 | Mass | 167 g | **182 g** | spec |
 | Plan corner radius | 8.9 front, 10.4 rear | **9.5, all four** | fitted to the FBX outline |
 | Buttons | right long side | right long side, three, 0.5 proud | FBX |
@@ -31,15 +31,15 @@ the lid's left end**, where the Pixel's was unused.
 
 ## Decisions
 
-**1. The pocket takes the spec thickness, 8.8, not the FBX's 7.9.** The file
-squashes Z by 0.856 and reads 6.8 mm of body plus a 1.0 plateau; its plan size
-is right and its thickness is not. A pocket too thin for the real phone fails the
-fit; one too thick costs 0.6 against the Pixel's 8.2. The closed height is
-**23.84 rear / 19.86 front**, 0.66 under the 24.5 limit. This is the first thing
-to settle with a caliper (`BLOCKED` in `params.py`); if the phone is thinner,
-`phone_z` is the only number that moves.
+**1. The pocket takes the caliper thickness, 9.25, not the FBX's 7.9 or the
+spec's 8.8.** The file squashes Z by 0.856; its plan size is right and its
+thickness is not. The owner measured the real phone at 9.25 on the flat body,
+away from the camera block, and 9.72 over it, so the block is 0.47 proud (the
+FBX has 1.0). The body is 1.05 more than the Pixel's 8.2. The closed
+height is **24.29 rear / 20.31 front**, only **0.21** under the 24.5 limit.
 
-**2. Camera cutout from the FBX plateau.** X -64.2 to -30.6, and 30.7 to 44.7 from
+**2. Camera cutout from the FBX plateau.** The block is 0.47 proud, well inside the
+1.2 rear wall, so it is a plain through-hole. X -64.2 to -30.6, and 30.7 to 44.7 from
 the phone's button-side edge, 1.0 clear all round. It sits well clear of the logo
 (X +-16.7).
 
@@ -57,7 +57,7 @@ but no usable opening, so Z is taken as mid-thickness, which the 8.0 slot covers
 with 2 mm either side.
 
 **4. Mass budget: N4 raised to 420 g, from 400 (owner-approved).** The phone is 15 g heavier and
-the estimate lands at **401** printed. The build was failing against 400 by a gram
+the estimate lands at **403** printed. The build was failing against 400 by a gram
 the estimate cannot resolve (it multiplies solid mass by two guessed infill
 factors). 420 keeps the check meaningful; the real number comes from the slicer.
 The alternative, lightening the lid (its end walls are now 20 mm of solid
@@ -65,11 +65,11 @@ plastic each), was not taken.
 
 ## Consequences
 
-- **Tipping margin got thinner.** Printed estimate: 1.165 at 150 deg (Mk3: 1.25), **1.009** at
+- **Tipping margin got thinner.** Printed estimate: 1.157 at 150 deg (Mk3: 1.25), **1.002** at
   180 deg (Mk3: 1.08). The heavier phone is most of the change. It still holds at
-  every angle, but 0.9% at the theoretical worst case is not headroom; a steel
+  every angle on paper, but 0.2% at the theoretical worst case is no headroom; a steel
   strip taped under the front of the base is the remedy noted in `params.py`.
-- **The thickness contingency no longer fits.** Margin to 24.5 is 0.66; ADR-0008's
+- **The thickness contingency no longer fits.** Margin to 24.5 is 0.21; ADR-0008's
   fallback of a 2.0 mm floor (+0.8) would break the limit.
 - **The fingerprint reader is under the lid's rear wall,** as the Pixel's was.
   The Pocophone's is on the back as well. The owner does not need it, so no

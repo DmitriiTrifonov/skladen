@@ -86,13 +86,13 @@ from others here · `A` assumed, not yet verified
 |---|---|---|---|
 | `phone_x` | 155.5 | M | long axis, horizontal in the lid; from refs/fun.fbx |
 | `phone_y` | 75.3 | M | from refs/fun.fbx; agrees with the spec sheet |
-| `phone_z` | 8.8 | S | spec 8.8; refs/fun.fbx reads 7.9 — see params.py |
+| `phone_z` | 9.25 | M | caliper 9.25; spec says 8.8 and refs/fun.fbx 7.9 |
 | `phone_mass` | 182 | S |  |
 | `phone_corner_r_front` | 9.5 | M | plan view, fitted to the FBX outline |
 | `phone_corner_r_rear` | 9.5 | M | all four corners agree |
 | `phone_front_wall` | 4 | D | biased forward so the buttons are reachable |
 | `tape_t` | 1 | D | double-sided tape, on the pocket's FLOOR |
-| `pocket_z` | 9.8 | C | phone_z + tape_t |
+| `pocket_z` | 10.25 | C | phone_z + tape_t |
 | `button_win_x0` | -52.5 | M | button window; buttons span X -49.9 to -10.0 |
 | `button_win_x1` | -7.5 | M |  |
 | `cam_x0` | -64.2 | M | camera plateau in the FBX, plus cam_margin |
@@ -142,8 +142,8 @@ from others here · `A` assumed, not yet verified
 | `lid_rear_wall` | 1.2 | D | ADR-0004, closed pocket |
 | `lid_x` | 198.4 | C | matches base_x |
 | `lid_y` | 90.05 | C | ends at the hinge axis |
-| `lid_t` | 11 | C | lid_rear_wall + pocket_z |
-| `lid_rear_radius` | 5.5 | C | half the lid thickness |
+| `lid_t` | 11.45 | C | lid_rear_wall + pocket_z |
+| `lid_rear_radius` | 5.725 | C | half the lid thickness |
 
 
 ## Logo — the Mitya Computer dog, inlaid in the lid's outer face
@@ -164,8 +164,8 @@ from others here · `A` assumed, not yet verified
 | `parting_front` | 8.56 | C |  |
 | `rim_rear` | 12.84 | C | where the lid lands |
 | `rim_front` | 8.86 | C |  |
-| `closed_h_rear` | 23.84 | C | **the N1 number** |
-| `closed_h_front` | 19.86 | C |  |
+| `closed_h_rear` | 24.29 | C | **the N1 number** |
+| `closed_h_front` | 20.31 | C |  |
 | `close_tilt` | 2.5307 | C | the lid shuts nose-down onto the wedge |
 
 
@@ -174,7 +174,7 @@ from others here · `A` assumed, not yet verified
 | Name | Value | St | Note |
 |---|---|---|---|
 | `hinge_axis_y` | 90.05 | C |  |
-| `hinge_axis_z` | 18.34 | C | lid mid-thickness, NOT the parting plane |
+| `hinge_axis_z` | 18.565 | C | lid mid-thickness, NOT the parting plane |
 | `hinge_torque_req` | 0.091 | C | N*m at 90 deg |
 | `knuckle_od` | 9 | D | capped by the lid's thickness at the axis |
 | `knuckle_id` | 3.5 | D | M3 clearance |
@@ -182,7 +182,7 @@ from others here · `A` assumed, not yet verified
 | `station_outer_w` | 6 | D | each base knuckle |
 | `station_inner_w` | 5.8 | D | the lid knuckle |
 | `station_w` | 18.2 | C |  |
-| `station_relief_r` | 6.5 | C | lid_rear_radius + 1.0, so a post can exist |
+| `station_relief_r` | 6.725 | C | lid_rear_radius + 1.0, so a post can exist |
 | `post_half_y` | 2.5 | D |  |
 | `nut_af` | 5.7 | D | M3 nut across flats |
 | `nut_depth` | 4.3 | D |  |
@@ -208,6 +208,4 @@ At X = -87.5, 87.5, span 175.0 mm between the outermost.
 | Parameter | Waiting on |
 |---|---|
 | `kbd_rim_recess` | task 0.4 |
-| `phone_camera_bump` | task 0.6 |
-| `phone_z` | caliper on the real phone: spec says 8.8, refs/fun.fbx says 7.9 |
 | `phone_jack_z` | the FBX has no usable jack opening; assumed at mid-thickness |

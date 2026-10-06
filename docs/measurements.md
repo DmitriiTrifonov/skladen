@@ -131,8 +131,8 @@ marked. The model's plan outline matches the spec sheet; its thickness does not.
 | Property | Value | Conf |
 |---|---|---|
 | Body, plan | 155.5 x 75.3 | M |
-| Thickness | 8.8 (spec). The FBX reads 7.9 with its Z squashed to 0.856 | S |
-| Camera plateau | 11.9 x 31.6 on the back, 1.0 proud, centred across the width, 14.5 from the top edge | M |
+| Thickness, flat body | 9.25 (caliper, owner). Spec says 8.8; the FBX reads 7.9 with its Z squashed to 0.856 | M |
+| Camera plateau | 11.9 x 31.6 on the back, 0.47 proud (FBX: 1.0), centred across the width, 14.5 from the top edge | M |
 | Mass | 182 | S |
 | Plan corner radius | 9.5, all four | M |
 | USB-C | bottom edge, centred (X -4 to +4) | M |
@@ -142,8 +142,7 @@ marked. The model's plan outline matches the spec sheet; its thickness does not.
 | Jack height in the edge | assumed mid-thickness; the FBX has no usable opening | A |
 | Fingerprint reader | rear face | S |
 | SIM tray | left edge in portrait; hinge-side edge of the lid | S |
-| Real thickness, caliper | — | ? |
-| Camera bump height | 1.0 in the FBX; not needed, the cutout is a through-hole | M |
+| Camera bump height | 0.47 (caliper: 9.72 over the block, 9.25 body); the FBX has 1.0. Not needed, the cutout is a through-hole | M |
 
 Orientation is fixed by the requirement that power and volume stay reachable —
 see [ADR-0004](adr/0004-phone-retention.md) — and is the same as the Pixel's:

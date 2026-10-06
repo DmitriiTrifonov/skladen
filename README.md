@@ -28,7 +28,7 @@ power-switch shuttle are unchanged.** What differs is the lid:
   <img src="docs/img/skladen2-closed.png" width="760"
        alt="Skladen 2 rendered closed, seen from the front right">
   <br>
-  <sub>Shut: 23.84 mm at the hinge, 19.86 at the front. Both renders come straight from the
+  <sub>Shut: 24.29 mm at the hinge, 20.31 at the front. Both renders come straight from the
   model via <code>cad/render.py</code>; the phone and keyboard are stand-ins built from
   their measured envelopes.</sub>
 </p>
@@ -39,12 +39,11 @@ power-switch shuttle are unchanged.** What differs is the lid:
 passes every check: one solid per part, no interference closed or through 0-180 deg,
 the hinge bolts reachable, the power-switch shuttle clear, and a plug's path out of
 the phone's USB-C and headphone jack unobstructed. What it cannot check is the
-phone itself. One number is open, in `params.py`:
+phone itself. The pocket thickness, 9.25 mm, is the owner's caliper reading;
+the spec says 8.8 and the FBX 7.9. Closed height is now within 0.21 mm of the
+24.5 limit, and the tipping margin is 1.00.
 
-- **Phone thickness.** The spec says 8.8; the FBX, with its Z squashed, reads 7.9.
-  The pocket uses 8.8. Measure the real phone.
-
-The mass budget N4 is raised from 400 to 420 g (estimate ~401 g; owner-approved,
+The mass budget N4 is raised from 400 to 420 g (estimate ~403 g; owner-approved,
 [ADR-0011](docs/adr/0011-phone-swap-pocophone-f1.md)).
 
 Mk3's printed results (the hinge coupons and their two defects, the first full
@@ -52,11 +51,11 @@ print) are inherited lessons, not results for this build.
 
 | | Mk3 | Skladen 2 |
 |---|---|---|
-| Phone | Pixel 3a XL, 160.1 x 76.1 x 8.2, 167 g | Pocophone F1, 155.5 x 75.3 x 8.8, 182 g |
-| Closed, rear / front | 23.24 / 19.26 mm | **23.84 / 19.86 mm** |
-| Margin to the 24.5 limit | 1.26 | **0.66** |
-| Printed mass (est.) | ~380 g | ~401 g |
-| Tipping margin at 180 deg (est.) | 1.08 | 1.01 (holds at every angle, barely) |
+| Phone | Pixel 3a XL, 160.1 x 76.1 x 8.2, 167 g | Pocophone F1, 155.5 x 75.3 x 9.25, 182 g |
+| Closed, rear / front | 23.24 / 19.26 mm | **24.29 / 20.31 mm** |
+| Margin to the 24.5 limit | 1.26 | **0.21** |
+| Printed mass (est.) | ~380 g | ~403 g |
+| Tipping margin at 180 deg (est.) | 1.08 | 1.00 (holds on paper, no headroom) |
 | Jack | no cutout | slot, 9 x 8 |
 
 | Doc | What it is |
@@ -72,7 +71,7 @@ print) are inherited lessons, not results for this build.
 ## Findings inherited from Mk3
 
 **Neither component gets thinner, so the skins had to go.** The keyboard shell is
-9.52 mm and the phone 8.8; together they are most of the budget and neither is
+9.52 mm and the phone 9.25; together they are most of the budget and neither is
 negotiable. The base's floor and the lid's back are the only skins, both kept for
 enclosure ([ADR-0008](docs/adr/0008-base-floor.md),
 [ADR-0004](docs/adr/0004-phone-retention.md)).

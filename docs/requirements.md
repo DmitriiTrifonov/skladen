@@ -36,10 +36,10 @@ within the constraints below.
 
 | # | Requirement |
 |---|---|
-| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 24.5. Design point is **23.84** (Mk3: 23.24; the Pocophone is 0.6 thicker) — the target is missed by 3.84 through deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md) (the lid's rear skin, and 1.0 of tape behind the phone). Limit restated by the owner, see below |
+| N1 | Closed thickness at the thickest point: target <= 20.0, hard limit <= 24.5. Design point is **24.29** (Mk3: 23.24; the Pocophone is 1.05 thicker) — the target is missed by 4.29 through deliberate trades, [ADR-0008](adr/0008-base-floor.md) and [ADR-0004](adr/0004-phone-retention.md) (the lid's rear skin, and 1.0 of tape behind the phone). Limit restated by the owner, see below |
 | N2 | Footprint: base ~197 x 105 including the 15 mm rear setback; lid ~197 x 90, ending at the hinge axis, leaving the tail exposed when closed (see [clamshell geometry](analysis/clamshell-geometry.md)) |
 | N3 | Printable on a 256 x 256 bed without the base being split into multiple parts |
-| N4 | Total mass <= 420 (raised by the owner 2026-10-06; Mk3's was 400, the Pocophone adds 15 g). Currently ~401 as printed (~466 if it were solid) — measure against the slicer's figure, not `volume x density` |
+| N4 | Total mass <= 420 (raised by the owner 2026-10-06; Mk3's was 400, the Pocophone adds 15 g). Currently ~403 as printed (~469 if it were solid) — measure against the slicer's figure, not `volume x density` |
 | N5 | No custom electronics — keyboard and phone stay stock |
 | N6 | Parametric CAD: all key dimensions driven from one table, so a different phone or keyboard is a re-parametrisation, not a redraw. Satisfied by [ADR-0007](adr/0007-cad-toolchain.md) — `docs/parameters.md` paired with `cad/params.py` |
 
@@ -87,7 +87,7 @@ Two responses, not exclusive:
 old figure, so the hard limit is now **24.5**. The first 1.0 of that went
 straight to tape behind the phone ([ADR-0004](adr/0004-phone-retention.md)),
 leaving 1.26 on Mk3 — enough to absorb the thicker-floor contingency above at 2.0,
-not at 2.5. On Skladen 2 the Pocophone takes 0.6 more, leaving 0.66: the 2.0
+not at 2.5. On Skladen 2 the Pocophone takes 1.05 more, leaving 0.21: the 2.0
 floor no longer fits.
 
 ## Scope boundary with Mk4

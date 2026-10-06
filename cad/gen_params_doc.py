@@ -75,7 +75,7 @@ SECTIONS = [
     ("Phone — Xiaomi Pocophone F1", [
         ("phone_x", "M", "long axis, horizontal in the lid; from refs/fun.fbx"),
         ("phone_y", "M", "from refs/fun.fbx; agrees with the spec sheet"),
-        ("phone_z", "S", "spec 8.8; refs/fun.fbx reads 7.9 — see params.py"),
+        ("phone_z", "M", "caliper 9.25; spec says 8.8 and refs/fun.fbx 7.9"),
         ("phone_mass", "S", ""),
         ("phone_corner_r_front", "M", "plan view, fitted to the FBX outline"),
         ("phone_corner_r_rear", "M", "all four corners agree"),
