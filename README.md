@@ -22,6 +22,13 @@ power-switch shuttle are unchanged.** What differs is the lid:
   the mass budget moves — see [ADR-0011](docs/adr/0011-phone-swap-pocophone-f1.md).
 
 <p align="center">
+  <img src="docs/img/skladen2-photo.jpg" width="760"
+       alt="The printed Skladen 2 on a desk, open: a Pocophone F1 in the lid showing a terminal, the Jomaa keyboard in the base">
+  <br>
+  <sub>Skladen 2.0.0, printed and assembled.</sub>
+</p>
+
+<p align="center">
   <img src="docs/img/skladen2-open.png" width="760"
        alt="Skladen 2 rendered open at 112 degrees: the phone in the lid showing a terminal, the keyboard in the base">
   <br>
@@ -35,7 +42,11 @@ power-switch shuttle are unchanged.** What differs is the lid:
 
 ## Status
 
-**Modelled and self-checked; not printed yet.** `cad/build.py` builds both shells and
+**Version 2.0.0 is printed, assembled and in use** (photo above); the front bezel in
+`export/bezel/` is a later proposal, modelled and not yet printed. Versions:
+**v1.0.0** is Skladen 1 / Mk3 (Pixel 3a XL), kept at that tag and on branch `v1`;
+**v2.0.0** is this design with the phone held by tape; **2.1** adds the clip-on bezel.
+`cad/build.py` builds both shells and
 passes every check: one solid per part, no interference closed or through 0-180 deg,
 the hinge bolts reachable, the power-switch shuttle clear, and a plug's path out of
 the phone's USB-C and headphone jack unobstructed. What it cannot check is the
@@ -47,7 +58,8 @@ The mass budget N4 is raised from 400 to 420 g (estimate ~403 g; owner-approved,
 [ADR-0011](docs/adr/0011-phone-swap-pocophone-f1.md)).
 
 Mk3's printed results (the hinge coupons and their two defects, the first full
-print) are inherited lessons, not results for this build.
+print) are inherited lessons. Skladen 2.0.0 itself has since been printed; the
+numbers below are still the model's, not measurements of that print.
 
 | | Mk3 | Skladen 2 |
 |---|---|---|
