@@ -66,7 +66,21 @@ print) are inherited lessons, not results for this build.
 | [parameters.md](docs/parameters.md) | Every driving dimension, generated from `cad/params.py` |
 | [analysis/](docs/analysis/) | Thickness, balance and clamshell geometry — **Mk3's**, kept as written |
 | [plan.md](docs/plan.md) | Phases and risks — Mk3's |
-| [adr/](docs/adr/README.md) | Eleven design decisions; 0001-0010 are Mk3's |
+| [adr/](docs/adr/README.md) | Thirteen design decisions; 0001-0010 are Mk3's, 0012-0013 are proposals |
+| [sourcing.md](docs/sourcing.md) | Links: the Reddit build that prompted 0012/0013, same-OEM keyboard candidates, what to measure |
+
+## Proposed, modelled, not printed
+
+Two ideas from a Reddit build of a Boox Palma, written up as proposals:
+
+- **A clip-on front frame instead of tape** ([ADR-0012](docs/adr/0012-removable-front-bezel.md)):
+  0.8 mm plate over the whole lid front with a screen window and a cut-out over the phone's
+  buttons, ten snap clips, no screws, and the lid's ends hollowed. Closed height stays 24.29.
+  Slicer masses: lid 56.0 g, frame 6.35 g, base 56.5 g; tipping margin 1.154 at 150 deg and
+  1.000 at 180 deg. In `export/bezel/`; `export/device/` is untouched.
+- **A short USB-C extender left in the phone** ([ADR-0013](docs/adr/0013-usbc-extender.md)):
+  it takes the cable's wear instead of the phone's port. The lid's USB-C slot is deepened to
+  9.0 mm; the adapter's size (width <= 11.5, length ~28) is in the ADR.
 
 ## Findings inherited from Mk3
 
@@ -98,6 +112,10 @@ export/plainnut/  base for a plain DIN 934 nut + threadlocker; lid from device/
 export/coupon21/  hinge-station coupons; the base's also carries the switch slot
 export/coupon-phone/  the lid's left end: jack slot, camera cutout, button window and
                   pocket corner, to try the real phone in before printing the lid
+export/bezel/     proposed: lid for the clip-on frame (hollow ends, no tape) and the frame
+                  itself, plus a flat STL of the frame for printing (ADR-0012). The lid with
+                  the logo comes as a two-colour Bambu project, `...-logo-petg.3mf`,
+                  refilled from `cad/templates/` (see ADR-0012)
 export/switch/    shuttle that works the keyboard's power switch from the rear face,
                   three finger lengths by five stem lengths: print the set, keep what works
 export/logo/      Mitya Computer logo: lid-logo (recessed) + the green inlay

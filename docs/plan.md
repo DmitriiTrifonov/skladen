@@ -53,6 +53,9 @@ Nothing in CAD should start before these exist. Each unblocks a specific ADR.
 | ~~0.8~~ | Superseded — the phone is taped in, as Mk2's was, so there are no retention lips to size | — |
 | 0.9 | Check the phone's magnetometer against a loose magnet at ~8 mm | ADR-0009 Option B |
 | ~~0.10~~ | Superseded — Mk2's button window measured off its STL and transferred; same phone, same orientation, centred in X in both | — |
+| 0.12 | Buy two short USB-C male-to-female extenders (straight and right-angle); caliper their bodies and compare charging current against the bare cable on a power meter | [ADR-0013](adr/0013-usbc-extender.md), sizes the lid's USB-C slot |
+| 0.13 | Measure how much of the Pocophone's front glass a retaining lip may overlap, and its edge radius (revives the superseded 0.8) | [ADR-0012](adr/0012-removable-front-bezel.md) |
+| ~~0.14~~ | Done 2026-10-17 — the ring is 1.7 g, the variant lid + ring gives 1.151 at 150 deg and **0.997 at 180 deg**; see [ADR-0012](adr/0012-removable-front-bezel.md) | — |
 | 0.11 | Look at how Mk2's lid treats its top edge around the buttons — relieved, or continuous | ADR-0004; confirms Mk2's no-accidental-press evidence transfers |
 
 
@@ -129,6 +132,15 @@ and of play accumulating across two bolted interfaces.
 Mitigated by printing the knuckle section both ways in coupon 2.2 and loading
 both to failure.
 
+### R7 — a removable bezel spends mass the balance does not have
+
+Proposed in [ADR-0012](adr/0012-removable-front-bezel.md). Thickness can be held at
+24.29 by letting the lip replace the tape's 1.0 mm, but the ring sits high in the lid
+and the 180 deg margin was 1.002. Task 0.14 is done: modelled, the ring is only 1.7 g,
+but with the tape gap gone the lid's ends are heavier and the margin lands at **0.997**.
+The remedy is lightening the lid's end blocks or a steel strip under the base, not a
+thinner lip. Open until the owner chooses.
+
 ### R5 — single-point measurements
 
 Keycap protrusion (1.82) and the bottom-rim recess (<1 mm) were each measured at
@@ -144,6 +156,9 @@ them have to exist before Phase 3.
 | Local gussets under the hinge stations | The base's rear pocket wall is 12.54 tall at 1.6 thick and takes point loads ([ADR-0005](adr/0005-hinge-mechanism.md)) |
 | Where the opening grip goes | Mk2 had no accidental-press problem with the same layout, so this is a styling choice rather than a fix |
 | Felt liner, now optional | No longer sets the keycap gap — the base's rim does. Worth having as screen protection |
+| Steel strip under the base, **deferred** | Only buys margin at 180 deg (1.000 on slicer masses; 150 deg is 1.154). About 100 x 12 x 0.8 mm (7.5 g) taped between the front feet, as far forward as it goes, and thinner than the bumpons stand proud (their height minus the 0.4 recess). Gives ~1.06 at 180 deg. Take it up if the lid is ever used laid flat back, or if the printed lid comes out heavier than 62 g with its frame — see [ADR-0012](adr/0012-removable-front-bezel.md) |
+| Lid lightening, **deferred** | The other way to buy margin at 180 deg. Lid + frame must print at 62.3 g or less; they are 62.4 g (56.02 + 6.35). Each gram off adds ~0.3% there: -3 g gives 1.009. Candidates: lower sparse infill, fewer wall loops in the hollow ends, a thinner outer wall than 1.6. Costs nothing in CAD |
+| Steel in the base instead of under it, **deferred** | A 100 x 12 x 0.5-0.6 mm plate (4.7-5.7 g, ~+4% at 180 deg) between the keyboard and the floor. Free in height only two ways: in the keyboard's bottom rim recess (depth unmeasured, < 1.0, needs >= 0.7; it is also where [ADR-0008](adr/0008-base-floor.md) Option E lives, so it is one or the other), or in a 0.6 pocket in the floor's top face, flush (a CAD change to the base; leaves 0.6 of plastic under it). Raw, under the keyboard, it adds its thickness to the closed height and to the walls. Keep it clear of the keyboard's board: steel can detune the Bluetooth antenna, and where that is is not known |
 | Styling of the exposed tail | [clamshell-geometry.md](analysis/clamshell-geometry.md) makes it an exterior surface; better decided than discovered |
 
 ## Phase 1 — decide
@@ -167,6 +182,7 @@ Small test prints, each answering one question.
 | 2.2 | Printed two-station knuckle section with M3 bolts and compliant washers | What torque does it actually produce, measured with a spring scale? Is it adjustable by feel? How much is lost over 100 cycles? Does it rack? |
 | 2.3 | Lid pocket corner, full thickness | Does the phone seat and stay in? Does the camera cutout clear the bump? Can the phone be pushed back out? |
 | 2.4 | Base pocket, full 193 x 86 footprint but short, printed at both 1.2 and 0.8+ribs | Does the keyboard seat and stay in? Does the floor flex under typing? Is the 0.8 ribbed floor sound (scenario A-thin)? |
+| 2.3b | Lid right-end coupon with the retaining ring and the USB-C slot, phone and adapter in place (extends the phone-fit coupon in `export/coupon-phone/`) | Does the lip hold the phone without touching the keycaps? Do snap tabs survive 50 cycles? Does a real cable plug into the adapter with the lid shut? |
 | 2.5 | Weigh 2.3 and 2.4, extrapolate to full shells | Replaces the `E`-confidence masses in the balance analysis (R3) |
 
 Re-run the balance numbers after 2.5. If they move materially, revisit ADR-0003
