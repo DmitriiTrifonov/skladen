@@ -213,7 +213,7 @@ def main():
         out.append("Nothing.")
     out.append("")
 
-    OUT.write_text("\n".join(out))
+    OUT.write_text("\n".join(out), encoding="utf-8")
     print(f"wrote {OUT.relative_to(Path.cwd())}  ({len(out)} lines)")
 
 

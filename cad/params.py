@@ -184,9 +184,52 @@ phone_jack_cut_h = 8.0    # along Z, centred on the phone's mid-plane, open on t
 # that edge: the FBX port sits at X -4 to +4 about the centre.
 phone_usbc_centred = True
 phone_usbc_cut_w = 12.0  # along Y, sized for a cable overmould not just the plug
-phone_usbc_cut_h = 7.0   # along Z: sets the FLOOR side only - the slot is open
-                         # to the screen side, so 3.5 below the port centre is
-                         # the one limit left on overmould thickness
+phone_usbc_cut_h = 9.0   # along Z: sets the FLOOR side only - the slot is open
+                         # to the screen side, so 4.5 below the port centre is
+                         # the one limit left on overmould thickness. Was 7.0
+                         # (3.5): a plug had to be worked in at an angle. 4.5
+                         # still leaves 2.3 of the lid's rear skin below the slot.
+
+# --- removable front bezel (ADR-0012, a separate export) ---------------------
+# A plate over the WHOLE front of the lid (as in the Reddit build), with a window
+# for the screen, instead of tape. It lies flush with the lid's face; the lid's
+# own face layer is gone under it and the phone sits against the rear wall, so the
+# tape's 1.0 becomes the plate's 0.8 plus 0.2 of play and the closed height does
+# not change. Held by snap clips - no screws. NOT PRINTED: every number here is a
+# first guess except the thickness, which falls out of the stack.
+bezel_play = 0.20        # plate's underside to the phone's glass
+bezel_t = pocket_z - phone_z - bezel_play   # 0.80, flush with the rim plane
+bezel_phone_off = pocket_z - phone_z        # phone's glass sits this far behind the face
+bezel_gap = 0.10         # plate to the lid's walls, per side
+bezel_y_end = 84.0       # the plate stops here; the hinge reliefs start at ~86.5
+# Overlap of the glass. The F1's side bezels are ~3.6 (spec sheet, estimated), the
+# ends carry the earpiece and camera and are larger; task 0.13 measures both.
+bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
+bezel_overlap_end = 3.00    # at the short ends
+bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
+
+# Snap clips: an arm standing off the plate's back, with a barb at its tip that
+# drops into a recess in the lid's wall. Arm 1.0 thick, 10 wide; the wall slot is
+# 0.2 looser each side. Front/rear clips are in the front and rear walls (barb
+# outward at the front, inward at the rear); end clips stand in the hollow ends
+# and catch the outer wall's inner face. Printed standing up they bend across
+# the layers: the first thing to break (risk R8).
+clip_w = 10.0
+clip_t = 1.0
+clip_arm_top = 7.0       # tip, from the face plane
+clip_barb = 0.5          # how far the barb stands out
+clip_slot_clr = 0.15
+clip_front_xs = (-66.0, 16.0, 56.0)   # clear of the button window, X -52.5 to -7.5
+clip_rear_xs = (-40.0, 0.0, 40.0)
+clip_end_ys = (8.0, 70.0)
+pry_notch = (30.0, 42.0)  # X range of the thumbnail notch under the front edge
+
+# Printed masses from the slicer (Bambu Studio, A1, 0.4 nozzle, 0.2 layers, 20% sparse
+# infill, 4 wall loops, supports on), model only: brim and supports taken off. These
+# replace the 0.63 / 0.69 / 0.85 factors for the bezel variant. Measured 2026-10-17.
+slice_g_lid_bezel = 56.02   # 57.95 less 1.93 brim
+slice_g_frame = 6.35        # 8.21 less 1.86 brim
+slice_g_base = 56.46        # 59.24 less 2.75 brim and 0.03 support
 
 # --- logo -----------------------------------------------------------------
 # The Mitya Computer dog, inlaid flush in the lid's outer face as one green

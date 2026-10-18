@@ -100,7 +100,7 @@ from others here · `A` assumed, not yet verified
 | `cam_from_edge0` | 30.71 | C | referenced to the phone's own button-side edge |
 | `cam_from_edge1` | 44.65 | C |  |
 | `phone_usbc_cut_w` | 12 | D | phone's own port, lid's right wall |
-| `phone_usbc_cut_h` | 7 | D |  |
+| `phone_usbc_cut_h` | 9 | D |  |
 | `phone_jack_from_edge` | 15.85 | M | 3.5 mm jack, lid's left wall; from the button-side edge |
 | `phone_jack_cut_w` | 9 | D | slot open to the screen side, sized for a plug's overmould |
 | `phone_jack_cut_h` | 8 | D | centred on the phone's mid-plane (assumed) |
