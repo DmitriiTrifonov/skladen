@@ -46,12 +46,168 @@ def save(part, sub, name, step=True):
     d = m.OUT / sub
     d.mkdir(parents=True, exist_ok=True)
     if step:
-        export_step(part, str(d / f"mk3-{name}.step"))
-    export_stl(part, str(d / f"mk3-{name}.stl"))
-    bad = open_edges(d / f"mk3-{name}.stl")
+        export_step(part, str(d / f"skladen2-{name}.step"))
+    export_stl(part, str(d / f"skladen2-{name}.stl"))
+    bad = open_edges(d / f"skladen2-{name}.stl")
     if bad:
-        print(f"  mk3-{name}.stl: {bad} non-manifold edges")
-        FAIL.append(f"mk3-{name}.stl mesh")
+        print(f"  skladen2-{name}.stl: {bad} non-manifold edges")
+        FAIL.append(f"skladen2-{name}.stl mesh")
+
+
+def bezel_variant(base):
+    """ADR-0012: the lid with no tape, and the ring that holds the phone instead.
+
+    A separate export; device/ is untouched. Same base, same hinge, same closed
+    height - the ring replaces the tape's 1.0 rather than adding to the stack.
+    """
+    from math import atan, degrees
+    from build123d import Rot
+
+    _, lid_b = m.build(bezel=True)
+    ring = m.bezel_ring()
+    print(f"\nbezel variant   frame {p.bezel_t:.2f} thick, {p.bezel_overlap_side:.1f} over the"
+          f" long edges, {p.bezel_overlap_end:.1f} over the ends")
+
+    for name, part in (("lid", lid_b), ("ring", ring)):
+        n = len(part.solids())
+        print(f"  {name + ' solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+        if n != 1:
+            FAIL.append(f"bezel {name} is {n} solids")
+
+    closed = (base + lid_b).bounding_box().size.Z
+    check("closed height", closed, p.closed_h_rear)
+    clash = (base & lid_b).volume + (base & ring).volume
+    print(f"  {'closed interference':32s} {clash:8.3f} mm3  want 0.00   {'ok' if clash < 1.0 else 'COLLISION'}")
+    if clash >= 1.0:
+        FAIL.append("bezel closed interference")
+
+    # The ring seats in the lid without touching it, and clears the phone's glass
+    # by the play - and still covers it, which is its whole job.
+    seat = (ring & lid_b).volume
+    print(f"  {'ring vs lid':32s} {seat:8.3f} mm3  want 0.00   {'ok' if seat < 0.01 else 'COLLISION'}")
+    if seat >= 0.01:
+        FAIL.append("bezel ring collides with lid")
+    ph_y0 = p.phone_front_wall + p.clr_phone
+    phone = m._slab(-p.phone_x / 2, p.phone_x / 2, ph_y0, ph_y0 + p.phone_y,
+                    p.bezel_phone_off, p.pocket_z) & m.rounded_outline(
+        p.phone_x, p.phone_y, ph_y0, p.phone_corner_r_front, p.phone_corner_r_rear)
+    hit = (ring & phone).volume
+    print(f"  {'ring vs phone':32s} {hit:8.3f} mm3  want 0.00   {'ok' if hit < 0.01 else 'PRESSES'}")
+    if hit >= 0.01:
+        FAIL.append("bezel ring presses the phone")
+    covered = (m._slab(-p.phone_x / 2, p.phone_x / 2, ph_y0, ph_y0 + p.phone_y, 0.0, p.bezel_t)
+               & m.rounded_outline(p.phone_x, p.phone_y, ph_y0,
+                                   p.phone_corner_r_front, p.phone_corner_r_rear)
+               & ring).volume
+    print(f"  {'ring over the phone face':32s} {covered:8.1f} mm3  want > 0   "
+          f"{'ok' if covered > 1.0 else 'DOES NOT COVER'}")
+    if covered <= 1.0:
+        FAIL.append("bezel does not cover the phone")
+
+    # Wall left under the slots: the phone sits 1.0 deeper, and so do they.
+    skin = p.lid_t - (p.bezel_phone_off + p.phone_z / 2 + p.phone_usbc_cut_h / 2)
+    print(f"  {'rear skin left under the USB-C':32s} {skin:8.2f} mm   want >= 1.20  "
+          f"{'ok' if skin >= 1.2 else 'THIN'}")
+    if skin < 1.2:
+        FAIL.append("bezel USB-C slot too deep")
+
+    # Real slicer masses, not factors: lid, frame and base as printed. 150 deg is the
+    # design target (ADR-0003) and what has to pass; 180 deg, the lid laid flat back, is
+    # the theoretical worst case and is reported, not enforced.
+    lid_print = p.slice_g_lid_bezel + p.slice_g_frame
+    r_lid = p.base_depth_to_axis - (p.phone_front_wall + (p.phone_y + 2 * p.clr_phone) / 2)
+    s_eff = p.foot_y_rear + p.foot_dia / 2 - p.base_depth_to_axis
+    L, B = lid_print + p.phone_mass, p.slice_g_base + p.kbd_mass
+    restoring = B * p.d_base + s_eff * (B + L)
+    m150 = restoring / (L * r_lid * sin(radians(60)))
+    m180 = restoring / (L * r_lid)
+    print(f"  {'frame mass (model)':32s} {ring.volume * p.mat_density:8.1f} g   slicer {p.slice_g_frame:.2f} g")
+    print(f"  {'tipping, slicer masses':32s} lid + frame {lid_print:.1f} g, base {p.slice_g_base:.1f} g   "
+          f"margin @150 {m150:.3f} {'ok' if m150 >= 1 else 'TIPS'}   @180 {m180:.3f} (not enforced)")
+    if m150 < 1:
+        FAIL.append("tipping at 150 deg (bezel)")
+
+    save(lid_b, "bezel", "lid-bezel")
+
+    # The same logo recess as the device lid. The rear wall it is cut into is the
+    # same, so the inlays in export/logo/ fit this lid too.
+    inlays = logo.inlays()
+    recess = None
+    for part in inlays.values():
+        recess = part if recess is None else recess + part
+    lid_b_logo = lid_b - recess
+    n = len(lid_b_logo.solids())
+    print(f"  {'logo lid solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+    if n != 1:
+        FAIL.append("bezel logo lid is not one solid")
+    check("logo recess vs inlays", (lid_b & recess).volume,
+          sum(part.volume for part in inlays.values()), tol=0.05, unit="mm3")
+    clash = (lid_b_logo & ring).volume
+    print(f"  {'logo lid vs frame':32s} {clash:8.3f} mm3  want 0.00   {'ok' if clash < 0.01 else 'COLLISION'}")
+    if clash >= 0.01:
+        FAIL.append("bezel logo lid meets the frame")
+    save(lid_b_logo, "bezel", "lid-bezel-logo")
+
+    # Both bodies in one file for a two-filament print: STEP carries each as a
+    # separate coloured solid, 3MF as two objects; the slicer takes them as one
+    # multi-part object and the colour goes to a filament.
+    from build123d import Color, Compound, Mesher
+    green = None
+    for part in inlays.values():
+        green = part if green is None else green + part
+    body = lid_b_logo.moved(Pos(0, 0, 0))
+    body.color, body.label = Color(0.18, 0.34, 0.82), "lid"
+    green = green.moved(Pos(0, 0, 0))
+    green.color, green.label = Color(0.15, 0.70, 0.35), "logo-inlay"
+    d2 = m.OUT / "bezel"
+    export_step(Compound(label="skladen2-lid-bezel-logo-2color", children=[body, green]),
+                str(d2 / "skladen2-lid-bezel-logo-2color.step"))
+    # One assembly object of two mesh parts and a single build item: what Orca and
+    # Bambu take as one multi-part object. (build123d's Mesher writes two loose items.)
+    import zipfile
+    f3 = d2 / "skladen2-lid-bezel-logo-2color.3mf"
+    meshes = []
+    for shp in (lid_b_logo, green):
+        vs, ts = shp.tessellate(0.01, 0.1)
+        meshes.append(([(v.X, v.Y, v.Z) for v in vs], ts))
+    res = []
+    for i, ((vs, ts), name) in enumerate(zip(meshes, ("lid", "logo-inlay")), 1):
+        v = "".join(f'<vertex x="{x:.5f}" y="{y:.5f}" z="{z:.5f}"/>' for x, y, z in vs)
+        t = "".join(f'<triangle v1="{a}" v2="{b}" v3="{c}"/>' for a, b, c in ts)
+        res.append(f'<object id="{i}" name="{name}" type="model"><mesh><vertices>{v}'
+                   f'</vertices><triangles>{t}</triangles></mesh></object>')
+    res.append('<object id="3" name="skladen2-lid-bezel-logo" type="model"><components>'
+               '<component objectid="1"/><component objectid="2"/></components></object>')
+    xml = ('<?xml version="1.0" encoding="UTF-8"?><model unit="millimeter" '
+           'xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">'
+           f'<resources>{"".join(res)}</resources><build><item objectid="3"/></build></model>')
+    with zipfile.ZipFile(f3, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types '
+                   'xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+                   '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+                   '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>')
+        z.writestr("_rels/.rels", '<?xml version="1.0" encoding="UTF-8"?><Relationships '
+                   'xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                   '<Relationship Target="/3D/3dmodel.model" Id="rel0" '
+                   'Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>')
+        z.writestr("3D/3dmodel.model", xml)
+    back = Mesher().read(str(f3))
+    print(f"  {'2-colour 3mf, parts read back':32s} {len(back):8d}      want 2      "
+          f"{'ok' if len(back) == 2 else 'WRONG'}")
+    if len(back) != 2:
+        FAIL.append("bezel 2-colour 3mf")
+    import bambu_project
+    off = bambu_project.write(lid_b_logo, green, d2 / "skladen2-lid-bezel-logo-petg.3mf")
+    print(f"  {'slicer project, inlay moved by':32s} {off:8.3f} mm   (template had it off)")
+    save(ring, "bezel", "bezel")
+    # The face is tilted with the keyboard's wedge, which a printer would see as a
+    # ramp under a 0.8 part. Laid flat, face down, for printing.
+    tilt = degrees(atan((p.rim_rear - p.rim_front) / p.base_depth_to_axis))
+    flat = Rot(X=-tilt) * ring
+    flat = Pos(0, 0, -flat.bounding_box().min.Z) * flat
+    check("flat frame height", flat.bounding_box().size.Z, p.clip_arm_top, tol=0.35)
+    save(flat, "bezel", "bezel-flat", step=False)
+    print(f"  exported to {m.OUT / 'bezel'}")
 
 
 def main():
@@ -112,6 +268,26 @@ def main():
     if clash >= 1.0:
         FAIL.append("closed interference")
 
+    # --- phone ports -------------------------------------------------------
+    # A plug's axis must run from the phone's port out through the lid's end
+    # without touching the lid or the base, closed. The jack's is new here.
+    print("\nphone ports   (rod from the port out through the lid's end, closed)")
+    slope = (p.rim_rear - p.rim_front) / p.base_depth_to_axis
+    py0 = p.phone_front_wall + p.clr_phone
+    ph_end = p.phone_x / 2 + p.clr_phone + p.tape_t
+    for label, sign, y, d in (
+            ("headphone jack, -X", -1, py0 + p.phone_jack_from_edge, 3.5),
+            ("USB-C, +X", 1, p.phone_front_wall + p.clr_phone + p.phone_y / 2, None)):
+        z = p.rim_front + slope * y + p.phone_z / 2
+        length, xc = p.lid_x / 2 - ph_end + 4.0, sign * (ph_end + p.lid_x / 2 + 4.0) / 2
+        # The jack's tip is round; the USB-C receptacle is a 8.3 x 2.6 slot.
+        rod = (m.x_cyl(d, length, xc, y, z) if d
+               else m.box_between(xc - length / 2, xc + length / 2, y - 4.15, y + 4.15, z - 1.3, z + 1.3))
+        hit = (rod & lid).volume + (rod & base).volume
+        print(f"  {label:32s} {hit:8.3f} mm3  want 0.00   {'ok' if hit < 0.01 else 'BLOCKED'}")
+        if hit >= 0.01:
+            FAIL.append(f"{label} blocked")
+
     # --- mass and balance, from the geometry ---
     # Solid is the 100%-infill upper bound; printed is a rough lower bound at
     # typical settings. The real figure is whatever the slicer says.
@@ -126,8 +302,8 @@ def main():
     print(f"  base shell            {base_solid:7.1f}  {base_print:9.1f} g")
     tot_s = lid_solid + base_solid + p.phone_mass + p.kbd_mass
     tot_p = lid_print + base_print + p.phone_mass + p.kbd_mass
-    print(f"  assembly              {tot_s:7.1f}  {tot_p:9.1f} g    N4 budget 400")
-    if tot_p > 400:
+    print(f"  assembly              {tot_s:7.1f}  {tot_p:9.1f} g    N4 budget {p.N4_BUDGET:.0f}")
+    if tot_p > p.N4_BUDGET:
         print("  OVER BUDGET even at printed estimate"); FAIL.append("N4 mass")
 
     # The contact line is where the REAR FEET touch, not the tail's rear edge.
@@ -239,7 +415,7 @@ def main():
     # One per stem length, to print as a set and pick from. Moved to the origin
     # by whole millimetres: an exact offset leaves vertices a rounding error
     # either side of zero, and the STL opens along them.
-    for f in (m.OUT / "switch").rglob("mk3-switch-shuttle*"):
+    for f in (m.OUT / "switch").rglob("skladen2-switch-shuttle*"):
         f.unlink()
     for d in (m.OUT / "switch").glob("finger*"):
         d.rmdir()
@@ -255,6 +431,15 @@ def main():
 
     cb, cl = m.coupon(base, lid)
     print(f"\ncoupon 2.1   base {cb.volume/1000:.1f} cm3   lid {cl.volume/1000:.1f} cm3")
+
+    # Phone-fit coupon: the lid's left end only, with everything new in Skladen 2.
+    pc = m.phone_coupon(lid)
+    n = len(pc.solids())
+    print(f"phone coupon   lid {pc.volume/1000:.1f} cm3   {pc.volume*p.mat_density:.0f} g solid   "
+          f"{'one solid' if n == 1 else f'{n} SOLIDS'}")
+    if n != 1:
+        FAIL.append("phone coupon is not one solid")
+    save(pc, "coupon-phone", "coupon-phone-lid")
 
     for sub, name, part in (("device", "base", base), ("device", "lid", lid),
                             ("coupon21", "coupon21-base", cb),
@@ -279,7 +464,10 @@ def main():
     # filled means an inlay pokes out of the lid - past its face, or through the
     # rear wall into the phone pocket or the camera cutout.
     filled = sum(part.volume for part in inlays.values())
-    check("recess taken vs inlays", lid.volume - lid_logo.volume, filled, tol=0.05, unit="mm3")
+    # Measured as what the lid and the recess share, not as the difference of two
+    # whole-lid volumes: those carry ~0.05 mm3 of B-rep rounding on 80 cm3, which
+    # sat just under the tolerance on Mk3 and just over it here.
+    check("recess taken vs inlays", (lid & recess).volume, filled, tol=0.05, unit="mm3")
     names = list(inlays)
     for i, a in enumerate(names):
         for b in names[i + 1:]:
@@ -310,6 +498,8 @@ def main():
     for name, part in (("base-plainnut", base_pn), ("coupon21-base-plainnut", cb_pn)):
         save(part, "plainnut", name)
     print(f"  exported to {m.OUT / 'plainnut'}")
+
+    bezel_variant(base)
 
     # Keep docs/parameters.md from drifting: regenerate it every build.
     import gen_params_doc

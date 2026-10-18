@@ -1,5 +1,7 @@
 # ADR-0010: Two hinge stations, not three
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](0011-phone-swap-pocophone-f1.md).
+
 - **Status:** Proposed — the span stiffness of two stations is what the first article decides
 - **Date:** 2026-09-22
 - **Decides:** how many stations the hinge has, and how a bolt head reaches its pocket

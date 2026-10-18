@@ -80,27 +80,30 @@ from others here · `A` assumed, not yet verified
 | `sw_stem_proud` | 0.5, 1, 1.5, 2, 3 | D | stem's end out of the rear face; one print per value |
 
 
-## Phone — Pixel 3a XL
+## Phone — Xiaomi Pocophone F1
 
 | Name | Value | St | Note |
 |---|---|---|---|
-| `phone_x` | 160.1 | S | long axis, horizontal in the lid |
-| `phone_y` | 76.1 | S |  |
-| `phone_z` | 8.2 | S | body, excluding the camera bump |
-| `phone_mass` | 167 | S |  |
-| `phone_corner_r_front` | 8.86 | M | plan view, button edge; from Mk2's pocket sketch |
-| `phone_corner_r_rear` | 10.4 | M | plan view, hinge edge |
+| `phone_x` | 155.5 | M | long axis, horizontal in the lid; from refs/fun.fbx |
+| `phone_y` | 75.3 | M | from refs/fun.fbx; agrees with the spec sheet |
+| `phone_z` | 9.25 | M | caliper 9.25; spec says 8.8 and refs/fun.fbx 7.9 |
+| `phone_mass` | 182 | S |  |
+| `phone_corner_r_front` | 9.5 | M | plan view, fitted to the FBX outline |
+| `phone_corner_r_rear` | 9.5 | M | all four corners agree |
 | `phone_front_wall` | 4 | D | biased forward so the buttons are reachable |
 | `tape_t` | 1 | D | double-sided tape, on the pocket's FLOOR |
-| `pocket_z` | 9.2 | C | phone_z + tape_t |
-| `button_win_x0` | -48.6 | M | button window, from Mk2's STL |
-| `button_win_x1` | 5 | M |  |
-| `cam_x0` | -69.8 | M | camera cutout, from Mk2's STL |
-| `cam_x1` | -58.6 | M |  |
-| `cam_from_edge0` | 8.85 | C | referenced to the phone's own button-side edge |
-| `cam_from_edge1` | 32.05 | C |  |
+| `pocket_z` | 10.25 | C | phone_z + tape_t |
+| `button_win_x0` | -52.5 | M | button window; buttons span X -49.9 to -10.0 |
+| `button_win_x1` | -7.5 | M |  |
+| `cam_x0` | -64.2 | M | camera plateau in the FBX, plus cam_margin |
+| `cam_x1` | -30.6 | M |  |
+| `cam_from_edge0` | 30.71 | C | referenced to the phone's own button-side edge |
+| `cam_from_edge1` | 44.65 | C |  |
 | `phone_usbc_cut_w` | 12 | D | phone's own port, lid's right wall |
-| `phone_usbc_cut_h` | 7 | D |  |
+| `phone_usbc_cut_h` | 9 | D |  |
+| `phone_jack_from_edge` | 15.85 | M | 3.5 mm jack, lid's left wall; from the button-side edge |
+| `phone_jack_cut_w` | 9 | D | slot open to the screen side, sized for a plug's overmould |
+| `phone_jack_cut_h` | 8 | D | centred on the phone's mid-plane (assumed) |
 
 
 ## Materials and clearances
@@ -139,8 +142,8 @@ from others here · `A` assumed, not yet verified
 | `lid_rear_wall` | 1.2 | D | ADR-0004, closed pocket |
 | `lid_x` | 198.4 | C | matches base_x |
 | `lid_y` | 90.05 | C | ends at the hinge axis |
-| `lid_t` | 10.4 | C | lid_rear_wall + pocket_z |
-| `lid_rear_radius` | 5.2 | C | half the lid thickness |
+| `lid_t` | 11.45 | C | lid_rear_wall + pocket_z |
+| `lid_rear_radius` | 5.725 | C | half the lid thickness |
 
 
 ## Logo — the Mitya Computer dog, inlaid in the lid's outer face
@@ -149,7 +152,7 @@ from others here · `A` assumed, not yet verified
 |---|---|---|---|
 | `logo_height` | 40 | D | ear tip to paws |
 | `logo_depth` | 0.6 | D | half the rear wall; three 0.2 layers |
-| `logo_centre_y` | 42.35 | C | centred over the phone |
+| `logo_centre_y` | 41.95 | C | centred over the phone |
 | `logo_reads_open` | True | D | upright to someone facing the open lid |
 
 
@@ -161,8 +164,8 @@ from others here · `A` assumed, not yet verified
 | `parting_front` | 8.56 | C |  |
 | `rim_rear` | 12.84 | C | where the lid lands |
 | `rim_front` | 8.86 | C |  |
-| `closed_h_rear` | 23.24 | C | **the N1 number** |
-| `closed_h_front` | 19.26 | C |  |
+| `closed_h_rear` | 24.29 | C | **the N1 number** |
+| `closed_h_front` | 20.31 | C |  |
 | `close_tilt` | 2.5307 | C | the lid shuts nose-down onto the wedge |
 
 
@@ -171,15 +174,15 @@ from others here · `A` assumed, not yet verified
 | Name | Value | St | Note |
 |---|---|---|---|
 | `hinge_axis_y` | 90.05 | C |  |
-| `hinge_axis_z` | 18.04 | C | lid mid-thickness, NOT the parting plane |
-| `hinge_torque_req` | 0.091 | C | N*m at 90 deg |
+| `hinge_axis_z` | 18.565 | C | lid mid-thickness, NOT the parting plane |
+| `hinge_torque_req` | 0.118 | C | N*m at 90 deg |
 | `knuckle_od` | 9 | D | capped by the lid's thickness at the axis |
 | `knuckle_id` | 3.5 | D | M3 clearance |
 | `knuckle_clr` | 0.2 | D | per face |
 | `station_outer_w` | 6 | D | each base knuckle |
 | `station_inner_w` | 5.8 | D | the lid knuckle |
 | `station_w` | 18.2 | C |  |
-| `station_relief_r` | 6.2 | C | lid_rear_radius + 1.0, so a post can exist |
+| `station_relief_r` | 6.725 | C | lid_rear_radius + 1.0, so a post can exist |
 | `post_half_y` | 2.5 | D |  |
 | `nut_af` | 5.7 | D | M3 nut across flats |
 | `nut_depth` | 4.3 | D |  |
@@ -205,4 +208,4 @@ At X = -87.5, 87.5, span 175.0 mm between the outermost.
 | Parameter | Waiting on |
 |---|---|
 | `kbd_rim_recess` | task 0.4 |
-| `phone_camera_bump` | task 0.6 |
+| `phone_jack_z` | the FBX has no usable jack opening; assumed at mid-thickness |

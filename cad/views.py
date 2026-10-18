@@ -1,4 +1,4 @@
-"""Assembled views of Mk3, as SVG line drawings with hidden lines removed."""
+"""Assembled views of Skladen 2, as SVG line drawings with hidden lines removed."""
 
 import sys
 from pathlib import Path

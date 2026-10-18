@@ -1,5 +1,7 @@
 # ADR-0005: Hinge mechanism
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](0011-phone-swap-pocophone-f1.md).
+
 - **Status:** Proposed
 - **Date:** 2026-09-20
 - **Decides:** F3, F8; sets the rear-edge geometry that ADR-0003 and ADR-0006

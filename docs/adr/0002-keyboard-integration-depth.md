@@ -1,5 +1,7 @@
 # ADR-0002: How deeply to integrate the keyboard
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](0011-phone-swap-pocophone-f1.md).
+
 - **Status:** Accepted
 - **Date:** 2026-09-20
 - **Decides:** N1 (closed thickness). This is the highest-leverage decision in

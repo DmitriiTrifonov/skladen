@@ -1,5 +1,7 @@
 # Thickness budget
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](../adr/0011-phone-swap-pocophone-f1.md).
+
 Goal: understand what actually sets the closed height, so the design effort goes
 where the millimetres are.
 

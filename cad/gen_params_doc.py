@@ -72,24 +72,27 @@ SECTIONS = [
         ("sw_stem_h", "D", ""),
         ("sw_stem_proud", "D", "stem's end out of the rear face; one print per value"),
     ]),
-    ("Phone — Pixel 3a XL", [
-        ("phone_x", "S", "long axis, horizontal in the lid"),
-        ("phone_y", "S", ""),
-        ("phone_z", "S", "body, excluding the camera bump"),
+    ("Phone — Xiaomi Pocophone F1", [
+        ("phone_x", "M", "long axis, horizontal in the lid; from refs/fun.fbx"),
+        ("phone_y", "M", "from refs/fun.fbx; agrees with the spec sheet"),
+        ("phone_z", "M", "caliper 9.25; spec says 8.8 and refs/fun.fbx 7.9"),
         ("phone_mass", "S", ""),
-        ("phone_corner_r_front", "M", "plan view, button edge; from Mk2's pocket sketch"),
-        ("phone_corner_r_rear", "M", "plan view, hinge edge"),
+        ("phone_corner_r_front", "M", "plan view, fitted to the FBX outline"),
+        ("phone_corner_r_rear", "M", "all four corners agree"),
         ("phone_front_wall", "D", "biased forward so the buttons are reachable"),
         ("tape_t", "D", "double-sided tape, on the pocket's FLOOR"),
         ("pocket_z", "C", "phone_z + tape_t"),
-        ("button_win_x0", "M", "button window, from Mk2's STL"),
+        ("button_win_x0", "M", "button window; buttons span X -49.9 to -10.0"),
         ("button_win_x1", "M", ""),
-        ("cam_x0", "M", "camera cutout, from Mk2's STL"),
+        ("cam_x0", "M", "camera plateau in the FBX, plus cam_margin"),
         ("cam_x1", "M", ""),
         ("cam_from_edge0", "C", "referenced to the phone's own button-side edge"),
         ("cam_from_edge1", "C", ""),
         ("phone_usbc_cut_w", "D", "phone's own port, lid's right wall"),
         ("phone_usbc_cut_h", "D", ""),
+        ("phone_jack_from_edge", "M", "3.5 mm jack, lid's left wall; from the button-side edge"),
+        ("phone_jack_cut_w", "D", "slot open to the screen side, sized for a plug's overmould"),
+        ("phone_jack_cut_h", "D", "centred on the phone's mid-plane (assumed)"),
     ]),
     ("Materials and clearances", [
         ("mat_density", "S", "g/mm3, PETG, SOLID — see the note in params.py"),
@@ -210,7 +213,7 @@ def main():
         out.append("Nothing.")
     out.append("")
 
-    OUT.write_text("\n".join(out))
+    OUT.write_text("\n".join(out), encoding="utf-8")
     print(f"wrote {OUT.relative_to(Path.cwd())}  ({len(out)} lines)")
 
 

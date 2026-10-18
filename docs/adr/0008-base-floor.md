@@ -1,5 +1,7 @@
 # ADR-0008: Base floor
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](0011-phone-swap-pocophone-f1.md).
+
 - **Status:** Accepted
 - **Date:** 2026-09-20
 - **Decides:** F2, and 1.2 mm of N1

@@ -1,4 +1,4 @@
-"""Driving dimensions for Skladen Mk3.
+"""Driving dimensions for Skladen 2 (Xiaomi Pocophone F1).
 
 Mirrors docs/parameters.md, which is the human-readable source of truth.
 Keep the two in step: a number that changes here changes there.
@@ -13,7 +13,7 @@ from math import atan, degrees
 # nothing that matters structurally may depend on one.
 BLOCKED = {
     "kbd_rim_recess": "task 0.4",
-    "phone_camera_bump": "task 0.6",
+    "phone_jack_z": "the FBX has no usable jack opening; assumed at mid-thickness",
 }
 
 # --- 1. keyboard (measured) ----------------------------------------------
@@ -73,15 +73,23 @@ kbd_sw_knob_proud = 0.75     # beyond the rear face; owner reckons nearer 1.0
 kbd_sw_knob_z = 4.25
 kbd_sw_travel = kbd_sw_niche_w - kbd_sw_knob_w - 2 * kbd_sw_knob_end_gap
 
-# --- 2. phone (spec) ------------------------------------------------------
-phone_x = 160.1
-phone_y = 76.1
-phone_z = 8.20
-phone_mass = 167.0
-# Plan-view corner radii, from Mk2's pocket sketch (9.362 / 10.904 at a 0.5
-# gap) less that gap; the Mk2 phone STL's outline agrees. Front = button edge.
-phone_corner_r_front = 8.86
-phone_corner_r_rear = 10.40
+# --- 2. phone (Xiaomi Pocophone F1: refs/fun.fbx, caliper, and spec) -----
+# Plan size and every feature position below were read off refs/fun.fbx (world
+# mm, the model's own scale applied). Its plan outline agrees with the spec
+# sheet, 155.5 x 75.3, to 0.1. Its THICKNESS does not: the file squashes Z by
+# 0.856 and reads 7.9, against the spec's 8.8. The owner's caliper on the real
+# phone, away from the camera block, reads 9.25 (2026-10-06), and that is used.
+phone_x = 155.5   # long axis, horizontal in the lid; top edge toward -X
+phone_y = 75.3    # across the buttons; the button side faces the lid's front
+phone_z = 9.25   # caliper, flat body, excluding the camera block
+phone_camera_bump = 0.47   # caliper: 9.72 over the block less 9.25; the FBX has 1.0
+# The block stands well inside the 1.2 rear wall, so the cutout is a plain
+# through-hole and nothing depends on this number.
+phone_mass = 182.0
+# Plan-view corner radius, fitted to the FBX outline: all four corners agree at
+# about 9.5 (the Pixel's front and rear differed; this phone's do not).
+phone_corner_r_front = 9.50
+phone_corner_r_rear = 9.50
 
 # --- 3. materials and clearances -----------------------------------------
 mat_density = 1.27e-3  # g/mm3, PETG, SOLID
@@ -141,32 +149,87 @@ lid_lip_depth_ASSUMED = 2.50  # task 0.8
 # needed no station reliefs and Mk3's stations do.
 phone_front_wall = 4.00
 
-# Button window, taken from Mk2 rather than measured fresh: same phone, same
-# orientation, centred in X in both lids, so its span transfers directly.
-# One opening over both buttons, as Mk2 has - not two holes.
-button_win_x0, button_win_x1 = -48.60, 5.00
+# Button window. One opening over volume and power together, as Mk2 and Mk3 had.
+# In the FBX the three buttons stand on the +X long side: volume at Y 28.4-49.9
+# from the phone's centre toward its top, power at 10.0-19.8. The phone's top
+# edge is the lid's -X end and the phone is centred on X = 0, so lid X = -Y.
+# Buttons span X -49.9 to -10.0; the window gives each end 2.5 of margin.
+# They stand 0.5 proud of the side, and sit on the phone's mid-plane.
+button_win_x0, button_win_x1 = -52.50, -7.50
 
-# --- camera cutout, also transferred from Mk2 -----------------------------
-# Measured off palmtop_weighted_mk2-top_part.stl. X transfers unchanged since
-# both lids centre the same phone on X=0. Y is referenced to the phone's own
-# button-side edge, because the two lids differ in depth and in how the phone
-# sits in them.
-_mk2_phone_y0 = -38.05          # phone's button-side edge in Mk2's lid
-mk2_cam_x0, mk2_cam_x1 = -69.80, -58.60
-mk2_cam_y0, mk2_cam_y1 = -29.20, -6.00
+# --- camera cutout --------------------------------------------------------
+# The FBX camera plateau, 1.0 proud of the back: X -6.0 to 5.9 across the phone
+# (centred), Y 31.6 to 63.2 toward the top - one tall module over both lenses and
+# the flash. 1.0 of clearance all round. X in the lid is -Y here; the other axis
+# is referenced to the phone's own button-side edge, as before.
+cam_margin = 1.00
+cam_x0, cam_x1 = -63.20 - cam_margin, -31.60 + cam_margin
+_half_w = phone_y / 2          # button-side edge sits at FBX x = +37.65
+cam_from_edge0 = _half_w - 5.94 - cam_margin
+cam_from_edge1 = _half_w + 6.00 + cam_margin
 
-cam_x0, cam_x1 = mk2_cam_x0, mk2_cam_x1
-cam_from_edge0 = mk2_cam_y0 - _mk2_phone_y0   # 8.85
-cam_from_edge1 = mk2_cam_y1 - _mk2_phone_y0   # 32.05
+# --- 3.5 mm headphone jack ------------------------------------------------
+# New in Skladen 2. The jack is in the phone's TOP edge, which is the lid's -X
+# end, 21.8 from the phone's centre toward the button side (the FBX hole spans
+# 20.1-23.5). Like the USB-C it is a slot open to the screen side, so there is no
+# bridge to sag, sized for a plug's overmould rather than the 3.5 tip. The wall
+# is 20 thick, so the plug lies in the slot for most of its length: nothing
+# narrower than 9 will take a typical straight plug.
+phone_jack_from_edge = _half_w - 21.80   # to the jack's centre, from the button-side edge
+phone_jack_cut_w = 9.0    # along Y
+phone_jack_cut_h = 8.0    # along Z, centred on the phone's mid-plane, open on the screen side
 
 # Phone USB-C cutout. Position follows from the fixed orientation (ADR-0004):
-# the phone's bottom edge becomes the lid's RIGHT short edge, +X. Assumed centred
-# along that edge - standard for this phone, but unverified.
-phone_usbc_centred = True  # A
+# the phone's bottom edge becomes the lid's RIGHT short edge, +X. Centred along
+# that edge: the FBX port sits at X -4 to +4 about the centre.
+phone_usbc_centred = True
 phone_usbc_cut_w = 12.0  # along Y, sized for a cable overmould not just the plug
-phone_usbc_cut_h = 7.0   # along Z: sets the FLOOR side only - the slot is open
-                         # to the screen side, so 3.5 below the port centre is
-                         # the one limit left on overmould thickness
+phone_usbc_cut_h = 9.0   # along Z: sets the FLOOR side only - the slot is open
+                         # to the screen side, so 4.5 below the port centre is
+                         # the one limit left on overmould thickness. Was 7.0
+                         # (3.5): a plug had to be worked in at an angle. 4.5
+                         # still leaves 2.3 of the lid's rear skin below the slot.
+
+# --- removable front bezel (ADR-0012, a separate export) ---------------------
+# A plate over the WHOLE front of the lid (as in the Reddit build), with a window
+# for the screen, instead of tape. It lies flush with the lid's face; the lid's
+# own face layer is gone under it and the phone sits against the rear wall, so the
+# tape's 1.0 becomes the plate's 0.8 plus 0.2 of play and the closed height does
+# not change. Held by snap clips - no screws. NOT PRINTED: every number here is a
+# first guess except the thickness, which falls out of the stack.
+bezel_play = 0.20        # plate's underside to the phone's glass
+bezel_t = pocket_z - phone_z - bezel_play   # 0.80, flush with the rim plane
+bezel_phone_off = pocket_z - phone_z        # phone's glass sits this far behind the face
+bezel_gap = 0.10         # plate to the lid's walls, per side
+bezel_y_end = 84.0       # the plate stops here; the hinge reliefs start at ~86.5
+# Overlap of the glass. The F1's side bezels are ~3.6 (spec sheet, estimated), the
+# ends carry the earpiece and camera and are larger; task 0.13 measures both.
+bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
+bezel_overlap_end = 3.00    # at the short ends
+bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
+
+# Snap clips: an arm standing off the plate's back, with a barb at its tip that
+# drops into a recess in the lid's wall. Arm 1.0 thick, 10 wide; the wall slot is
+# 0.2 looser each side. Front/rear clips are in the front and rear walls (barb
+# outward at the front, inward at the rear); end clips stand in the hollow ends
+# and catch the outer wall's inner face. Printed standing up they bend across
+# the layers: the first thing to break (risk R8).
+clip_w = 10.0
+clip_t = 1.0
+clip_arm_top = 7.0       # tip, from the face plane
+clip_barb = 0.5          # how far the barb stands out
+clip_slot_clr = 0.15
+clip_front_xs = (-66.0, 16.0, 56.0)   # clear of the button window, X -52.5 to -7.5
+clip_rear_xs = (-40.0, 0.0, 40.0)
+clip_end_ys = (8.0, 70.0)
+pry_notch = (30.0, 42.0)  # X range of the thumbnail notch under the front edge
+
+# Printed masses from the slicer (Bambu Studio, A1, 0.4 nozzle, 0.2 layers, 20% sparse
+# infill, 4 wall loops, supports on), model only: brim and supports taken off. These
+# replace the 0.63 / 0.69 / 0.85 factors for the bezel variant. Measured 2026-10-17.
+slice_g_lid_bezel = 56.02   # 57.95 less 1.93 brim
+slice_g_frame = 6.35        # 8.21 less 1.86 brim
+slice_g_base = 56.46        # 59.24 less 2.75 brim and 0.03 support
 
 # --- logo -----------------------------------------------------------------
 # The Mitya Computer dog, inlaid flush in the lid's outer face as one green
@@ -188,7 +251,11 @@ closed_h_front = rim_front + lid_t
 close_tilt = degrees(atan((parting_rear - parting_front) / base_depth_to_axis))
 
 N1_TARGET = 20.00
-N1_HARD_LIMIT = 24.50  # restated 2026-09-29 by the owner, see requirements.md
+N1_HARD_LIMIT = 25.00  # Mk3: 24.5, restated 2026-09-29; Skladen 2: 25.0, owner, 2026-10-06 (ADR-0011)
+# Mk3's was 400. The Pocophone F1 weighs 15 g more than the Pixel 3a XL and the
+# estimate lands at ~401, so the build fails against 400 by a gram that the
+# estimate cannot resolve. 420 was approved by the owner on 2026-10-06; see ADR-0011.
+N4_BUDGET = 420.0
 
 # --- 7. hinge -------------------------------------------------------------
 # The axis sits at the lid's MID-THICKNESS, not on the parting plane. With it on
@@ -200,7 +267,9 @@ hinge_axis_y = base_depth_to_axis
 lid_bottom_rear = rim_rear
 hinge_axis_z = (lid_bottom_rear + closed_h_rear) / 2
 lid_rear_radius = (closed_h_rear - lid_bottom_rear) / 2  # lid's rounded rear edge
-hinge_torque_req = 0.091  # N*m at 90 deg
+# N*m at 90 deg. Mk3's was 0.091 (0.207 kg at 45 mm). Skladen 2: the lid and
+# phone are ~0.249 kg (printed estimate) at 48.1 mm, 0.249 * 9.81 * 0.0481.
+hinge_torque_req = 0.118
 
 # Knuckle OD is set by packaging, not by load: it must fit between the lid's
 # faces at the axis. The lid weighs ~2 N, so even a small annulus is ample.

@@ -1,5 +1,7 @@
 # ADR-0004: How the phone is held in the lid
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](0011-phone-swap-pocophone-f1.md).
+
 - **Status:** Accepted
 - **Date:** 2026-09-20
 - **Decides:** F1, F6, F7; contributes 1.2-1.5 mm to N1 and ~25 g to the

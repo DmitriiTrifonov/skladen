@@ -1,5 +1,7 @@
 # Clamshell geometry — why the lid is shallower than the base
 
+> **Skladen 2:** written for Mk3 and the Pixel 3a XL. Its numbers are inherited, not re-derived; what the Pocophone F1 changes is in [ADR-0011](../adr/0011-phone-swap-pocophone-f1.md).
+
 [ADR-0005](../adr/0005-hinge-mechanism.md) notes in passing that an inboard hinge
 axis "costs opening angle". This document works that out, because the answer
 changes what the closed device looks like and it is not recorded anywhere else.

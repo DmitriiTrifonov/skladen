@@ -1,4 +1,4 @@
-"""Skladen Mk3 geometry.
+"""Skladen 2 geometry.
 
 Coordinates:
     X  span, 0 at centre
@@ -93,7 +93,7 @@ def base_shell():
     return s
 
 
-def lid_shell():
+def lid_shell(bezel=False):
     bot_f, bot_r = p.rim_front, p.rim_rear
     s = yz_prism(
         [
@@ -104,7 +104,11 @@ def lid_shell():
         ],
         p.lid_x,
     )
-    ph_x = p.phone_x + 2 * (p.clr_phone + p.tape_t)   # tape lives in this gap
+    # With the bezel there is no tape: the phone sits on the rear wall, its glass
+    # p.bezel_phone_off behind the rim plane, and the ring fills the gap.
+    tape = 0.0 if bezel else p.tape_t
+    phone_off = p.bezel_phone_off if bezel else 0.0
+    ph_x = p.phone_x + 2 * (p.clr_phone + tape)   # tape lives in this gap
     ph_y = p.phone_y + 2 * p.clr_phone
     ph_y0 = p.phone_front_wall
     slope = (bot_r - bot_f) / p.base_depth_to_axis
@@ -138,8 +142,8 @@ def lid_shell():
         [
             (bw_y0, z_at(ph_y0, -1.0)),
             (bw_y1, z_at(ph_y0, -1.0)),
-            (bw_y1, z_at(ph_y0, p.phone_z)),
-            (bw_y0, z_at(ph_y0, p.phone_z)),
+            (bw_y1, z_at(ph_y0, phone_off + p.phone_z)),
+            (bw_y0, z_at(ph_y0, phone_off + p.phone_z)),
         ],
         p.button_win_x1 - p.button_win_x0,
         (p.button_win_x0 + p.button_win_x1) / 2,
@@ -162,12 +166,167 @@ def lid_shell():
     # choked the cable. Open, there is no bridge; the plug lays in from the
     # screen side, and with the lid shut the slot faces the keyboard.
     uy = ph_y0 + ph_y / 2
-    top = z_at(uy, p.phone_z / 2) + p.phone_usbc_cut_h / 2
+    top = z_at(uy, phone_off + p.phone_z / 2) + p.phone_usbc_cut_h / 2
     bot = z_at(uy, 0.0) - 3.0   # well past the screen face, tilt included
     s -= Pos(p.lid_x / 2 - (p.lid_x - ph_x) / 4, uy, (top + bot) / 2) * Box(
         (p.lid_x - ph_x) / 2 + 2.0, p.phone_usbc_cut_w, top - bot
     )
+
+    # Headphone jack through the left wall, the same open slot on the other end.
+    # The phone's top edge is the lid's -X end; the jack is measured from the
+    # button-side edge, which is the pocket's front.
+    jy = phone_y0 + p.phone_jack_from_edge
+    top = z_at(jy, phone_off + p.phone_z / 2) + p.phone_jack_cut_h / 2
+    bot = z_at(jy, 0.0) - 3.0
+    s -= Pos(-(p.lid_x / 2 - (p.lid_x - ph_x) / 4), jy, (top + bot) / 2) * Box(
+        (p.lid_x - ph_x) / 2 + 2.0, p.phone_jack_cut_w, top - bot
+    )
+    if bezel:
+        s -= front_rebate()
+        s -= lightening(ph_x, ph_y0, ph_y)
+        for clip in clips():
+            s -= clip[1]
+        s -= pry_notch()
     return s
+
+
+def lightening(ph_x, ph_y0, ph_y):
+    """Hollow the lid's two ends from the screen side, as the Reddit build did.
+
+    The end blocks (21 mm each) are dead material in the worst place for it
+    (ADR-0003: hollow the lid, leave the base solid). What stays: the outer wall,
+    on top of the base's own wall, one rib across each end, walls either side of the
+    USB-C and jack channels (they carry the plug), and under the ears and screws.
+    Open to the face, so it prints without bridges, the lid face-up.
+    """
+    t = p.wall_t
+    xi, xo = ph_x / 2 + t, p.lid_x / 2 - t
+    y0, y1 = t, ph_y0 + ph_y - t
+    top = p.pocket_z                       # the 1.2 rear skin stays
+    outline = rounded_outline(2 * xo, y1 - y0, y0, max(p.corner_r - t, 1.0), 1.0)
+    uy = ph_y0 + p.clr_phone + p.phone_y / 2
+    jy = ph_y0 + p.clr_phone + p.phone_jack_from_edge
+    out = None
+    for sign in (-1, 1):
+        a, b = (xi, xo) if sign > 0 else (-xo, -xi)
+        cav = _slab(a, b, y0, y1, -1.0, top) & outline
+        # a rib across the middle of the end
+        xm = sign * (xi + xo) / 2
+        keep = _slab(xm - t / 2, xm + t / 2, y0, y1, -2.0, top + 1.0)
+        # walls beside the plug's channel
+        yc, w = (uy, p.phone_usbc_cut_w) if sign > 0 else (jy, p.phone_jack_cut_w)
+        for lo, hi in ((yc - w / 2 - t, yc - w / 2), (yc + w / 2, yc + w / 2 + t)):
+            keep += _slab(a, b, lo, hi, -2.0, top + 1.0)
+        cav -= keep
+        out = cav if out is None else out + cav
+    return out
+
+
+# --- removable front bezel (ADR-0012) ---------------------------------------
+# Same sloped frame as the lid: an offset is measured from the lid's face plane,
+# which follows the keyboard's wedge, into the lid.
+
+def _face_z(y, off):
+    slope = (p.rim_rear - p.rim_front) / p.base_depth_to_axis
+    return p.rim_front + slope * y + off
+
+
+def _slab(x0, x1, y0, y1, off0, off1):
+    return yz_prism(
+        [(y0, _face_z(y0, off0)), (y1, _face_z(y1, off0)),
+         (y1, _face_z(y1, off1)), (y0, _face_z(y0, off1))],
+        x1 - x0, (x0 + x1) / 2)
+
+
+def _xz_prism(points, span_y, y_centre):
+    sk = Plane(origin=(0, 0, 0), x_dir=(1, 0, 0), z_dir=(0, -1, 0)) * Polygon(*points, align=None)
+    solid = extrude(sk, amount=span_y / 2, both=True)
+    return Pos(0, y_centre, 0) * solid
+
+
+def front_rebate():
+    """The lid's own face layer, under the plate: gone from the whole front."""
+    return _slab(-p.lid_x / 2 - 1.0, p.lid_x / 2 + 1.0, -1.0, p.bezel_y_end + p.bezel_gap,
+                 -1.0, p.bezel_t)
+
+
+def pry_notch():
+    """A nick under the front edge, so a fingernail can lift the plate."""
+    x0, x1 = p.pry_notch
+    return _slab(x0, x1, -1.0, 1.2, p.bezel_t - 0.01, p.bezel_t + 1.5)
+
+
+def _clip_places():
+    """(axis, along, origin, direction) for every clip. The axis is the one the arm's
+    thickness lies along; `origin` is the arm's inner face on that axis, `along`
+    where it stands on the other, and `direction` the way the barb points."""
+    out = []
+    for x in p.clip_front_xs:
+        out.append(("y", x, 2.9, -1))                       # front wall, barb outward
+    for x in p.clip_rear_xs:
+        out.append(("y", x, p.bezel_y_end - 3.0, +1))       # rear wall, barb inward
+    xo = p.lid_x / 2 - p.wall_t - 0.2 - p.clip_t            # arm just inside the outer wall
+    for y in p.clip_end_ys:
+        out.append(("x", y, -xo, -1))
+        out.append(("x", y, xo, +1))
+    return out
+
+
+def clips():
+    """[(arm with barb, void for it in the lid)] for each clip. Arms are vertical,
+    not along the face's normal: the 2.6 deg difference is 0.3 over their length,
+    and the slots are cut the same way, so they agree."""
+    t, b, w, c = p.clip_t, p.clip_barb, p.clip_w, p.clip_slot_clr
+    top = p.clip_arm_top
+    # (u, v): u along the arm's thickness from its inner face toward the barb, v up
+    # from the face plane. The barb has a long lead-in and a steeper catch.
+    arm = [(0, p.bezel_t - 0.4), (t, p.bezel_t - 0.4), (t, top), (0, top)]
+    barb = [(t, top), (t + b, top - 0.7), (t + b, top - 1.4), (t, top - 2.0)]
+    slot = [(-c, -1.0), (t + c, -1.0), (t + c, top + 0.4), (-c, top + 0.4)]
+    recess = [(t + c - 0.01, top - 2.3), (t + b + 0.3, top - 2.3),
+              (t + b + 0.3, top + 0.4), (t + c - 0.01, top + 0.4)]
+    out = []
+    for axis, along, origin, d in _clip_places():
+        y_ref = origin if axis == "y" else along
+        z0 = _face_z(y_ref, 0.0)
+
+        def place(prof, wide):
+            span = w + (2 * c if wide else 0.0)
+            if axis == "y":
+                return yz_prism([(origin + d * u, z0 + v) for u, v in prof], span, along)
+            return _xz_prism([(origin + d * u, z0 + v) for u, v in prof], span, along)
+
+        arm_solid = place(arm, False) + place(barb, False)
+        void = place(slot, True) + place(recess, True)
+        out.append((arm_solid, void))
+    return out
+
+
+def bezel_frame():
+    """The plate over the whole front, flush with the lid's face, with its clips."""
+    g = p.bezel_gap
+    ph_y0 = p.phone_front_wall
+    outer = _slab(-p.lid_x / 2 + g, p.lid_x / 2 - g, g, p.bezel_y_end, 0.0, p.bezel_t) \
+        & rounded_outline(p.lid_x - 2 * g, p.bezel_y_end - g, g,
+                          p.corner_r - g, 0.6)
+    win_x = p.phone_x - 2 * p.bezel_overlap_end
+    win_y = p.phone_y - 2 * p.bezel_overlap_side
+    window = rounded_outline(win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
+                             p.bezel_window_r, p.bezel_window_r)
+    frame = outer - window
+    # The buttons are pressed from the front edge, through the lid's window. The
+    # plate would roof it, so it is cut away over the same span, joining the screen
+    # window: fingers and a thumbnail reach the buttons as they do on the open lid.
+    win_y_front = ph_y0 + p.clr_phone + p.bezel_overlap_side
+    frame -= _slab(p.button_win_x0, p.button_win_x1, -1.0, win_y_front + 0.5,
+                   -1.0, p.bezel_t + 1.0)
+    for arm, _ in clips():
+        frame += arm
+    return frame
+
+
+bezel_ring = bezel_frame
+
 
 
 # --- hinge stations -------------------------------------------------------
@@ -352,8 +511,8 @@ def soften(part, radius, name, half_x, y_at):
         return part
 
 
-def build(fillets=True, nut_depth=None):
-    base, lid = base_shell(), lid_shell()
+def build(fillets=True, nut_depth=None, bezel=False):
+    base, lid = base_shell(), lid_shell(bezel)
     for x0 in p.station_x:
         base = base - lid_knuckle(x0, p.knuckle_clr) + base_station(x0)
         base = base - bore(x0) - fasteners(x0, nut_depth)
@@ -373,3 +532,14 @@ def coupon(base, lid, x0=55.0, x1=100.0):
         x1 - x0, p.base_y + 10, p.closed_h_rear + 10
     )
     return base & box, lid & box
+
+
+def phone_coupon(lid, x0=-p.lid_x / 2, x1=-4.0):
+    """The lid's phone end: the jack slot, the camera cutout, the button window
+    and the pocket's corner, in the one piece, to try the real phone in before
+    the whole lid is printed. Left end of the lid, X from the end to just past
+    the button window (which stops at -7.5)."""
+    box = Pos((x0 + x1) / 2, p.lid_y / 2, p.closed_h_rear / 2) * Box(
+        x1 - x0, p.lid_y + 20, p.closed_h_rear + 10
+    )
+    return lid & box

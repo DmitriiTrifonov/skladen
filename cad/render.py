@@ -1,6 +1,6 @@
 """Shaded renders for the README. A small numpy rasteriser; no OpenGL, no VTK.
 
-    .venv/bin/python cad/render.py   ->  docs/img/mk3-open.png, docs/img/mk3-closed.png
+    .venv/bin/python cad/render.py   ->  docs/img/skladen2-open.png, docs/img/skladen2-closed.png
 
 The printed shells come straight from model.build(). The phone and keyboard are
 stand-ins built from their measured envelopes in params.py - there only so the
@@ -343,10 +343,10 @@ def main():
     opening = 112
     render(below + lid_parts(-(opening + p.close_tilt)),
            Camera(eye=(-377, -531, 306), target=(2, 45, 42), fov=24),
-           IMG / "mk3-open.png")
+           IMG / "skladen2-open.png")
     render(below + lid_parts(0),
            Camera(eye=(400, -511, 187), target=(0, 52, 10), fov=24),
-           IMG / "mk3-closed.png")
+           IMG / "skladen2-closed.png")
 
 
 if __name__ == "__main__":

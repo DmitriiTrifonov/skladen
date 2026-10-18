@@ -15,6 +15,9 @@ CAD. See [ADR-0001](0001-record-architecture-decisions.md) for why.
 | [0008](0008-base-floor.md) | Base floor | **Accepted** — full 1.2 mm floor kept; Option E open | Task 0.4 (Option E only) |
 | [0009](0009-closure-retention.md) | Keeping the device shut when closed | Proposed | Coupon 2.2 — does hinge torque survive 100 cycles |
 | [0010](0010-hinge-station-count.md) | How many hinge stations, and how a bolt reaches its pocket | Proposed — two stations, heads outboard | First article — does the lid sag at mid-span |
+| [0011](0011-phone-swap-pocophone-f1.md) | Pocophone F1 for the Pixel 3a XL; headphone-jack slot | **Accepted** — N4 raised to 420 g | Caliper on the phone |
+| [0012](0012-removable-front-bezel.md) | A removable front bezel in place of tape | Proposed — full-front clip-on frame modelled in `export/bezel/`; 180 deg tipping unresolved | Task 0.13, a print, the balance remedy |
+| [0013](0013-usbc-extender.md) | A short USB-C extender left in the phone | Proposed | Task 0.12 — measure an adapter |
 
 ## Dependency order
 
