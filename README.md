@@ -3,7 +3,8 @@
        alt="Mitya Computer logo: a seated shiba in green, its head apart from the body, with a hex nut cut out of it, beside the words Mitya Computer">
 </p>
 
-<p align="center"><b>English</b> · <a href="README.ru.md">Русский</a></p>
+<p align="center"><b>English</b> · <a href="README.ru.md">Русский</a> ·
+<a href="CHANGELOG.md">Changelog</a> · <a href="#versions">Versions</a></p>
 
 # Mitya Computer Skladen 2
 
@@ -40,12 +41,25 @@ power-switch shuttle are unchanged.** What differs is the lid:
   their measured envelopes.</sub>
 </p>
 
+## Versions
+
+This branch (`main`) is **Skladen 2**. Earlier versions stay reachable by tag; the
+[changelog](CHANGELOG.md) lists what changed.
+
+| Version | What | Where |
+|---|---|---|
+| **2.1** (unreleased) | Skladen 2 plus the clip-on front bezel; modelled, not printed | this branch, `export/bezel/` |
+| **2.0.0** | Skladen 2: Pocophone F1, phone held by tape; printed | [tag v2.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v2.0.0) |
+| **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; printed | [tag v1.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v1.0.0), [its README](https://github.com/DmitriiTrifonov/skladen/blob/v1.0.0/README.md), branch [`v1`](https://github.com/DmitriiTrifonov/skladen/tree/v1) |
+
+Versions follow semantic versioning for hardware: a new major when parts stop
+interchanging (another phone), a minor for a compatible option such as the bezel.
+
 ## Status
 
 **Version 2.0.0 is printed, assembled and in use** (photo above); the front bezel in
-`export/bezel/` is a later proposal, modelled and not yet printed. Versions:
-**v1.0.0** is Skladen 1 / Mk3 (Pixel 3a XL), kept at that tag and on branch `v1`;
-**v2.0.0** is this design with the phone held by tape; **2.1** adds the clip-on bezel.
+`export/bezel/` is a later proposal, modelled and not yet printed; see
+[Versions](#versions).
 `cad/build.py` builds both shells and
 passes every check: one solid per part, no interference closed or through 0-180 deg,
 the hinge bolts reachable, the power-switch shuttle clear, and a plug's path out of
