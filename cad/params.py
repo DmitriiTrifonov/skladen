@@ -206,6 +206,8 @@ bezel_y_end = 84.0       # the plate stops here; the hinge reliefs start at ~86.
 # ends carry the earpiece and camera and are larger; task 0.13 measures both.
 bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
 bezel_overlap_end = 3.00    # at the short ends
+bezel_notch_w_ASSUMED = 34.0    # the notch cover's width along Y, centred on the phone; measure
+bezel_notch_d_ASSUMED = 8.0     # how far it reaches into the window from the -X edge; measure
 bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
 
 # Snap clips: an arm standing off the plate's back, with a barb at its tip that
@@ -219,9 +221,10 @@ clip_t = 1.0
 clip_arm_top = 7.0       # tip, from the face plane
 clip_barb = 0.5          # how far the barb stands out
 clip_slot_clr = 0.15
-clip_front_xs = (-66.0, 16.0, 56.0)   # clear of the button window, X -52.5 to -7.5
-clip_rear_xs = (-40.0, 0.0, 40.0)
+clip_front_xs = (-70.0, 16.0, 70.0)   # clear of the button window, X -52.5 to -7.5
+clip_rear_xs = (-72.0, -36.0, 0.0, 36.0, 72.0)
 clip_end_ys = (8.0, 70.0)
+clip_end_left_ys = (8.0, 42.0, 70.0)   # the right end has the USB-C channel at y 36-48
 clip_pad = 1.2           # solid left round each end clip's slot, inside the hollow end
 pry_notch = (30.0, 42.0)  # X range of the thumbnail notch under the front edge
 

@@ -109,6 +109,13 @@ enforces 150 deg and only reports 180. A steel strip under the front of the base
 add margin at 180 deg (~7.5 g for ~1.06); **deferred by the owner**, noted in
 [plan.md](../plan.md).
 
+**After the first print (2026-10-19).** The clips moved toward the corners: front
+x -70 / 16 / 70, rear -72 / -36 / 0 / 36 / 72 (the front row keeps clear of the button
+window, X -52.5 to -7.5). The left end got a third clip at y 42, mid-way; the right end
+cannot, the USB-C channel is there. The plate also covers the notch: a tab 34 x 8 reaches
+into the window from the -X edge, centred on the phone. Both tab sizes are **assumed**
+(`bezel_notch_*_ASSUMED`); measure the notch and set them.
+
 **Risks, not yet seen on a print:**
 - Clip arms print standing up, so they bend across the layers: the likeliest thing to
   break first. A fallback is a thicker arm or a metal-free alternative such as a sliding

@@ -6,7 +6,9 @@ Versions follow [semantic versioning](https://semver.org/) applied to hardware:
 tolerances or documentation. Tags mark the commit a version was printed from;
 design reasons are in [docs/adr/](docs/adr/README.md).
 
-## [Unreleased] — 2.1.0, front bezel (modelled, not printed)
+## [Unreleased]
+
+- Bezel: clips nearer the corners (front 3, rear 5), a third clip mid-left on the end, and a tab that covers the phone's notch (size assumed). — 2.1.0, front bezel (modelled, not printed)
 
 Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
 

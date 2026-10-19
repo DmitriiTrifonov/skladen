@@ -288,8 +288,9 @@ def _clip_places():
     for x in p.clip_rear_xs:
         out.append(("y", x, p.bezel_y_end - 3.0, +1))       # rear wall, barb inward
     xo = p.lid_x / 2 - p.wall_t - 0.2 - p.clip_t            # arm just inside the outer wall
-    for y in p.clip_end_ys:
+    for y in p.clip_end_left_ys:
         out.append(("x", y, -xo, -1))
+    for y in p.clip_end_ys:
         out.append(("x", y, xo, +1))
     return out
 
@@ -335,7 +336,14 @@ def bezel_frame():
     win_y = p.phone_y - 2 * p.bezel_overlap_side
     window = rounded_outline(win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
                              p.bezel_window_r, p.bezel_window_r)
-    frame = outer - window
+    # The notch (the phone's top edge is the lid's -X end): a tab of the plate reaches
+    # into the window and covers it down to the picture, centred on the phone.
+    uy = ph_y0 + p.clr_phone + p.phone_y / 2
+    x_edge = -win_x / 2
+    tab = _slab(x_edge - 1.0, x_edge + p.bezel_notch_d_ASSUMED,
+                uy - p.bezel_notch_w_ASSUMED / 2, uy + p.bezel_notch_w_ASSUMED / 2,
+                -1.0, p.bezel_t + 1.0)
+    frame = outer - (window - tab)
     # The buttons are pressed from the front edge, through the lid's window. The
     # plate would roof it, so it is cut away over the same span, joining the screen
     # window: fingers and a thumbnail reach the buttons as they do on the open lid.
