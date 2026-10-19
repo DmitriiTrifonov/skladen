@@ -171,10 +171,14 @@ def write_plates(out, lid, inlay, plates):
         for o in group:
             v = meshes[o[3][0][0] - 1][0]
             widths.append((v[:, 0].max() - v[:, 0].min(), v[:, 1].max() - v[:, 1].min()))
-        # rows of at most PLATE-12 wide, 6 mm apart; each row is centred in X and the
-        # whole block in Y, so nothing sits at the edge, where the bed heats worst
+        # Everything sits clear of the plate edge, where the bed heats worst. Small
+        # "Plug" parts go in a row at the back (north), 15 mm apart; the rest is
+        # laid out in rows, each centred in X and the block centred in Y.
+        plug = [k for k, o in enumerate(group) if o[1].startswith("Plug")]
+        main = [k for k in range(len(group)) if k not in plug]
         rows, cur, cw = [], [], 0.0
-        for k, (w, d) in enumerate(widths):
+        for k in main:
+            w = widths[k][0]
             if cur and cw + w > PLATE - 12:
                 rows.append(cur)
                 cur, cw = [], 0.0
@@ -193,6 +197,18 @@ def write_plates(out, lid, inlay, plates):
                 pos[k] = (ox + x + w / 2, oy + y + rd / 2)
                 x += w + 6.0
             y += rd + 6.0
+        if plug:
+            gap = 15.0
+            pw = sum(widths[k][0] for k in plug) + gap * (len(plug) - 1)
+            pd = max(widths[k][1] for k in plug)
+            x = (PLATE - pw) / 2
+            py = PLATE - 30.0 - pd / 2
+            if (PLATE + total_h) / 2 + 6.0 > py - pd / 2:
+                raise ValueError("plugs do not fit north of the main part")
+            for k in plug:
+                w, d = widths[k]
+                pos[k] = (ox + x + w / 2, oy + py)
+                x += w + gap
         for k, o in enumerate(group):
             tf = o[4].split()
             tf[9], tf[10] = f"{pos[k][0]:.6f}", f"{pos[k][1]:.6f}"
