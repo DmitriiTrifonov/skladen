@@ -228,6 +228,17 @@ def lightening(ph_x, ph_y0, ph_y):
         yc, w = (uy, p.phone_usbc_cut_w) if sign > 0 else (jy, p.phone_jack_cut_w)
         for lo, hi in ((yc - w / 2 - t, yc - w / 2), (yc + w / 2, yc + w / 2 + t)):
             keep += _slab(a, b, lo, hi, -2.0, top + 1.0)
+        # a solid block round each end clip: its arm and the recess it snaps into sit
+        # in the block, as the front clips sit in the 4.0 front wall. Standing in the
+        # hollow, with only the 1.6 outer wall behind the barb, they held nothing.
+        c, pad = p.clip_slot_clr, p.clip_pad
+        for axis, along, origin, d in _clip_places():
+            if axis != "x" or d != sign:
+                continue
+            x_in = origin - d * (c + pad)        # the block's inner face, past the arm's
+            keep += _slab(min(x_in, sign * xo), max(x_in, sign * xo),
+                          along - p.clip_w / 2 - c - pad, along + p.clip_w / 2 + c + pad,
+                          -2.0, top + 1.0)
         cav -= keep
         out = cav if out is None else out + cav
     return out

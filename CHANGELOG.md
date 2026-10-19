@@ -26,6 +26,8 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
 
 ### Changed
 - The phone's USB-C slot in the lid is 9.0 mm tall (was 7.0): the plug was too tight.
+- The bezel lid's end clips sit in solid blocks inside the hollow ends: on the first
+  print they held nothing, standing free behind a 1.6 mm wall.
 - The bezel lid's hinge end has a ramp under the cylinder's lowest arc, so the lid
   prints on its back without supports there (PETG welded to them).
 

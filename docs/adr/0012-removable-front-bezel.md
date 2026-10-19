@@ -137,6 +137,13 @@ deg (it first collided at 150 deg with a 45 deg ramp, 0.47 mm out). Overhang are
 shallower than 30 deg fell from ~1 500 mm2 to ~110 mm2 of short ceilings inside. Also
 useful with PETG: top Z distance 0.25-0.3, interface layers 2.
 
+**First print: the end clips held nothing** (owner, 2026-10-19); the front and rear
+clips, which stand in the 4.0 front wall and rear wall, held well. The end clips stood
+in the hollow end with only the 1.6 outer wall behind the barb, which simply flexed.
+Each end clip now has a solid block round its slot (`clip_pad` = 1.2 mm each side of
+the slot), like the long-side ones; +0.7 cm3 in all, about 0.9 g solid. Only the lid
+changes; the frame's arms are the same. Not yet printed.
+
 Things that went wrong on the way, so they are not repeated:
 
 - Two separate objects (lid and inlay) overlap and the slicer reports conflicting

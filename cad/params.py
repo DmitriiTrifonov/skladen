@@ -222,6 +222,7 @@ clip_slot_clr = 0.15
 clip_front_xs = (-66.0, 16.0, 56.0)   # clear of the button window, X -52.5 to -7.5
 clip_rear_xs = (-40.0, 0.0, 40.0)
 clip_end_ys = (8.0, 70.0)
+clip_pad = 1.2           # solid left round each end clip's slot, inside the hollow end
 pry_notch = (30.0, 42.0)  # X range of the thumbnail notch under the front edge
 
 # Printed masses from the slicer (Bambu Studio, A1, 0.4 nozzle, 0.2 layers, 20% sparse
