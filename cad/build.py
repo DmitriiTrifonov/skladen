@@ -117,7 +117,7 @@ def bezel_variant(base):
     _, lid_b = m.build(bezel=True)
     ring = m.bezel_ring()
     print(f"\nbezel variant   frame {p.bezel_t:.2f} thick, {p.bezel_overlap_side:.1f} over the"
-          f" long edges, {p.bezel_overlap_end:.1f} over the ends")
+          f" long edges, {p.bezel_overlap_top:.1f} over the notch end, {p.bezel_overlap_end:.1f} over the other")
 
     for name, part in (("lid", lid_b), ("ring", ring)):
         n = len(part.solids())

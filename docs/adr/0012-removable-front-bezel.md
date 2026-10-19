@@ -112,9 +112,13 @@ add margin at 180 deg (~7.5 g for ~1.06); **deferred by the owner**, noted in
 **After the first print (2026-10-19).** The clips moved toward the corners: front
 x -70 / 16 / 70, rear -72 / -36 / 0 / 36 / 72 (the front row keeps clear of the button
 window, X -52.5 to -7.5). The left end got a third clip at y 42, mid-way; the right end
-cannot, the USB-C channel is there. The plate also covers the notch: a tab 34 x 8 reaches
-into the window from the -X edge, centred on the phone. Both tab sizes are **assumed**
-(`bezel_notch_*_ASSUMED`); measure the notch and set them.
+cannot, the USB-C channel is there. The plate also covers the notch end of the phone down to the
+picture: the owner measured 8.84 mm from the top edge to where the picture starts, so the
+window now begins 8.5 mm in at the -X end (3.0 stays at the USB-C end, where the picture
+starts ~5.7 in: 155.5 - 141 - 8.84; the panel is 68 x 141 mm active, from the
+mainline driver `panel-ebbg-ft8719.c`). The window is 144.0 long, offset 2.75 toward +X.
+A tab 34 x 5 reaches further into the window, centred on the phone, over the notch's dip
+into the picture; both tab sizes are **assumed** (`bezel_notch_*_ASSUMED`), measure them.
 
 **Risks, not yet seen on a print:**
 - Clip arms print standing up, so they bend across the layers: the likeliest thing to

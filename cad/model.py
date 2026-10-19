@@ -332,14 +332,16 @@ def bezel_frame():
     outer = _slab(-p.lid_x / 2 + g, p.lid_x / 2 - g, g, p.bezel_y_end, 0.0, p.bezel_t) \
         & rounded_outline(p.lid_x - 2 * g, p.bezel_y_end - g, g,
                           p.corner_r - g, 0.6)
-    win_x = p.phone_x - 2 * p.bezel_overlap_end
+    win_x = p.phone_x - p.bezel_overlap_end - p.bezel_overlap_top
+    win_dx = (p.bezel_overlap_top - p.bezel_overlap_end) / 2     # window sits toward +X
     win_y = p.phone_y - 2 * p.bezel_overlap_side
-    window = rounded_outline(win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
-                             p.bezel_window_r, p.bezel_window_r)
+    window = Pos(win_dx, 0, 0) * rounded_outline(
+        win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
+        p.bezel_window_r, p.bezel_window_r)
     # The notch (the phone's top edge is the lid's -X end): a tab of the plate reaches
     # into the window and covers it down to the picture, centred on the phone.
     uy = ph_y0 + p.clr_phone + p.phone_y / 2
-    x_edge = -win_x / 2
+    x_edge = win_dx - win_x / 2
     tab = _slab(x_edge - 1.0, x_edge + p.bezel_notch_d_ASSUMED,
                 uy - p.bezel_notch_w_ASSUMED / 2, uy + p.bezel_notch_w_ASSUMED / 2,
                 -1.0, p.bezel_t + 1.0)
