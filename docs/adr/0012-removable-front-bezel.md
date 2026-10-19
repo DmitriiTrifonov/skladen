@@ -82,7 +82,7 @@ of the lid, as in the Reddit build, and holds on snap clips with no screws.
 | Frame | 0.8 plate, flush with the lid's face, 198 x 84, window over the screen; 7.0 g |
 | Phone | on the rear wall, glass 1.0 behind the face; 0.2 of play to the frame |
 | Overlap | 2.0 over the long edges, 3.0 over the ends — **guesses**, task 0.13 |
-| Clips | 10 in all: 3 in the front wall, 3 in the rear, 2 at each end; arm 1.0 x 10, barb 0.5 into a recess in the wall |
+| Clips | 15 in all (since 2026-10-19): 5 in the front wall, 5 in the rear, 3 at the left end, 2 at the right; arm 1.0 x 10, barb 0.5 into a recess in the wall |
 | Prying | a nick under the front edge, X 30-42, for a fingernail |
 | Closed height | 24.29, unchanged: the lid's own face layer is gone under the plate |
 | Pocket in X | 156.1, not 158.1: with no tape the ends need no room |
@@ -135,7 +135,7 @@ cut-out is 2.4 mm narrower for it. Not yet printed; if the legs bind, raise
   tab; both are CAD changes.
 - The front clips leave 1.1 mm of outer wall and about 1.0 beside the pocket; the front
   wall is only 4.0 thick.
-- A 0.8 plate over a 198 x 84 area is a flexible sheet; it is held at ten points.
+- A 0.8 plate over a 198 x 84 area is a flexible sheet; it is held at fifteen points.
 
 **Printing the logo lid in two colours.** The lid with the logo recess and the
 inlay are printed as one multi-part object, one filament each (on the owner's A1 with

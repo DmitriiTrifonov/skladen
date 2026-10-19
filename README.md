@@ -101,7 +101,7 @@ Two ideas from a Reddit build of a Boox Palma, written up as proposals:
 
 - **A clip-on front frame instead of tape** ([ADR-0012](docs/adr/0012-removable-front-bezel.md)):
   0.8 mm plate over the whole lid front with a screen window and a cut-out over the phone's
-  buttons, ten snap clips, no screws, and the lid's ends hollowed. Closed height stays 24.29.
+  buttons, fifteen snap clips, no screws, and the lid's ends hollowed. Closed height stays 24.29.
   Slicer masses: lid 56.0 g, frame 6.35 g, base 56.5 g; tipping margin 1.154 at 150 deg and
   1.000 at 180 deg. In `export/bezel/`; `export/device/` is untouched.
 - **A short USB-C extender left in the phone** ([ADR-0013](docs/adr/0013-usbc-extender.md)):

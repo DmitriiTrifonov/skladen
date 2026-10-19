@@ -8,13 +8,11 @@ design reasons are in [docs/adr/](docs/adr/README.md).
 
 ## [Unreleased] — 2.1.0, front bezel (modelled, not printed)
 
-- Bezel: clips nearer the corners (front 3, rear 5), a third clip mid-left on the end, and a tab that covers the phone's notch (size assumed).
-
 Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
 
 ### Added
 - **Clip-on front bezel** and a lid for it as a separate export, `export/bezel/`: a
-  0.8 mm frame covering the whole front, ten snap clips and no screws, a window over
+  0.8 mm frame covering the whole front, fifteen snap clips and no screws, a window over
   the screen and one over the phone's buttons, a nick for prying it off. The phone
   sits 1.0 mm behind the face instead of on tape, so the closed height stays 24.29 mm
   ([ADR-0012](docs/adr/0012-removable-front-bezel.md)).
@@ -33,6 +31,17 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
   its three plugs.
 
 ### Changed
+- Bezel clips: 15 now (front 5, rear 5, left end 3, right end 2), nearer the corners
+  and two standing 1.35 mm from the button window's edges. The left end has a third
+  clip mid-way (the right end has the USB-C channel there).
+- Bezel plate: legs down both sides of the button cut-out locate it in the lid's window
+  (0.05 clear per side), so the edge cannot lift or drift.
+- Bezel window follows the picture: 13.5 mm of plate over the notch end (8.84 mm to the
+  picture, measured, plus 5 mm assumed over the notch's dip), 8.5 mm over the USB-C
+  end; both corners round, r 7. The panel is 68 x 141 mm active (mainline driver).
+- `export/skladen2-2.1-plates.3mf`: every object centred on its plate; the three
+  plugs in a row at the back of plate 3, 15 mm apart.
+- Lid mass in the tipping check from the owner's slice of the logo lid: 57.47 g.
 - The phone's USB-C slot in the lid is 9.0 mm tall (was 7.0): the plug was too tight.
 - The bezel lid's end clips sit in solid blocks inside the hollow ends: on the first
   print they held nothing, standing free behind a 1.6 mm wall.
