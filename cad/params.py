@@ -217,12 +217,16 @@ bezel_window_r = 7.00       # window corner radius, ASSUMED against the display'
 # outward at the front, inward at the rear); end clips stand in the hollow ends
 # and catch the outer wall's inner face. Printed standing up they bend across
 # the layers: the first thing to break (risk R8).
+bezel_leg_t = 1.2        # locating legs on the plate, down the button window's sides
+bezel_leg_clr = 0.05     # to the window's walls, per side
+bezel_leg_len = 3.5      # along Y, from the front edge
+bezel_leg_h = 3.0        # below the face
 clip_w = 10.0
 clip_t = 1.0
 clip_arm_top = 7.0       # tip, from the face plane
 clip_barb = 0.5          # how far the barb stands out
 clip_slot_clr = 0.15
-clip_front_xs = (-70.0, 16.0, 70.0)   # clear of the button window, X -52.5 to -7.5
+clip_front_xs = (-72.0, -59.0, -1.0, 35.0, 70.0)   # two stand 1.35 from the button window's edges
 clip_rear_xs = (-72.0, -36.0, 0.0, 36.0, 72.0)
 clip_end_ys = (8.0, 70.0)
 clip_end_left_ys = (8.0, 42.0, 70.0)   # the right end has the USB-C channel at y 36-48

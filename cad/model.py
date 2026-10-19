@@ -352,6 +352,15 @@ def bezel_frame():
     win_y_front = ph_y0 + p.clr_phone + p.bezel_overlap_side
     frame -= _slab(p.button_win_x0, p.button_win_x1, -1.0, win_y_front + 0.5,
                    -1.0, p.bezel_t + 1.0)
+    # Legs down both sides of the button window press the plate square: it sits in the
+    # lid's window with 0.05 either side, so the cut-out edge cannot lift or drift.
+    bw0, bw1 = p.button_win_x0, p.button_win_x1
+    lt, lc = p.bezel_leg_t, p.bezel_leg_clr
+    for x0, x1 in ((bw0 + lc, bw0 + lc + lt), (bw1 - lc - lt, bw1 - lc)):
+        # a strip of the plate stays beside the cut-out, so the leg hangs from the plate
+        o0, o1 = (x0 - 0.5, x1) if x0 < (bw0 + bw1) / 2 else (x0, x1 + 0.5)
+        frame += _slab(o0, o1, 0.3, win_y_front + 1.0, 0.0, p.bezel_t)
+        frame += _slab(x0, x1, 0.3, 0.3 + p.bezel_leg_len, p.bezel_t, p.bezel_t + p.bezel_leg_h)
     for arm, _ in clips():
         frame += arm
     return frame

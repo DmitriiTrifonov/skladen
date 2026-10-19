@@ -120,6 +120,14 @@ mainline driver `panel-ebbg-ft8719.c`). The window is 144.0 long, offset 2.75 to
 A tab 34 x 5 reaches further into the window, centred on the phone, over the notch's dip
 into the picture; both tab sizes are **assumed** (`bezel_notch_*_ASSUMED`), measure them.
 
+**Button window edges.** The plate's cut-out over the buttons left its edges free to lift,
+and the front clips were far from it. Two front clips now stand at x -59 and -1, 1.35 mm
+clear of the window's walls (front row -72 / -59 / -1 / 35 / 70). Each side of the cut-out
+also keeps a 1.2 mm strip of plate with a 3.0 mm leg hanging into the lid's window, 0.05
+from its wall, so the plate sits square and cannot drift sideways or lift there. The
+cut-out is 2.4 mm narrower for it. Not yet printed; if the legs bind, raise
+`bezel_leg_clr`.
+
 **Risks, not yet seen on a print:**
 - Clip arms print standing up, so they bend across the layers: the likeliest thing to
   break first. A fallback is a thicker arm or a metal-free alternative such as a sliding
