@@ -207,8 +207,7 @@ bezel_y_end = 84.0       # the plate stops here; the hinge reliefs start at ~86.
 bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
 bezel_overlap_end = 8.50    # the USB-C end, same as the notch end by choice (the picture starts ~5.7 in: hides ~2.8 mm of it)
 bezel_overlap_top = 8.50    # at the short end by the notch: the picture starts 8.84 in (owner, ruler)
-bezel_notch_w_ASSUMED = 80.0    # wider than the window (71.3): the strip runs the whole short side, as asked
-bezel_notch_d_ASSUMED = 5.0     # how far it reaches into the window from the -X edge; measure
+bezel_notch_d_ASSUMED = 5.0     # extra cover past the picture's edge over the notch; measure
 bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
 
 # Snap clips: an arm standing off the plate's back, with a barb at its tip that

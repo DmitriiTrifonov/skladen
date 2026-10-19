@@ -332,20 +332,17 @@ def bezel_frame():
     outer = _slab(-p.lid_x / 2 + g, p.lid_x / 2 - g, g, p.bezel_y_end, 0.0, p.bezel_t) \
         & rounded_outline(p.lid_x - 2 * g, p.bezel_y_end - g, g,
                           p.corner_r - g, 0.6)
-    win_x = p.phone_x - p.bezel_overlap_end - p.bezel_overlap_top
-    win_dx = (p.bezel_overlap_top - p.bezel_overlap_end) / 2     # window sits toward +X
+    # The notch end (the phone's top edge is the lid's -X end) is covered by a strip
+    # across the whole side, past the picture's edge over the notch's dip: the window
+    # just starts later there, with the same corner radius as at the other end.
+    top = p.bezel_overlap_top + p.bezel_notch_d_ASSUMED
+    win_x = p.phone_x - p.bezel_overlap_end - top
+    win_dx = (top - p.bezel_overlap_end) / 2     # window sits toward +X
     win_y = p.phone_y - 2 * p.bezel_overlap_side
     window = Pos(win_dx, 0, 0) * rounded_outline(
         win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
         p.bezel_window_r, p.bezel_window_r)
-    # The notch (the phone's top edge is the lid's -X end): a tab of the plate reaches
-    # into the window and covers it down to the picture, centred on the phone.
-    uy = ph_y0 + p.clr_phone + p.phone_y / 2
-    x_edge = win_dx - win_x / 2
-    tab = _slab(x_edge - 1.0, x_edge + p.bezel_notch_d_ASSUMED,
-                uy - p.bezel_notch_w_ASSUMED / 2, uy + p.bezel_notch_w_ASSUMED / 2,
-                -1.0, p.bezel_t + 1.0)
-    frame = outer - (window - tab)
+    frame = outer - window
     # The buttons are pressed from the front edge, through the lid's window. The
     # plate would roof it, so it is cut away over the same span, joining the screen
     # window: fingers and a thumbnail reach the buttons as they do on the open lid.
