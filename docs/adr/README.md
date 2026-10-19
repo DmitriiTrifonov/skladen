@@ -18,6 +18,7 @@ CAD. See [ADR-0001](0001-record-architecture-decisions.md) for why.
 | [0011](0011-phone-swap-pocophone-f1.md) | Pocophone F1 for the Pixel 3a XL; headphone-jack slot | **Accepted** — N4 raised to 420 g | Caliper on the phone |
 | [0012](0012-removable-front-bezel.md) | A removable front bezel in place of tape | Proposed — full-front clip-on frame modelled in `export/bezel/`; 180 deg tipping unresolved | Task 0.13, a print, the balance remedy |
 | [0013](0013-usbc-extender.md) | A short USB-C extender left in the phone | Proposed | Task 0.12 — measure an adapter |
+| [0014](0014-switch-by-hand.md) | Power switch by hand: a window in the rear face with a plug, no shuttle | Proposed — modelled in `export/switch-window/` | A print and a try with tweezers |
 
 ## Dependency order
 

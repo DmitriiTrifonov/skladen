@@ -94,3 +94,173 @@ def write(lid, inlay, out):
         for n, b in files.items():
             zo.writestr(n, b)
     return err
+
+
+PLATE = 256.0            # the A1's bed
+PLATE_STRIDE = PLATE * 1.2   # Bambu Studio lays plates out a fifth of a bed apart
+
+
+def _flat(M):
+    return " ".join(f"{x:.9g}" for x in np.asarray(M).flatten())
+
+
+def write_plates(out, lid, inlay, plates):
+    """A multi-plate project: plate 1 is the lid with its logo exactly as write() lays
+    it out; every other plate is a list of (name, shape, filament) lying as exported,
+    each shape on its own plate, centred. Printer and filament settings come from the
+    template. Plates are placed on Bambu's grid (a column count of ceil(sqrt(n)),
+    rows going toward -Y), so a slice with the real slicer is the check that matters."""
+    import uuid
+    from math import ceil, sqrt
+
+    z = zipfile.ZipFile(TEMPLATE)
+    files = {n: z.read(n) for n in z.namelist()}
+    cfg = files["Metadata/model_settings.config"].decode()
+    mats = [np.array(x.split(), float).reshape(4, 4)
+            for x in re.findall(r'key="matrix" value="([^"]+)"', cfg)]
+    M_logo, M_lid = mats
+    item_lid = re.search(r'<item [^>]*transform="([^"]+)"',
+                         files["3D/3dmodel.model"].decode()).group(1).split()
+    R, t = M_lid[:3, :3], M_lid[:3, 3]
+    v_lid, c_lid, t_lid = _local(lid)
+    v_logo, c_logo, t_logo = _local(inlay)
+    new_logo = np.eye(4)
+    new_logo[:3, :3] = R
+    new_logo[:3, 3] = R @ (c_logo - c_lid) + t
+    M_lid = np.array(M_lid)
+
+    n_plates = 1 + len(plates)
+    cols = ceil(sqrt(n_plates))
+
+    def origin(i):
+        return (i % cols) * PLATE_STRIDE, -(i // cols) * PLATE_STRIDE
+
+    meshes = [(v_logo, t_logo), (v_lid, t_lid)]     # mesh ids 1 and 2
+    # objects: (id, name, extruder, [(mesh id, part matrix, part name, extruder)], item)
+    objs = [(3, "Lid with logo", 3,
+             [(1, new_logo, "inlay", 4), (2, M_lid, "lid", 3)],
+             " ".join(item_lid))]
+    plate_of = {3: 0}
+    nxt = 4
+    for pi, plate in enumerate(plates, start=1):
+        ox, oy = origin(pi)
+        for name, shape, fil in plate:
+            v, c, ts = _local(shape)
+            if open_edges(ts):
+                raise ValueError(f"open edges in {name}")
+            meshes.append((v, ts))
+            mid = len(meshes)
+            # The shape keeps its exported position; centre it on the plate.
+            h = (v[:, 2].max() - v[:, 2].min()) / 2
+            xy = np.array([PLATE / 2 + ox, PLATE / 2 + oy])
+            objs.append((nxt, name, fil, [(mid, np.eye(4), name, fil)],
+                         f"1 0 0 0 1 0 0 0 1 {xy[0]:.6f} {xy[1]:.6f} {h:.6f}"))
+            plate_of[nxt] = pi
+            nxt += 1
+    # Spread each plate's objects along X so they do not overlap. Done after sizing.
+    by_plate = {}
+    for o in objs:
+        by_plate.setdefault(plate_of[o[0]], []).append(o)
+    placed = []
+    for pi, group in by_plate.items():
+        if pi == 0:
+            placed += group
+            continue
+        ox, oy = origin(pi)
+        widths = []
+        for o in group:
+            v = meshes[o[3][0][0] - 1][0]
+            widths.append((v[:, 0].max() - v[:, 0].min(), v[:, 1].max() - v[:, 1].min()))
+        # rows of at most PLATE-10 wide, 6 mm apart
+        x = y = 0.0
+        row_h = 0.0
+        pos = []
+        for (w, d) in widths:
+            if x + w > PLATE - 12 and x > 0:
+                x, y, row_h = 0.0, y + row_h + 6.0, 0.0
+            pos.append((x + w / 2, y + d / 2))
+            x += w + 6.0
+            row_h = max(row_h, d)
+        total_h = y + row_h
+        total_w = max(sum(w for w, _ in widths[: len(widths)]) + 6.0 * (len(widths) - 1), 0)
+        for o, (px, py), (w, d) in zip(group, pos, widths):
+            tx = ox + 6.0 + px
+            ty = oy + (PLATE - total_h) / 2 + py
+            tf = o[4].split()
+            tf[9], tf[10] = f"{tx:.6f}", f"{ty:.6f}"
+            placed.append(o[:4] + (" ".join(tf),))
+
+    # Objects file: every mesh
+    body = []
+    for i, (v, ts) in enumerate(meshes, start=1):
+        body.append(f' <object id="{i}" p:UUID="{uuid.uuid4()}" type="model">\n'
+                    + _mesh_xml(v, ts).replace("   <mesh>", "  <mesh>", 1) + " </object>\n")
+    head = files["3D/Objects/Assembly_11.model"].decode()
+    head = head[:head.index("<resources>") + len("<resources>")] + "\n" + "".join(body) \
+        + " </resources>\n <build/>\n</model>\n"
+    files["3D/Objects/Assembly_11.model"] = head.encode()
+
+    # Main model
+    top = files["3D/3dmodel.model"].decode()
+    res, items = [], []
+    for oid, name, ext, parts, item in placed:
+        comps = "".join(
+            f'<component p:path="/3D/Objects/Assembly_11.model" objectid="{mid}" '
+            f'p:UUID="{uuid.uuid4()}" transform="{_comp(M)}"/>'
+            for mid, M, pname, pext in parts)
+        res.append(f'  <object id="{oid}" p:UUID="{uuid.uuid4()}" type="model">'
+                   f'<components>{comps}</components></object>\n')
+        items.append(f'  <item objectid="{oid}" p:UUID="{uuid.uuid4()}" transform="{item}" '
+                     f'printable="1"/>\n')
+    top = re.sub(r"<resources>.*</resources>", lambda m_: "<resources>\n" + "".join(res)
+                 + " </resources>", top, flags=re.S)
+    top = re.sub(r"<build [^>]*>.*</build>", lambda m_: f'<build p:UUID="{uuid.uuid4()}">\n'
+                 + "".join(items) + " </build>", top, flags=re.S)
+    files["3D/3dmodel.model"] = top.encode()
+
+    # model_settings: objects, then plates
+    ms = ['<?xml version="1.0" encoding="UTF-8"?>\n<config>\n']
+    for oid, name, ext, parts, item in placed:
+        ms.append(f'  <object id="{oid}">\n    <metadata key="name" value="{name}"/>\n'
+                  f'    <metadata key="extruder" value="{ext}"/>\n')
+        for k, (mid, M, pname, pext) in enumerate(parts, start=1):
+            ms.append(f'    <part id="{k}" subtype="normal_part">\n'
+                      f'      <metadata key="name" value="{pname}"/>\n'
+                      f'      <metadata key="matrix" value="{_flat(M)}"/>\n'
+                      f'      <metadata key="extruder" value="{pext}"/>\n'
+                      f'    </part>\n')
+        ms.append("  </object>\n")
+    for pi in range(n_plates):
+        ms.append(f'  <plate>\n    <metadata key="plater_id" value="{pi + 1}"/>\n'
+                  f'    <metadata key="plater_name" value=""/>\n'
+                  f'    <metadata key="locked" value="false"/>\n'
+                  f'    <metadata key="filament_map_mode" value="Auto For Flush"/>\n'
+                  f'    <metadata key="filament_maps" value="1 1 1 1 1"/>\n')
+        if pi == 0:
+            ms.append('    <metadata key="thumbnail_file" value="Metadata/plate_1.png"/>\n'
+                      '    <metadata key="thumbnail_no_light_file" value="Metadata/plate_no_light_1.png"/>\n'
+                      '    <metadata key="top_file" value="Metadata/top_1.png"/>\n'
+                      '    <metadata key="pick_file" value="Metadata/pick_1.png"/>\n')
+        for o in placed:
+            if plate_of[o[0]] == pi:
+                ms.append(f'    <model_instance>\n      <metadata key="object_id" value="{o[0]}"/>\n'
+                           f'      <metadata key="instance_id" value="0"/>\n'
+                           f'      <metadata key="identify_id" value="{400 + o[0]}"/>\n'
+                           f'    </model_instance>\n')
+        ms.append("  </plate>\n")
+    ms.append("  <assemble>\n")
+    for o in placed:
+        ms.append(f'   <assemble_item object_id="{o[0]}" instance_id="0" transform="{o[4]}" offset="0 0 0" />\n')
+    ms.append("  </assemble>\n</config>\n")
+    files["Metadata/model_settings.config"] = "".join(ms).encode()
+
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zo:
+        for n, b in files.items():
+            zo.writestr(n, b)
+    return {o[1]: plate_of[o[0]] + 1 for o in placed}
+
+
+def _comp(M):
+    """A 4x4 matrix as the 3MF component transform: columns of R, then translation."""
+    M = np.asarray(M)
+    return " ".join(f"{x:.9g}" for x in [*M[:3, 0], *M[:3, 1], *M[:3, 2], *M[:3, 3]])

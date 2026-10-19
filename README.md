@@ -92,7 +92,7 @@ numbers below are still the model's, not measurements of that print.
 | [parameters.md](docs/parameters.md) | Every driving dimension, generated from `cad/params.py` |
 | [analysis/](docs/analysis/) | Thickness, balance and clamshell geometry — **Mk3's**, kept as written |
 | [plan.md](docs/plan.md) | Phases and risks — Mk3's |
-| [adr/](docs/adr/README.md) | Thirteen design decisions; 0001-0010 are Mk3's, 0012-0013 are proposals |
+| [adr/](docs/adr/README.md) | Fourteen design decisions; 0001-0010 are Mk3's, 0012-0014 are proposals |
 | [sourcing.md](docs/sourcing.md) | Links: the Reddit build that prompted 0012/0013, same-OEM keyboard candidates, what to measure |
 
 ## Proposed, modelled, not printed
@@ -142,6 +142,8 @@ export/bezel/     proposed: lid for the clip-on frame (hollow ends, no tape) and
                   itself, plus a flat STL of the frame for printing (ADR-0012). The lid with
                   the logo comes as a two-colour Bambu project, `...-logo-petg.3mf`,
                   refilled from `cad/templates/` (see ADR-0012)
+export/switch-window/  proposed: base with a window in the rear face and the plug that closes it
+                  (ADR-0014); `export/skladen2-2.1-plates.3mf` has every 2.1 plate in one project
 export/switch/    shuttle that works the keyboard's power switch from the rear face,
                   three finger lengths by five stem lengths: print the set, keep what works
 export/logo/      Mitya Computer logo: lid-logo (recessed) + the green inlay

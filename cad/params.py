@@ -425,6 +425,23 @@ sw_stem_h = 3.00
 sw_stem_proud = (0.5, 1.0, 1.5, 2.0, 3.0)
 sw_nail_groove = 0.80    # vertical groove across the thumb end, for a fingernail
 
+# Power switch by hand instead of by shuttle (ADR-0014): the base's rear face has a
+# window and the tunnel behind it a plug. Pull the plug, reach the knob with a
+# toothpick or tweezers, push the plug back. The slot through the wall is wide enough
+# to open tweezers on the knob; the tunnel through the tail is only as wide as it
+# has to be, to leave the tail its stiffness.
+sw_win_w = kbd_sw_travel + kbd_sw_knob_w + 4.00        # in the wall, X
+sw_win_xc = (sw_knob_x_on + sw_knob_x_off) / 2
+sw_win_zc = (sw_z0 + sw_head_z1) / 2                   # where the prongs reached
+sw_win_z0, sw_win_z1 = sw_z0, sw_head_z1               # the slot, 4.6 high
+sw_tun_w = 7.00
+sw_tun_h = 4.00
+sw_plug_len = 8.0      # the peg, into the tunnel's rear end
+sw_plug_clr = (0.05, 0.10, 0.15)   # per side; one print per value, keep what holds
+sw_plug_flange = (9.0, 6.0, 1.0)   # X, Z, Y: wider than the tunnel, stops at the face
+sw_plug_nipple_d = 4.0
+sw_plug_nipple_h = 1.5
+
 # --- 8. masses and balance (ALL ESTIMATES - risk R3) ----------------------
 # Bracketed, not guessed. The lower bound was the original hand estimate; the
 # upper bound is what massing.py measures with both halves fully solid. The real

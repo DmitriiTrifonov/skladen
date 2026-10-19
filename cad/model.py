@@ -470,6 +470,35 @@ def switch_cut():
     return slot + tunnel
 
 
+def switch_window_cut():
+    """The hand-operated version of switch_cut(): a slot through the rear wall wide
+    enough to open tweezers on the knob, and a narrower tunnel back through the
+    tail to the rear face."""
+    c = p.sw_clr
+    slot = box_between(p.sw_win_xc - p.sw_win_w / 2, p.sw_win_xc + p.sw_win_w / 2,
+                       p.kbd_rear_y - 0.5, p.sw_head_y1 + c,
+                       p.sw_win_z0, p.sw_win_z1)
+    tunnel = box_between(p.sw_win_xc - p.sw_tun_w / 2, p.sw_win_xc + p.sw_tun_w / 2,
+                         p.sw_head_y1 - 0.5, p.base_y + 1.0,
+                         p.sw_win_zc - p.sw_tun_h / 2, p.sw_win_zc + p.sw_tun_h / 2)
+    return slot + tunnel
+
+
+def switch_plug(clr):
+    """The plug, in place: a peg in the tunnel's rear end, a flange against the
+    rear face and a nipple to pull it by."""
+    x, z = p.sw_win_xc, p.sw_win_zc
+    peg = box_between(x - p.sw_tun_w / 2 + clr, x + p.sw_tun_w / 2 - clr,
+                      p.base_y - p.sw_plug_len, p.base_y,
+                      z - p.sw_tun_h / 2 + clr, z + p.sw_tun_h / 2 - clr)
+    fx, fz, fy = p.sw_plug_flange
+    flange = box_between(x - fx / 2, x + fx / 2, p.base_y, p.base_y + fy,
+                         z - fz / 2, z + fz / 2)
+    nipple = Pos(x, p.base_y + fy + p.sw_plug_nipple_h / 2, z) * Rot(90, 0, 0) * Cylinder(
+        p.sw_plug_nipple_d / 2, p.sw_plug_nipple_h)
+    return peg + flange + nipple
+
+
 def switch_shuttle(x=None, proud=None, finger=None, back=0.0):
     """The pusher, in place, its fork centred on X (the knob's ON position by
     default), its stem standing PROUD out of the rear face and its fingers
@@ -533,7 +562,7 @@ def soften(part, radius, name, half_x, y_at):
         return part
 
 
-def build(fillets=True, nut_depth=None, bezel=False):
+def build(fillets=True, nut_depth=None, bezel=False, switch_window=False):
     base, lid = base_shell(), lid_shell(bezel)
     for x0 in p.station_x:
         base = base - lid_knuckle(x0, p.knuckle_clr) + base_station(x0)
@@ -541,7 +570,7 @@ def build(fillets=True, nut_depth=None, bezel=False):
         lid = lid - station_envelope(x0) + lid_knuckle(x0) - bore(x0)
         lid -= head_access(x0)
     base -= usbc_cut()
-    base -= switch_cut()
+    base -= switch_window_cut() if switch_window else switch_cut()
     if fillets:
         base = soften(base, p.corner_r, "base", p.base_x / 2, (0.0, p.base_y))
         lid = soften(lid, p.corner_r, "lid", p.lid_x / 2, (0.0,))

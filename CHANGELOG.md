@@ -24,6 +24,12 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
 - [docs/sourcing.md](docs/sourcing.md): where the Jomaa keyboard and its look-alikes
   (Doohoeek, CACOE) are sold.
 
+- [ADR-0014](docs/adr/0014-switch-by-hand.md): a base with a window in the rear face
+  and a plug, instead of the switch shuttle (`export/switch-window/`; three plug fits).
+- `export/skladen2-2.1-plates.3mf`: one Bambu Studio project with every plate the 2.1
+  parts need: the logo lid in two colours, the frame, the switch-window base with
+  its three plugs.
+
 ### Changed
 - The phone's USB-C slot in the lid is 9.0 mm tall (was 7.0): the plug was too tight.
 - The bezel lid's end clips sit in solid blocks inside the hollow ends: on the first

@@ -54,6 +54,57 @@ def save(part, sub, name, step=True):
         FAIL.append(f"skladen2-{name}.stl mesh")
 
 
+PARTS = {}   # shapes the multi-plate project is built from
+
+
+def switch_window_variant():
+    """ADR-0014: no shuttle; a window in the base's rear face with a plug in it, and the
+    knob reached with a toothpick or tweezers. A separate export; device/ is untouched."""
+    from build123d import Cylinder, Pos, Rot
+
+    base_w, lid = m.build(switch_window=True)
+    print("\nswitch window   slot %.1f wide in the wall, tunnel %.1f x %.1f through the tail"
+          % (p.sw_win_w, p.sw_tun_w, p.sw_tun_h))
+    n = len(base_w.solids())
+    print(f"  {'base solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+    if n != 1:
+        FAIL.append("switch-window base is not one solid")
+    clash = (base_w & lid).volume
+    print(f"  {'closed interference':32s} {clash:8.3f} mm3  want 0.00   "
+          f"{'ok' if clash < 1.0 else 'COLLISION'}")
+    if clash >= 1.0:
+        FAIL.append("switch-window closed interference")
+
+    # A toothpick (2.0 round) from outside the tail to the knob's face, at either end
+    # of its travel and between: nothing of the base in the way.
+    z_knob = p.base_floor_t + p.kbd_sw_knob_z
+    worst = 0.0
+    for x in (p.sw_knob_x_on, p.sw_win_xc, p.sw_knob_x_off):
+        pick = Pos(x, (p.kbd_rear_y + 0.2 + p.base_y + 12) / 2, z_knob) * Rot(90, 0, 0) * Cylinder(
+            1.0, p.base_y + 12 - p.kbd_rear_y - 0.2)
+        worst = max(worst, (base_w & pick).volume)
+    print(f"  {'toothpick to the knob':32s} {worst:8.3f} mm3  want 0.00   "
+          f"{'ok' if worst < 0.01 else 'BLOCKED'}")
+    if worst >= 0.01:
+        FAIL.append("switch-window toothpick path blocked")
+
+    save(base_w, "switch-window", "base-switchwindow")
+    PARTS["base"] = base_w
+    for clr in p.sw_plug_clr:
+        plug = m.switch_plug(clr)
+        hit = (plug & base_w).volume
+        print(f"  {'plug, %.2f per side' % clr:32s} {hit:8.3f} mm3 in the base   "
+              f"{'ok' if hit < 0.01 else 'INTERFERES'}")
+        if hit >= 0.01:
+            FAIL.append(f"switch plug {clr} interferes")
+        # Nipple up, peg on the bed: the flange overhangs by about a millimetre.
+        flat = Rot(X=90) * plug
+        flat = Pos(0, 0, -flat.bounding_box().min.Z) * flat
+        PARTS.setdefault("plugs", []).append((f"Plug {clr:.2f}", flat))
+        save(flat, "switch-window", f"switch-plug-clr{clr:.2f}", step=False)
+    print(f"  exported to {m.OUT / 'switch-window'}")
+
+
 def bezel_variant(base):
     """ADR-0012: the lid with no tape, and the ring that holds the phone instead.
 
@@ -219,6 +270,8 @@ def bezel_variant(base):
     flat = Pos(0, 0, -flat.bounding_box().min.Z) * flat
     check("flat frame height", flat.bounding_box().size.Z, p.clip_arm_top, tol=0.35)
     save(flat, "bezel", "bezel-flat", step=False)
+    PARTS["frame"] = flat
+    PARTS["lid"], PARTS["inlay"] = lid_b_logo, green
     print(f"  exported to {m.OUT / 'bezel'}")
 
 
@@ -512,6 +565,14 @@ def main():
     print(f"  exported to {m.OUT / 'plainnut'}")
 
     bezel_variant(base)
+    switch_window_variant()
+    import bambu_project
+    where = bambu_project.write_plates(
+        m.OUT / "skladen2-2.1-plates.3mf", PARTS["lid"], PARTS["inlay"],
+        [[("Frame", PARTS["frame"], 3)],
+         [("Base, switch window", PARTS["base"], 3)]
+         + [(n, sh, 3) for n, sh in PARTS["plugs"]]])
+    print("\nall plates in one project:", ", ".join(f"{n} -> plate {i}" for n, i in where.items()))
 
     # Keep docs/parameters.md from drifting: regenerate it every build.
     import gen_params_doc
