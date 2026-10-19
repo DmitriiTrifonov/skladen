@@ -228,7 +228,7 @@ pry_notch = (30.0, 42.0)  # X range of the thumbnail notch under the front edge
 # Printed masses from the slicer (Bambu Studio, A1, 0.4 nozzle, 0.2 layers, 20% sparse
 # infill, 4 wall loops, supports on), model only: brim and supports taken off. These
 # replace the 0.63 / 0.69 / 0.85 factors for the bezel variant. Measured 2026-10-17.
-slice_g_lid_bezel = 56.02   # 57.95 less 1.93 brim
+slice_g_lid_bezel = 55.09   # owner's slicer, 2026-10-19: with the ramp and end-clip blocks (was 56.02)
 slice_g_frame = 6.35        # 8.21 less 1.86 brim
 slice_g_base = 56.46        # 59.24 less 2.75 brim and 0.03 support
 
