@@ -205,7 +205,7 @@ bezel_y_end = 84.0       # the plate stops here; the hinge reliefs start at ~86.
 # Overlap of the glass. The F1's side bezels are ~3.6 (spec sheet, estimated), the
 # ends carry the earpiece and camera and are larger; task 0.13 measures both.
 bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
-bezel_overlap_end = 3.00    # at the short end by the USB-C (the chin; the picture starts ~5.7 in)
+bezel_overlap_end = 8.50    # the USB-C end, same as the notch end by choice (the picture starts ~5.7 in: hides ~2.8 mm of it)
 bezel_overlap_top = 8.50    # at the short end by the notch: the picture starts 8.84 in (owner, ruler)
 bezel_notch_w_ASSUMED = 34.0    # the notch cover's width along Y, centred on the phone; measure
 bezel_notch_d_ASSUMED = 5.0     # how far it reaches into the window from the -X edge; measure
