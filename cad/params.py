@@ -267,6 +267,10 @@ hinge_axis_y = base_depth_to_axis
 lid_bottom_rear = rim_rear
 hinge_axis_z = (lid_bottom_rear + closed_h_rear) / 2
 lid_rear_radius = (closed_h_rear - lid_bottom_rear) / 2  # lid's rounded rear edge
+# Bezel lid only: a ramp filling the cylinder's lowest 45 deg when the lid is printed
+# on its back, so it needs no supports. The ramp's foot is this far outside the
+# cylinder; the base's tail has to spare it at 150 deg (build.py sweeps it).
+lid_ramp_out = 0.25
 # N*m at 90 deg. Mk3's was 0.091 (0.207 kg at 45 mm). Skladen 2: the lid and
 # phone are ~0.249 kg (printed estimate) at 48.1 mm, 0.249 * 9.81 * 0.0481.
 hinge_torque_req = 0.118

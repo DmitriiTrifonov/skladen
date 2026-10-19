@@ -134,6 +134,17 @@ def lid_shell(bezel=False):
     # rounded rear edge: every point within lid_rear_radius of the hinge axis, so
     # the lid sweeps a clean cylinder and clears the tail at any opening angle
     s += x_cyl(2 * p.lid_rear_radius, p.lid_x, 0, p.hinge_axis_y, p.hinge_axis_z)
+    if bezel:
+        # Printed on its outer face, the cylinder's first 45 deg of arc hang in the
+        # air and need supports that PETG welds to. Fill that corner with a flat
+        # ramp from the tangent point to the arc's 45 deg point instead; the ramp's
+        # foot sits p.lid_ramp_out outside the cylinder, which the base's tail can
+        # spare (checked by the opening sweep, worst at 150 deg).
+        r, ay, az = p.lid_rear_radius, p.hinge_axis_y, p.hinge_axis_z
+        k = 2 ** -0.5
+        foot = (2 * r * p.lid_ramp_out + p.lid_ramp_out ** 2) ** 0.5
+        s += yz_prism([(ay, az + r), (ay + foot, az + r), (ay + r * k, az + r * k)],
+                      p.lid_x)
 
     # Button window through the front wall: one opening over power and volume
     # together, spanning the phone's full thickness. Mk2's geometry.

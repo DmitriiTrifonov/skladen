@@ -127,6 +127,16 @@ every `build.py` run and writes `export/bezel/skladen2-lid-bezel-logo-petg.3mf`,
 leaving settings alone. It also places the inlay exactly: the slicer's *Assemble* had
 left it 0.21 mm off in X and 0.11 in Y, which is a hairline gap beside the recess.
 To change settings, re-save the template from the slicer, not the exported file.
+**Supports under the hinge end.** The slicer lays the lid on its back, which puts the
+rear cylinder's first 45 deg of arc in the air; in PETG those supports weld to the lid
+and have to be cut off. The bezel lid (not the printed `device/` lid) now fills that
+corner with a flat ramp, about 36 deg from horizontal, which Bambu's default 30 deg
+threshold leaves unsupported. The ramp's foot is `lid_ramp_out` = 0.25 mm outside
+the cylinder; the opening sweep of this lid against the base is 0.000 mm3 from 0 to 180
+deg (it first collided at 150 deg with a 45 deg ramp, 0.47 mm out). Overhang area
+shallower than 30 deg fell from ~1 500 mm2 to ~110 mm2 of short ceilings inside. Also
+useful with PETG: top Z distance 0.25-0.3, interface layers 2.
+
 Things that went wrong on the way, so they are not repeated:
 
 - Two separate objects (lid and inlay) overlap and the slicer reports conflicting

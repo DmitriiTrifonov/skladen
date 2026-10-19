@@ -81,6 +81,17 @@ def bezel_variant(base):
     if clash >= 1.0:
         FAIL.append("bezel closed interference")
 
+    # The lid's rear edge carries a 45 deg chamfer in this variant (no supports when
+    # printed on its back), which sits a little outside the hinge cylinder: sweep it.
+    from build123d import Axis
+    hinge = Axis((0, p.hinge_axis_y, p.hinge_axis_z), (1, 0, 0))
+    worst = max((base & lid_b.rotate(hinge, -(a + p.close_tilt))).volume
+                for a in (0, 15, 30, 45, 60, 90, 120, 150, 180))
+    print(f"  {'opening sweep, worst':32s} {worst:8.3f} mm3  want < 1.00   "
+          f"{'ok' if worst < 1.0 else 'COLLISION'}")
+    if worst >= 1.0:
+        FAIL.append("bezel opening sweep")
+
     # The ring seats in the lid without touching it, and clears the phone's glass
     # by the play - and still covers it, which is its whole job.
     seat = (ring & lid_b).volume
