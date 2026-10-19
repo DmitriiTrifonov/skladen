@@ -175,12 +175,14 @@ def bezel_variant(base):
                 str(d2 / "skladen2-lid-bezel-logo-2color.step"))
     # One assembly object of two mesh parts and a single build item: what Orca and
     # Bambu take as one multi-part object. (build123d's Mesher writes two loose items.)
+    import bambu_project
     import zipfile
     f3 = d2 / "skladen2-lid-bezel-logo-2color.3mf"
     meshes = []
     for shp in (lid_b_logo, green):
-        vs, ts = shp.tessellate(0.01, 0.1)
-        meshes.append(([(v.X, v.Y, v.Z) for v in vs], ts))
+        vs, ts = bambu_project.welded(shp)
+        assert not bambu_project.open_edges(ts), "open edges in the 2-colour 3mf"
+        meshes.append((vs.tolist(), ts))
     res = []
     for i, ((vs, ts), name) in enumerate(zip(meshes, ("lid", "logo-inlay")), 1):
         v = "".join(f'<vertex x="{x:.5f}" y="{y:.5f}" z="{z:.5f}"/>' for x, y, z in vs)
@@ -207,7 +209,6 @@ def bezel_variant(base):
           f"{'ok' if len(back) == 2 else 'WRONG'}")
     if len(back) != 2:
         FAIL.append("bezel 2-colour 3mf")
-    import bambu_project
     off = bambu_project.write(lid_b_logo, green, d2 / "skladen2-lid-bezel-logo-petg.3mf")
     print(f"  {'slicer project, inlay moved by':32s} {off:8.3f} mm   (template had it off)")
     save(ring, "bezel", "bezel")

@@ -14,10 +14,30 @@ import numpy as np
 TEMPLATE = Path(__file__).parent / "templates" / "bezel-lid-logo.3mf"
 
 
-def _local(shape):
-    """Tessellated shape, centred on its bounding box as the slicer stores it."""
+def welded(shape):
+    """Tessellated shape with the vertices on shared face edges merged. The raw
+    tessellation repeats them per face, which a slicer reads as open edges."""
     vs, ts = shape.tessellate(0.01, 0.1)
     v = np.array([(p.X, p.Y, p.Z) for p in vs])
+    uniq, inv = np.unique(np.round(v, 4), axis=0, return_inverse=True)
+    inv = inv.reshape(-1)
+    tris = [tuple(int(inv[i]) for i in t) for t in ts]
+    return uniq, [t for t in tris if len(set(t)) == 3]
+
+
+def open_edges(ts):
+    """Edges not used exactly twice in opposite directions; 0 for a closed mesh."""
+    from collections import Counter
+    c = Counter()
+    for a, b, d in ts:
+        for u, w in ((a, b), (b, d), (d, a)):
+            c[(u, w)] += 1
+    return sum(1 for (u, w), n in c.items() if n != 1 or c.get((w, u), 0) != 1)
+
+
+def _local(shape):
+    """Tessellated shape, centred on its bounding box as the slicer stores it."""
+    v, ts = welded(shape)
     c = (v.min(0) + v.max(0)) / 2
     return v - c, c, ts
 
@@ -49,6 +69,9 @@ def write(lid, inlay, out):
     new_logo[:3, :3] = R
     new_logo[:3, 3] = R @ (c_logo - c_lid) + t
     err = np.abs(new_logo[:3, 3] - M_logo[:3, 3]).max()
+    bad = open_edges(t_lid) + open_edges(t_logo)
+    if bad:
+        raise ValueError(f"{bad} open edges in the slicer meshes")
 
     obj = files["3D/Objects/Assembly_11.model"].decode()
     for oid, (v, ts) in ((1, (v_logo, t_logo)), (2, (v_lid, t_lid))):
