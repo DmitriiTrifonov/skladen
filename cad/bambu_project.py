@@ -171,23 +171,31 @@ def write_plates(out, lid, inlay, plates):
         for o in group:
             v = meshes[o[3][0][0] - 1][0]
             widths.append((v[:, 0].max() - v[:, 0].min(), v[:, 1].max() - v[:, 1].min()))
-        # rows of at most PLATE-10 wide, 6 mm apart
-        x = y = 0.0
-        row_h = 0.0
-        pos = []
-        for (w, d) in widths:
-            if x + w > PLATE - 12 and x > 0:
-                x, y, row_h = 0.0, y + row_h + 6.0, 0.0
-            pos.append((x + w / 2, y + d / 2))
-            x += w + 6.0
-            row_h = max(row_h, d)
-        total_h = y + row_h
-        total_w = max(sum(w for w, _ in widths[: len(widths)]) + 6.0 * (len(widths) - 1), 0)
-        for o, (px, py), (w, d) in zip(group, pos, widths):
-            tx = ox + 6.0 + px
-            ty = oy + (PLATE - total_h) / 2 + py
+        # rows of at most PLATE-12 wide, 6 mm apart; each row is centred in X and the
+        # whole block in Y, so nothing sits at the edge, where the bed heats worst
+        rows, cur, cw = [], [], 0.0
+        for k, (w, d) in enumerate(widths):
+            if cur and cw + w > PLATE - 12:
+                rows.append(cur)
+                cur, cw = [], 0.0
+            cur.append(k)
+            cw += w + 6.0
+        rows.append(cur)
+        row_w = [sum(widths[k][0] for k in r) + 6.0 * (len(r) - 1) for r in rows]
+        row_d = [max(widths[k][1] for k in r) for r in rows]
+        total_h = sum(row_d) + 6.0 * (len(rows) - 1)
+        pos = {}
+        y = (PLATE - total_h) / 2
+        for r, rw, rd in zip(rows, row_w, row_d):
+            x = (PLATE - rw) / 2
+            for k in r:
+                w, d = widths[k]
+                pos[k] = (ox + x + w / 2, oy + y + rd / 2)
+                x += w + 6.0
+            y += rd + 6.0
+        for k, o in enumerate(group):
             tf = o[4].split()
-            tf[9], tf[10] = f"{tx:.6f}", f"{ty:.6f}"
+            tf[9], tf[10] = f"{pos[k][0]:.6f}", f"{pos[k][1]:.6f}"
             placed.append(o[:4] + (" ".join(tf),))
 
     # Objects file: every mesh
