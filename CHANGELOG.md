@@ -36,8 +36,8 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
   clip mid-way (the right end has the USB-C channel there).
 - Bezel plate: legs down both sides of the button cut-out locate it in the lid's window
   (0.05 clear per side), so the edge cannot lift or drift.
-- Bezel window follows the picture: 13.5 mm of plate over the notch end (8.84 mm to the
-  picture, measured, plus 5 mm assumed over the notch's dip), 8.5 mm over the USB-C
+- Bezel window follows the picture: 9.5 mm of plate over the notch end (8.84 mm to the
+  picture, measured, plus 1 mm over the notch's dip), 8.5 mm over the USB-C
   end; both corners round, r 7. The panel is 68 x 141 mm active (mainline driver).
 - `export/skladen2-2.1-plates.3mf`: every object centred on its plate; the three
   plugs in a row at the back of plate 3, 15 mm apart.

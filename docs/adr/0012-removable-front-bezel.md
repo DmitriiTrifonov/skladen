@@ -117,8 +117,8 @@ picture: the owner measured 8.84 mm from the top edge to where the picture start
 window now begins 8.5 mm in at the -X end (3.0 stays at the USB-C end, where the picture
 starts ~5.7 in: 155.5 - 141 - 8.84; the panel is 68 x 141 mm active, from the
 mainline driver `panel-ebbg-ft8719.c`). The window is 144.0 long, offset 2.75 toward +X.
-The owner asked for the plastic across the whole notch side, so the window starts 5 mm
-later there (`bezel_notch_d_ASSUMED`), with the same corner radius as at the other end,
+The owner asked for the plastic across the whole notch side, so the window started 5 mm
+later there (moved 4 mm back toward the end on 2026-10-20: now 1 mm) (`bezel_notch_d_ASSUMED`), with the same corner radius as at the other end,
 hiding the status bar beside the notch as well; both tab sizes are **assumed** (`bezel_notch_*_ASSUMED`), measure them.
 
 **Button window edges.** The plate's cut-out over the buttons left its edges free to lift,
