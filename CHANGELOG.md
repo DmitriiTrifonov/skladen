@@ -31,6 +31,8 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
   its three plugs.
 
 ### Changed
+- Bezel lid: six 1.4 mm holes either side of the USB-C slot for the phone's speaker and
+  microphone; the frame has an earpiece slit (positions assumed, to be measured).
 - Bezel lid: a 1.6 mm eject hole from the back to every clip slot, to push out an arm
   that broke off; barb 0.4 mm with a gentler catch, so the frame lets go more easily.
 - Bezel clips: 15 now (front 5, rear 5, left end 3, right end 2), nearer the corners

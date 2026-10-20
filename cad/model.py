@@ -199,6 +199,7 @@ def lid_shell(bezel=False):
             s -= clip[1]
         s -= pry_notch()
         s -= eject_holes()
+        s -= audio_holes(ph_y0 + p.clr_phone, z_at, phone_off)
     return s
 
 
@@ -342,6 +343,24 @@ def eject_holes():
     return out
 
 
+def audio_holes(phone_y0, z_at, phone_off):
+    """Small holes through the USB-C end wall, either side of the USB-C slot, in line with
+    the phone's bottom-edge speaker and microphone grilles (six holes each)."""
+    uy = phone_y0 + p.phone_y / 2
+    lo, hi = p.audio_grille_from_centre_ASSUMED
+    n = int((hi - lo) / p.audio_hole_pitch) + 1
+    x0 = p.phone_x / 2 + 0.2
+    w = p.lid_x / 2 + 1.0 - x0
+    out = None
+    for side in (-1, 1):
+        for i in range(n):
+            y = uy + side * (lo + i * p.audio_hole_pitch)
+            z = z_at(y, p.bezel_phone_off + p.phone_z / 2)
+            h = x_cyl(p.audio_hole_d, w, x0 + w / 2, y, z)
+            out = h if out is None else out + h
+    return out
+
+
 def bezel_frame():
     """The plate over the whole front, flush with the lid's face, with its clips."""
     g = p.bezel_gap
@@ -360,6 +379,12 @@ def bezel_frame():
         win_x, win_y, ph_y0 + p.clr_phone + p.bezel_overlap_side,
         p.bezel_window_r, p.bezel_window_r)
     frame = outer - window
+    # Earpiece: a slit in the plate over the phone's top-edge speaker, centred on it.
+    uy = ph_y0 + p.clr_phone + p.phone_y / 2
+    ex = -p.phone_x / 2 + p.earpiece_from_edge_ASSUMED
+    frame -= _slab(ex - p.earpiece_w / 2, ex + p.earpiece_w / 2,
+                   uy - p.earpiece_len_ASSUMED / 2, uy + p.earpiece_len_ASSUMED / 2,
+                   -1.0, p.bezel_t + 1.0)
     # The buttons are pressed from the front edge, through the lid's window. The
     # plate would roof it, so it is cut away over the same span, joining the screen
     # window: fingers and a thumbnail reach the buttons as they do on the open lid.

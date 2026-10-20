@@ -208,6 +208,14 @@ bezel_overlap_side = 2.00   # along the long edges (the lid's front and rear)
 bezel_overlap_end = 8.50    # the USB-C end, same as the notch end by choice (the picture starts ~5.7 in: hides ~2.8 mm of it)
 bezel_overlap_top = 8.50    # at the short end by the notch: the picture starts 8.84 in (owner, ruler)
 bezel_notch_d_ASSUMED = 1.0     # extra cover past the picture's edge over the notch; measure
+# Audio openings, all ASSUMED (the F1 has a speaker grille and a microphone grille
+# either side of the USB-C, six holes each; which is which is not known, so both get holes).
+audio_grille_from_centre_ASSUMED = (9.0, 21.0)   # span of each grille's holes from the USB-C's centreline, Y
+audio_hole_d = 1.4
+audio_hole_pitch = 2.2
+earpiece_from_edge_ASSUMED = 3.5     # earpiece slit's centre, from the phone's top edge (the -X end)
+earpiece_len_ASSUMED = 12.0          # along Y
+earpiece_w = 1.6                     # along X
 bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
 
 # Snap clips: an arm standing off the plate's back, with a barb at its tip that
