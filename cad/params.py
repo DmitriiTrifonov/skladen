@@ -216,6 +216,7 @@ audio_holes_n = 6
 earpiece_from_edge = 4.5     # earpiece slit's centre, from the phone's top edge (the -X end); owner, measured
 earpiece_len = 6.0           # along Y; owner, measured
 earpiece_w = 1.6                     # along X
+earpiece_clr = 0.3        # added to each side of the slit: the phone floats 0.3 in its pocket
 bezel_window_r = 7.00       # window corner radius, ASSUMED against the display's
 
 # Snap clips: an arm standing off the plate's back, with a barb at its tip that

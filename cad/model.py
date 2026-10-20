@@ -384,8 +384,9 @@ def bezel_frame():
     # Earpiece: a slit in the plate over the phone's top-edge speaker, centred on it.
     uy = ph_y0 + p.clr_phone + p.phone_y / 2
     ex = -p.phone_x / 2 + p.earpiece_from_edge
-    frame -= _slab(ex - p.earpiece_w / 2, ex + p.earpiece_w / 2,
-                   uy - p.earpiece_len / 2, uy + p.earpiece_len / 2,
+    k = p.earpiece_clr
+    frame -= _slab(ex - p.earpiece_w / 2 - k, ex + p.earpiece_w / 2 + k,
+                   uy - p.earpiece_len / 2 - k, uy + p.earpiece_len / 2 + k,
                    -1.0, p.bezel_t + 1.0)
     # The buttons are pressed from the front edge, through the lid's window. The
     # plate would roof it, so it is cut away over the same span, joining the screen
