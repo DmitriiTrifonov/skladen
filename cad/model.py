@@ -198,6 +198,7 @@ def lid_shell(bezel=False):
         for clip in clips():
             s -= clip[1]
         s -= pry_notch()
+        s -= eject_holes()
     return s
 
 
@@ -304,9 +305,9 @@ def clips():
     # (u, v): u along the arm's thickness from its inner face toward the barb, v up
     # from the face plane. The barb has a long lead-in and a steeper catch.
     arm = [(0, p.bezel_t - 0.4), (t, p.bezel_t - 0.4), (t, top), (0, top)]
-    barb = [(t, top), (t + b, top - 0.7), (t + b, top - 1.4), (t, top - 2.0)]
+    barb = [(t, top), (t + b, top - 0.7), (t + b, top - 1.4), (t, top - 2.4)]
     slot = [(-c, -1.0), (t + c, -1.0), (t + c, top + 0.4), (-c, top + 0.4)]
-    recess = [(t + c - 0.01, top - 2.3), (t + b + 0.3, top - 2.3),
+    recess = [(t + c - 0.01, top - 2.7), (t + b + 0.3, top - 2.7),
               (t + b + 0.3, top + 0.4), (t + c - 0.01, top + 0.4)]
     out = []
     for axis, along, origin, d in _clip_places():
@@ -322,6 +323,22 @@ def clips():
         arm_solid = place(arm, False) + place(barb, False)
         void = place(slot, True) + place(recess, True)
         out.append((arm_solid, void))
+    return out
+
+
+def eject_holes():
+    """A hole from the lid's back down to the top of every clip slot, centred on the arm:
+    a pin through it pushes out an arm that broke off and stayed in the slot."""
+    t = p.clip_t
+    out = None
+    for axis, along, origin, d in _clip_places():
+        c = origin + d * t / 2
+        x, y = (along, c) if axis == "y" else (c, along)
+        y_ref = c if axis == "y" else along
+        z0 = _face_z(y_ref, p.clip_arm_top + 0.3)
+        z1 = _face_z(y_ref, p.lid_t + 1.0)
+        h = Pos(x, y, (z0 + z1) / 2) * Cylinder(p.clip_eject_d / 2, z1 - z0)
+        out = h if out is None else out + h
     return out
 
 

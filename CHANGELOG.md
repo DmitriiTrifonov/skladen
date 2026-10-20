@@ -31,6 +31,8 @@ Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
   its three plugs.
 
 ### Changed
+- Bezel lid: a 1.6 mm eject hole from the back to every clip slot, to push out an arm
+  that broke off; barb 0.4 mm with a gentler catch, so the frame lets go more easily.
 - Bezel clips: 15 now (front 5, rear 5, left end 3, right end 2), nearer the corners
   and two standing 1.35 mm from the button window's edges. The left end has a third
   clip mid-way (the right end has the USB-C channel there).

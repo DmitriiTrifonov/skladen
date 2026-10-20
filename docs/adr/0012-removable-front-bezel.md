@@ -129,6 +129,13 @@ from its wall, so the plate sits square and cannot drift sideways or lift there.
 cut-out is 2.4 mm narrower for it. Not yet printed; if the legs bind, raise
 `bezel_leg_clr`.
 
+**First removal (2026-10-20).** Pulling the frame off broke it, and the arms stayed in
+their slots, so both parts were lost. The arms stand upright, their layers across the
+bend, and one pry notch loads all fifteen at once. Changes: a 1.6 mm hole from the
+lid's back to the top of each slot (`clip_eject_d`), so a pin pushes a broken arm out;
+barb 0.4 instead of 0.5, with a gentler catch (0.4 over 1.0 instead of 0.5 over 0.6) so
+it lets go sooner. Not yet printed.
+
 **Risks, not yet seen on a print:**
 - Clip arms print standing up, so they bend across the layers: the likeliest thing to
   break first. A fallback is a thicker arm or a metal-free alternative such as a sliding
