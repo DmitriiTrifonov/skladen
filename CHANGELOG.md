@@ -6,9 +6,11 @@ Versions follow [semantic versioning](https://semver.org/) applied to hardware:
 tolerances or documentation. Tags mark the commit a version was printed from;
 design reasons are in [docs/adr/](docs/adr/README.md).
 
-## [Unreleased] — 2.1.0, front bezel (modelled, not printed)
+## [2.1.0] — 2026-10-20, front bezel (printed)
 
-Planned tag `v2.1.0-rc1` once the bezel is printed; `v2.1.0` when it fits.
+Printed and assembled (photo in the README). Revisions after the first print — the eject
+holes, the speaker and microphone openings, the notch cover, the extra clips, the switch-window
+base and its plugs — are modelled and checked, not yet confirmed on a print.
 
 ### Added
 - **Clip-on front bezel** and a lid for it as a separate export, `export/bezel/`: a

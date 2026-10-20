@@ -1,6 +1,6 @@
 # ADR-0012: A removable front bezel in place of tape
 
-- **Status:** Proposed — modelled as a separate export (`export/bezel/`), not printed
+- **Status:** Accepted for 2.1.0 — printed in `export/bezel/` (photo in the README, 2026-10-20); revisions since the first print (eject holes, audio openings, notch cover) not yet printed
 - **Date:** 2026-10-17
 - **Decides:** would restore F7 (relaxed in [ADR-0004](0004-phone-retention.md)); touches N1 and the tipping margin
 
