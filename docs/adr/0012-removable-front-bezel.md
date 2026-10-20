@@ -142,8 +142,8 @@ grille either side of the USB-C, one for the speaker and one for the microphone
 1.4 mm holes either side of the slot, the grilles' edges 13.5 and 25.5 mm from the
 USB-C's centreline (owner, measured, the same both sides), level with the phone's
 mid-thickness (`audio_*`). The end clips moved from y 70 to 74 to clear the rear grille.
-The frame has a 12 x 1.6 slit for the earpiece 3.5 mm from the phone's top edge, a
-guess: set `earpiece_*_ASSUMED` once measured. A second
+The frame has a 6 x 1.6 slit for the earpiece, its centre 4.5 mm from the phone's top
+edge (owner, measured). A second
 microphone in the top edge, if the phone has one, is not opened.
 
 **Risks, not yet seen on a print:**
