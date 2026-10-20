@@ -347,14 +347,16 @@ def audio_holes(phone_y0, z_at, phone_off):
     """Small holes through the USB-C end wall, either side of the USB-C slot, in line with
     the phone's bottom-edge speaker and microphone grilles (six holes each)."""
     uy = phone_y0 + p.phone_y / 2
-    lo, hi = p.audio_grille_from_centre_ASSUMED
-    n = int((hi - lo) / p.audio_hole_pitch) + 1
+    n = p.audio_holes_n
+    near, far = p.audio_grille_from_centre
+    lo, hi = near + p.audio_hole_d / 2, far - p.audio_hole_d / 2     # hole centres
+    pitch = (hi - lo) / (n - 1)
     x0 = p.phone_x / 2 + 0.2
     w = p.lid_x / 2 + 1.0 - x0
     out = None
     for side in (-1, 1):
         for i in range(n):
-            y = uy + side * (lo + i * p.audio_hole_pitch)
+            y = uy + side * (lo + i * pitch)
             z = z_at(y, p.bezel_phone_off + p.phone_z / 2)
             h = x_cyl(p.audio_hole_d, w, x0 + w / 2, y, z)
             out = h if out is None else out + h

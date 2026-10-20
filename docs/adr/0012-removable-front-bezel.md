@@ -136,13 +136,14 @@ lid's back to the top of each slot (`clip_eject_d`), so a pin pushes a broken ar
 barb 0.4 instead of 0.5, with a gentler catch (0.4 over 1.0 instead of 0.5 over 0.6) so
 it lets go sooner. Not yet printed.
 
-**Audio openings (2026-10-20), positions assumed.** The F1's bottom edge has a six-hole
+**Audio openings (2026-10-20).** The F1's bottom edge has a six-hole
 grille either side of the USB-C, one for the speaker and one for the microphone
 (reviews do not say which side). The USB-C end wall of the bezel lid has a row of six
-1.4 mm holes either side of the slot, 9 to 21 mm from its centreline, level with the
-phone's mid-thickness (`audio_*`); the frame has a 12 x 1.6 slit for the earpiece
-3.5 mm from the phone's top edge. All of it is a guess from photos: measure from the
-phone and set `audio_grille_from_centre_ASSUMED`, `earpiece_*_ASSUMED`. A second
+1.4 mm holes either side of the slot, the grilles' edges 13.5 and 25.5 mm from the
+USB-C's centreline (owner, measured, the same both sides), level with the phone's
+mid-thickness (`audio_*`). The end clips moved from y 70 to 74 to clear the rear grille.
+The frame has a 12 x 1.6 slit for the earpiece 3.5 mm from the phone's top edge, a
+guess: set `earpiece_*_ASSUMED` once measured. A second
 microphone in the top edge, if the phone has one, is not opened.
 
 **Risks, not yet seen on a print:**
