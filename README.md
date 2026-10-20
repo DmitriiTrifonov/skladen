@@ -1,6 +1,6 @@
 <p align="center">
   <img src="docs/img/mitya-computer.svg" width="520"
-       alt="Mitya Computer logo: a seated shiba in green, its head apart from the body, with a hex nut cut out of it, beside the words Mitya Computer">
+       alt="Mitya Labs logo: a seated shiba in green, its head apart from the body, with a hex nut cut out of it, beside the words Mitya Labs">
 </p>
 
 <p align="center"><b>English</b> · <a href="README.ru.md">Русский</a> ·
@@ -48,9 +48,9 @@ This branch (`main`) is **Skladen 2**. Earlier versions stay reachable by tag; t
 
 | Version | What | Where |
 |---|---|---|
-| **2.1.0** | Skladen 2 plus the clip-on front bezel; printed | [tag v2.1.0](https://github.com/DmitriiTrifonov/skladen/tree/v2.1.0), `export/bezel/` |
-| **2.0.0** | Skladen 2: Pocophone F1, phone held by tape; printed | [tag v2.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v2.0.0) |
-| **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; printed | [tag v1.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v1.0.0), [its README](https://github.com/DmitriiTrifonov/skladen/blob/v1.0.0/README.md), branch [`v1`](https://github.com/DmitriiTrifonov/skladen/tree/v1) |
+| **2.1.0** | Skladen 2 plus the clip-on front bezel; printed | [tag v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
+| **2.0.0** | Skladen 2: Pocophone F1, phone held by tape; printed | [tag v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
+| **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; printed | [tag v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [its README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), branch [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |
 
 Versions follow semantic versioning for hardware: a new major when parts stop
 interchanging (another phone), a minor for a compatible option such as the bezel.
@@ -147,7 +147,7 @@ export/switch-window/  proposed: base with a window in the rear face and the plu
                   (ADR-0014); `export/skladen2-2.1-plates.3mf` has every 2.1 plate in one project
 export/switch/    shuttle that works the keyboard's power switch from the rear face,
                   three finger lengths by five stem lengths: print the set, keep what works
-export/logo/      Mitya Computer logo: lid-logo (recessed) + the green inlay
+export/logo/      Mitya Labs logo: lid-logo (recessed) + the green inlay
                   that fills it, for a two-filament print
 ```
 
@@ -164,10 +164,10 @@ released under the [CERN Open Hardware Licence Version 2 – Strongly Reciprocal
 you adapt it, to a different phone or keyboard say, and distribute the result or
 anything built from it, you share your modified source under the same terms.
 
-**Except the Mitya Computer name and logo.** The artwork in `cad/logo/` and
+**Except the Mitya Labs name and logo.** The artwork in `cad/logo/` and
 `docs/img/mitya-computer.svg`, and the logo it puts into `export/logo/`, are not
 released under that licence: all rights reserved. They are in the repository so the lid can be built with them, not for
 reuse. A device you make and distribute from this design should use the plain lid
 in `export/device/`, which carries no logo, or one of your own.
 
-Source location: <https://github.com/DmitriiTrifonov/skladen>
+Source location: <https://github.com/mitya-labs/skladen>

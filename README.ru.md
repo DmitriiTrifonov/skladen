@@ -1,6 +1,6 @@
 <p align="center">
   <img src="docs/img/mitya-computer.svg" width="520"
-       alt="Логотип Mitya Computer: сидящий зелёный сиба-ину с отдельной головой и вырезом-гайкой на теле, рядом надпись Mitya Computer">
+       alt="Логотип Mitya Labs: сидящий зелёный сиба-ину с отдельной головой и вырезом-гайкой на теле, рядом надпись Mitya Labs">
 </p>
 
 <p align="center"><a href="README.md">English</a> · <b>Русский</b> ·
@@ -48,9 +48,9 @@ Skladen 2 — это конструкция Mk3 (Pixel 3a XL, клавиатур
 
 | Версия | Что | Где |
 |---|---|---|
-| **2.1.0** | Skladen 2 с рамкой на защёлках; напечатан | [тег v2.1.0](https://github.com/DmitriiTrifonov/skladen/tree/v2.1.0), `export/bezel/` |
-| **2.0.0** | Skladen 2: Pocophone F1, телефон на скотче; напечатан | [тег v2.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v2.0.0) |
-| **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; напечатан | [тег v1.0.0](https://github.com/DmitriiTrifonov/skladen/tree/v1.0.0), [его README](https://github.com/DmitriiTrifonov/skladen/blob/v1.0.0/README.md), ветка [`v1`](https://github.com/DmitriiTrifonov/skladen/tree/v1) |
+| **2.1.0** | Skladen 2 с рамкой на защёлках; напечатан | [тег v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
+| **2.0.0** | Skladen 2: Pocophone F1, телефон на скотче; напечатан | [тег v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
+| **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; напечатан | [тег v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [его README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), ветка [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |
 
 Версии по семантическому версионированию для железа: новый major — когда детали перестают
 подходить друг к другу (другой телефон), minor — совместимая опция вроде рамки.
@@ -147,7 +147,7 @@ export/switch-window/  предложение: основание с окошк�
                   (ADR-0014); `export/skladen2-2.1-plates.3mf` — все столы 2.1 одним проектом
 export/switch/    толкатель выключателя клавиатуры с задней стенки:
                   три длины пальцев на пять длин штока — печатать набор, оставить подошедший
-export/logo/      логотип Mitya Computer: lid-logo (с выемкой) + зелёная вставка
+export/logo/      логотип Mitya Labs: lid-logo (с выемкой) + зелёная вставка
                   для печати двумя филаментами
 ```
 
@@ -165,7 +165,7 @@ Copyright Dmitrii Trifonov 2026.
 результат или что-либо сделанное по нему, вы делитесь изменённым исходником на тех же
 условиях.
 
-**Кроме названия и логотипа Mitya Computer.** Графика в `cad/logo/` и
+**Кроме названия и логотипа Mitya Labs.** Графика в `cad/logo/` и
 `docs/img/mitya-computer.svg`, а также логотип, который из неё попадает в `export/logo/`,
 под эту лицензию не подпадают: все права защищены. Они лежат в репозитории, чтобы
 крышку можно было собрать с ними, а не для повторного использования. Устройство,
@@ -174,4 +174,4 @@ Copyright Dmitrii Trifonov 2026.
 
 Этот перевод — для удобства; юридически значим английский текст лицензии.
 
-Исходники: <https://github.com/DmitriiTrifonov/skladen>
+Исходники: <https://github.com/mitya-labs/skladen>
