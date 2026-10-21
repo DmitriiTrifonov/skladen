@@ -272,7 +272,85 @@ def bezel_variant(base):
     save(flat, "bezel", "bezel-flat", step=False)
     PARTS["frame"] = flat
     PARTS["lid"], PARTS["inlay"] = lid_b_logo, green
+
+    # The through-logo lid: the recess and the inlay go the whole way through the 1.2 rear
+    # wall instead of half of it. Same lid otherwise, so plate 4 can never drift from plate 1.
+    deep = logo.inlays(p.lid_rear_wall)
+    recess_t = None
+    for part in deep.values():
+        recess_t = part if recess_t is None else recess_t + part
+    lid_through = lid_b - recess_t
+    clash = (lid_through & recess_t).volume
+    print(f"  {'through lid vs its inlay':32s} {clash:8.3f} mm3  want 0.00   "
+          f"{'ok' if clash < 0.01 else 'COLLISION'}")
+    if clash >= 0.01:
+        FAIL.append("through lid meets its inlay")
+    save(lid_through, "bezel", "lid-bezel-logo-through")
+    PARTS["lid_through"], PARTS["inlay_through"] = lid_through, recess_t
     print(f"  exported to {m.OUT / 'bezel'}")
+
+
+def adapter_variant(base):
+    """ADR-0013: the bezel lid with a seat for the USB-C extender, and a coupon of the
+    lid's right end to try the real adapter in before the whole lid is printed."""
+    _, lid_a = m.build(bezel=True, seat=True)
+    print("\nadapter seat    extender body "
+          f"{p.adapter_body_w_ASSUMED} x {p.adapter_body_t_ASSUMED} x {p.adapter_body_len_ASSUMED} (ASSUMED)")
+    n = len(lid_a.solids())
+    print(f"  {'seat lid solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+    if n != 1:
+        FAIL.append("adapter lid is not one solid")
+    clash = (base & lid_a).volume
+    print(f"  {'closed interference':32s} {clash:8.3f} mm3  want 0.00   {'ok' if clash < 1.0 else 'COLLISION'}")
+    if clash >= 1.0:
+        FAIL.append("adapter lid closed interference")
+
+    # The extender's body, seated, against the seat. It squeezes the ribs and the ridge
+    # by design (a press fit); anything else it touches is a mistake.
+    x0, x1 = m.adapter_dims()
+    uy = p.phone_front_wall + (p.phone_y + 2 * p.clr_phone) / 2
+    axis = p.bezel_phone_off + p.phone_z / 2
+    w, t = p.adapter_body_w_ASSUMED, p.adapter_body_t_ASSUMED
+
+    def body(dx=0.0, dz=0.0, width=w):
+        return m._slab(x0 + dx, x1 + dx, uy - width / 2, uy + width / 2,
+                       axis - t / 2 + dz, axis + t / 2 + dz)
+
+    squeeze = (body() & lid_a).volume
+    print(f"  {'body squeezes ribs + ridges':32s} {squeeze:8.3f} mm3  want > 0     {'ok' if squeeze > 0 else 'LOOSE'}")
+    if squeeze <= 0:
+        FAIL.append("adapter seat does not grip")
+    loose = (body(width=w - 2 * (p.adapter_rib_h - p.adapter_seat_clr) - 0.05) & lid_a).volume
+    print(f"  {'body 0.6 narrower touches':32s} {loose:8.3f} mm3  want 0.00   {'ok' if loose < 0.01 else 'FOULED'}")
+    if loose >= 0.01:
+        FAIL.append("adapter seat fouls a narrow body")
+    lifted = (body(dz=-0.5) & lid_a).volume
+    print(f"  {'body lifted 0.5 meets ridge':32s} {lifted:8.3f} mm3  want > 0     {'ok' if lifted > 0 else 'NO DETENT'}")
+    if lifted <= 0:
+        FAIL.append("adapter ridge does not catch")
+    # The cable's overmould, from the body's socket face to the lid's end, must be as free
+    # as it was without the seat.
+    cable = m._slab(x1, p.lid_x / 2, uy - p.phone_usbc_cut_w / 2, uy + p.phone_usbc_cut_w / 2,
+                    axis - p.phone_usbc_cut_h / 2, axis + p.phone_usbc_cut_h / 2)
+    base_lid = m.lid_shell(True, False)
+    dv = (cable & lid_a).volume - (cable & base_lid).volume
+    print(f"  {'seat in the cable zone':32s} {dv:8.3f} mm3  want 0.00   {'ok' if abs(dv) < 0.01 else 'BLOCKED'}")
+    if abs(dv) >= 0.01:
+        FAIL.append("adapter seat blocks the cable")
+    save(lid_a, "adapter", "lid-bezel-adapter")
+    coupon = m.usbc_coupon(lid_a)
+    save(coupon, "adapter", "coupon-usbc-lid")
+    # For printing: the face's wedge levelled, then the lid turned over onto its rear wall,
+    # screen side up, so the seat prints without bridges.
+    from math import atan, degrees
+    from build123d import Rot
+    import bambu_project
+    tilt = degrees(atan((p.rim_rear - p.rim_front) / p.base_depth_to_axis))
+    flat = Rot(Y=180) * (Rot(X=-tilt) * coupon)
+    flat = Pos(0, 0, -flat.bounding_box().min.Z) * flat
+    bb = flat.bounding_box()
+    print(f"  {'coupon, printing pose':32s} {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm")
+    bambu_project.write_single(flat, m.OUT / "adapter" / "skladen2-coupon-usbc-lid.3mf", "coupon-usbc-lid")
 
 
 def main():
@@ -565,13 +643,15 @@ def main():
     print(f"  exported to {m.OUT / 'plainnut'}")
 
     bezel_variant(base)
+    adapter_variant(base)
     switch_window_variant()
     import bambu_project
     where = bambu_project.write_plates(
         m.OUT / "skladen2-2.1-plates.3mf", PARTS["lid"], PARTS["inlay"],
         [[("Frame", PARTS["frame"], 3)],
          [("Base, switch window", PARTS["base"], 3)]
-         + [(n, sh, 3) for n, sh in PARTS["plugs"]]])
+         + [(n, sh, 3) for n, sh in PARTS["plugs"]]],
+        through=(PARTS["lid_through"], PARTS["inlay_through"]))
     print("\nall plates in one project:", ", ".join(f"{n} -> plate {i}" for n, i in where.items()))
 
     # Keep docs/parameters.md from drifting: regenerate it every build.

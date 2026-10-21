@@ -93,7 +93,7 @@ def base_shell():
     return s
 
 
-def lid_shell(bezel=False):
+def lid_shell(bezel=False, seat=False):
     bot_f, bot_r = p.rim_front, p.rim_rear
     s = yz_prism(
         [
@@ -200,6 +200,8 @@ def lid_shell(bezel=False):
         s -= pry_notch()
         s -= eject_holes()
         s -= audio_holes(ph_y0 + p.clr_phone, z_at, phone_off)
+    if seat:
+        s += adapter_seat(uy, p.bezel_phone_off if bezel else 0.0)
     return s
 
 
@@ -244,6 +246,61 @@ def lightening(ph_x, ph_y0, ph_y):
         cav -= keep
         out = cav if out is None else out + cav
     return out
+
+
+def adapter_dims():
+    """The extender's body, in the lid's frame: X from the pocket's end, Y about the port's
+    centreline, offsets from the face plane. Shared by the seat and the build's checks."""
+    body_x0 = (p.phone_x + 2 * p.clr_phone) / 2     # the phone's edge, against the pocket end
+    return body_x0, body_x0 + p.adapter_body_len_ASSUMED
+
+
+def adapter_seat(uy, phone_off):
+    """ADR-0013: a seat in the USB-C slot that holds the extender's black body.
+
+    A floor and two cheeks, merged into the slot's walls and the rear skin; open to the
+    screen side, so the phone drops in with the adapter on it, and prints face-up with
+    nothing to bridge. The cheeks carry three crush ribs each (friction against the cable's
+    pull) and a ridge over the body's top corner (a detent against it lifting out). The
+    cheeks stop short of the socket face, where the cable's overmould needs the full slot.
+    Offsets are from the lid's face plane, as in `_slab`.
+    """
+    half_w = p.adapter_body_w_ASSUMED / 2 + p.adapter_seat_clr
+    axis = phone_off + p.phone_z / 2
+    top = axis - p.adapter_body_t_ASSUMED / 2               # the body's face-side surface
+    floor = axis + p.adapter_body_t_ASSUMED / 2 + p.adapter_seat_clr
+    x0, x1 = adapter_dims()
+    x1 -= p.adapter_seat_stop
+    wall = p.phone_usbc_cut_w / 2 + 0.6                      # into the slot's side walls
+    cheek_top = top - 2 * p.adapter_ridge_h - 0.6            # the ridge stands on the cheek below this
+    pad = floor + 0.3                                        # into the rear skin
+    xc = (x0 + x1) / 2
+
+    def prism(pts, xa, xb):
+        return yz_prism([(uy + y, _face_z(uy + y, o)) for y, o in pts], xb - xa, (xa + xb) / 2)
+
+    out = None
+    for sign in (-1, 1):
+        a, b = sign * half_w, sign * wall
+        # the cheek, its inner top corner chamfered as a lead-in for the body
+        lead = 0.6
+        cheek = prism([(a, pad), (b, pad), (b, cheek_top), (a + sign * lead, cheek_top),
+                       (a, cheek_top + lead)], x0, x1)
+        out = cheek if out is None else out + cheek
+        for i in range(p.adapter_rib_n):
+            rx = x0 + 1.5 + i * (x1 - x0 - 3.0) / max(p.adapter_rib_n - 1, 1)
+            rib = prism([(a, pad), (a - sign * p.adapter_rib_h, pad),
+                         (a - sign * p.adapter_rib_h, top + 0.4), (a, top + 0.4)],
+                        rx - p.adapter_rib_w / 2, rx + p.adapter_rib_w / 2)
+            out += rib
+        # the ridge: 45 deg up and down so the face-up print needs nothing under it, its
+        # lower slope ending just above the body's top surface
+        h = p.adapter_ridge_h
+        ridge = prism([(a, top - 2 * h), (a - sign * h, top - h), (a, top)],
+                      xc - p.adapter_ridge_len / 2, xc + p.adapter_ridge_len / 2)
+        out += ridge
+    floor_blk = prism([(-wall, pad), (wall, pad), (wall, floor), (-wall, floor)], x0, x1)
+    return out + floor_blk
 
 
 # --- removable front bezel (ADR-0012) ---------------------------------------
@@ -623,8 +680,8 @@ def soften(part, radius, name, half_x, y_at):
         return part
 
 
-def build(fillets=True, nut_depth=None, bezel=False, switch_window=False):
-    base, lid = base_shell(), lid_shell(bezel)
+def build(fillets=True, nut_depth=None, bezel=False, switch_window=False, seat=False):
+    base, lid = base_shell(), lid_shell(bezel, seat)
     for x0 in p.station_x:
         base = base - lid_knuckle(x0, p.knuckle_clr) + base_station(x0)
         base = base - bore(x0) - fasteners(x0, nut_depth)
@@ -644,6 +701,15 @@ def coupon(base, lid, x0=55.0, x1=100.0):
         x1 - x0, p.base_y + 10, p.closed_h_rear + 10
     )
     return base & box, lid & box
+
+
+def usbc_coupon(lid, x0=60.0):
+    """The lid's right end, from X = x0: the USB-C slot with the extender's seat, the
+    pocket's end and the end clips, to fit the real adapter and cable before a full print."""
+    box = Pos((x0 + p.lid_x / 2 + 5) / 2, p.lid_y / 2, p.closed_h_rear / 2) * Box(
+        p.lid_x / 2 + 5 - x0, p.lid_y + 20, p.closed_h_rear + 10
+    )
+    return lid & box
 
 
 def phone_coupon(lid, x0=-p.lid_x / 2, x1=-4.0):

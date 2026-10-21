@@ -104,12 +104,14 @@ def _flat(M):
     return " ".join(f"{x:.9g}" for x in np.asarray(M).flatten())
 
 
-def write_plates(out, lid, inlay, plates):
+def write_plates(out, lid, inlay, plates, through=None):
     """A multi-plate project: plate 1 is the lid with its logo exactly as write() lays
     it out; every other plate is a list of (name, shape, filament) lying as exported,
     each shape on its own plate, centred. Printer and filament settings come from the
     template. Plates are placed on Bambu's grid (a column count of ceil(sqrt(n)),
-    rows going toward -Y), so a slice with the real slicer is the check that matters."""
+    rows going toward -Y), so a slice with the real slicer is the check that matters.
+    `through` = (lid, inlay) of the through-logo variant: one more plate, the same lid
+    in the same pose as plate 1, so the two cannot drift apart."""
     import uuid
     from math import ceil, sqrt
 
@@ -129,7 +131,7 @@ def write_plates(out, lid, inlay, plates):
     new_logo[:3, 3] = R @ (c_logo - c_lid) + t
     M_lid = np.array(M_lid)
 
-    n_plates = 1 + len(plates)
+    n_plates = 1 + len(plates) + (1 if through else 0)
     cols = ceil(sqrt(n_plates))
 
     def origin(i):
@@ -157,13 +159,36 @@ def write_plates(out, lid, inlay, plates):
                          f"1 0 0 0 1 0 0 0 1 {xy[0]:.6f} {xy[1]:.6f} {h:.6f}"))
             plate_of[nxt] = pi
             nxt += 1
+    fixed = {0}
+    if through:
+        lid2, inlay2 = through
+        v_l2, c_l2, t_l2 = _local(lid2)
+        v_i2, c_i2, t_i2 = _local(inlay2)
+        if open_edges(t_l2) + open_edges(t_i2):
+            raise ValueError("open edges in the through-logo meshes")
+        if not np.allclose(c_l2, c_lid, atol=1e-3):
+            raise ValueError("the through lid is not centred like plate 1's")
+        logo2 = np.eye(4)
+        logo2[:3, :3] = R
+        logo2[:3, 3] = R @ (c_i2 - c_lid) + t
+        meshes += [(v_i2, t_i2), (v_l2, t_l2)]
+        pi = n_plates - 1
+        ox, oy = origin(pi)
+        tf2 = list(item_lid)
+        tf2[9], tf2[10] = f"{float(item_lid[9]) + ox:.6f}", f"{float(item_lid[10]) + oy:.6f}"
+        objs.append((nxt, "Lid with through logo", 3,
+                     [(len(meshes) - 1, logo2, "inlay", 4), (len(meshes), M_lid, "lid", 3)],
+                     " ".join(tf2)))
+        plate_of[nxt] = pi
+        fixed.add(pi)
+        nxt += 1
     # Spread each plate's objects along X so they do not overlap. Done after sizing.
     by_plate = {}
     for o in objs:
         by_plate.setdefault(plate_of[o[0]], []).append(o)
     placed = []
     for pi, group in by_plate.items():
-        if pi == 0:
+        if pi in fixed:
             placed += group
             continue
         ox, oy = origin(pi)
@@ -288,3 +313,26 @@ def _comp(M):
     """A 4x4 matrix as the 3MF component transform: columns of R, then translation."""
     M = np.asarray(M)
     return " ".join(f"{x:.9g}" for x in [*M[:3, 0], *M[:3, 1], *M[:3, 2], *M[:3, 3]])
+
+
+def write_single(shape, out, name):
+    """One part as a plain 3MF, as placed: no slicer settings, just the mesh."""
+    vs, ts = welded(shape)
+    assert not open_edges(ts), f"open edges in {name}"
+    v = "".join(f'<vertex x="{x:.5f}" y="{y:.5f}" z="{z:.5f}"/>' for x, y, z in vs.tolist())
+    t = "".join(f'<triangle v1="{a}" v2="{b}" v3="{c}"/>' for a, b, c in ts)
+    xml = ('<?xml version="1.0" encoding="UTF-8"?><model unit="millimeter" xml:lang="en-US" '
+           'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02"><resources>'
+           f'<object id="1" name="{name}" type="model"><mesh><vertices>{v}</vertices>'
+           f'<triangles>{t}</triangles></mesh></object></resources>'
+           '<build><item objectid="1"/></build></model>')
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types '
+                   'xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+                   '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+                   '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>')
+        z.writestr("_rels/.rels", '<?xml version="1.0" encoding="UTF-8"?><Relationships '
+                   'xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                   '<Relationship Target="/3D/3dmodel.model" Id="rel0" '
+                   'Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>')
+        z.writestr("3D/3dmodel.model", xml)

@@ -190,6 +190,28 @@ phone_usbc_cut_h = 9.0   # along Z: sets the FLOOR side only - the slot is open
                          # (3.5): a plug had to be worked in at an angle. 4.5
                          # still leaves 2.3 of the lid's rear skin below the slot.
 
+# --- USB-C extender seat (ADR-0013, bezel lid only) --------------------------
+# The extender stays in the phone, and the lid's USB-C slot grows a seat that holds
+# its body: a floor and two cheeks that take the cable's side load instead of the
+# phone's port, crush ribs on the cheeks that grip it, and a detent ridge over each
+# top corner. The fit is tight on purpose: the adapter stays in the lid, and the phone
+# unplugs from it. Drop-in from the screen side. Which end is which: the 6.1 silver stub is the male plug that
+# goes into the phone; the female socket is the far end of the black body, so the
+# cable enters the body's +X face. The seat stops 1 short of that face.
+# Lengths and width measured from the ruler in IMG_6361 at full resolution (36 px/mm,
+# 2026-10-21): about +-0.3. The thickness comes from the end-on photo, same scale check. Caliper the real adapter before anything is printed.
+adapter_body_w_ASSUMED = 10.5    # across Y, the label face
+adapter_body_t_ASSUMED = 6.0     # along Z, read off the end-on photo (socket 8.8 x 2.6 fixes its scale): +-0.3
+adapter_body_len_ASSUMED = 18.5  # black body, the socket face to the male plug's root
+adapter_plug_len = 6.1           # silver male stub, inside the phone
+adapter_seat_clr = 0.15          # per side, between the body and the cheek / floor
+adapter_seat_stop = 1.0          # the seat ends this far short of the socket face
+adapter_rib_h = 0.45             # crush rib height: net squeeze = rib_h - seat_clr = 0.30 per side, a firm press fit
+adapter_rib_w = 0.80             # along X
+adapter_rib_n = 3                # per cheek
+adapter_ridge_h = 0.45           # detent ridge height; 45 deg both ways, so it prints face-up
+adapter_ridge_len = 5.0          # along X, centred on the seat
+
 # --- removable front bezel (ADR-0012, a separate export) ---------------------
 # A plate over the WHOLE front of the lid (as in the Reddit build), with a window
 # for the screen, instead of tape. It lies flush with the lid's face; the lid's

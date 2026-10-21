@@ -92,9 +92,10 @@ def _viewbox_w():
     return float(vb[2])
 
 
-def place(shape2d):
-    """Extrude a flat region logo_depth down into the lid's outer face."""
-    solid = Pos(0, 0, -p.logo_depth) * extrude(shape2d, amount=p.logo_depth)
+def place(shape2d, depth=None):
+    """Extrude a flat region `depth` (default logo_depth) down into the lid's outer face."""
+    depth = p.logo_depth if depth is None else depth
+    solid = Pos(0, 0, -depth) * extrude(shape2d, amount=depth)
     if p.logo_reads_open:
         solid = Rot(0, 0, 180) * solid
     slope = (p.rim_rear - p.rim_front) / p.base_depth_to_axis
@@ -102,6 +103,6 @@ def place(shape2d):
     return Pos(0, p.logo_centre_y, z) * Rot(p.close_tilt, 0, 0) * solid
 
 
-def inlays():
+def inlays(depth=None):
     """{colour: solid}, in device coordinates, flush with the lid's face."""
-    return {name: place(r) for name, r in regions().items()}
+    return {name: place(r, depth) for name, r in regions().items()}
