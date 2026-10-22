@@ -545,7 +545,9 @@ def fasteners(x0, nut_depth=None):
     )
     head = x_cyl(p.head_dia, p.head_depth,
                  x0 + s * (half - p.head_depth / 2), AY, AZ)
-    return nut + head
+    groove = x_cyl(p.ring_groove_dia, p.ring_groove_depth,
+                   x0 + s * (half - p.head_depth - p.ring_groove_depth / 2), AY, AZ)
+    return nut + head + groove
 
 
 def head_access(x0):

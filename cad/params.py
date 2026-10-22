@@ -357,8 +357,14 @@ nut_depth = 4.30
 # order: export/plainnut/. It wants threadlocker, which cannot be re-applied
 # once the lid is nested - fine for a coupon, not what the device should ship with.
 nut_depth_plain = 2.70
-head_dia = 5.80          # M3 socket cap 5.5 plus fit
-head_depth = 3.80        # head 3.0 plus a wave washer
+# The head sits on a flat DIN 433 washer (3.2 x 6 x 0.5), the washer on the floor of
+# the pocket, and the 3 x 1 O-ring in a groove in that floor. The groove is 0.8
+# deep, so the ring stands 0.2 proud: the head squeezes it 20 % and then the washer
+# lands on the floor beside the groove and stops. No torque can crush the ring.
+head_dia = 6.50          # washer 6.0 plus fit; M3 socket cap is 5.5
+head_depth = 3.80        # head 3.0 plus washer 0.5, with 0.3 spare
+ring_groove_dia = 5.30   # 3 x 1 ring is 5.0 across; it spreads a little when squeezed
+ring_groove_depth = 0.80
 
 corner_r = 3.0   # outer vertical corners
 
@@ -394,7 +400,7 @@ station_x = (-87.5, 87.5)
 
 # Clearance bored through the lid outboard of each station so the Ø5.5 head can
 # travel down the axis into its pocket. Ø3.5 - the bolt's own bore - will not.
-head_access_dia = 6.40
+head_access_dia = 6.80
 foot_y_rear = base_y - foot_dia / 2 - 1.0
 
 # The tunnel is now a plain opening through the base's right wall - 1.9 mm of

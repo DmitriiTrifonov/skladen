@@ -6,6 +6,17 @@ Versions follow [semantic versioning](https://semver.org/) applied to hardware:
 tolerances or documentation. Tags mark the commit a version was printed from;
 design reasons are in [docs/adr/](docs/adr/README.md).
 
+## [Unreleased]
+
+### Changed
+- **Hinge head pocket has a hard stop.** On the first print the 3 x 1 O-ring under the bolt
+  head was flattened or torn when the bolts were turned out, because nothing limited how hard
+  the head could squeeze it. The ring now sits in a 0.8 mm deep groove in the pocket floor,
+  standing 0.2 mm proud, and a flat DIN 433 washer (3.2 x 6 x 0.5) goes between head and
+  ring: the head squeezes the ring 20 % and the washer lands on the floor beside the groove.
+  Pocket 5.8 -> 6.5 mm, head access through the lid 6.4 -> 6.8 mm. Not yet printed.
+  DIN 137B wave washers were looked at and rejected: the M3 size is 8 mm across.
+
 ## [2.1.0] — 2026-10-20, front bezel (printed)
 
 Printed and assembled (photo in the README). Revisions after the first print — the eject

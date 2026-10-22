@@ -186,7 +186,7 @@ from others here · `A` assumed, not yet verified
 | `post_half_y` | 2.5 | D |  |
 | `nut_af` | 5.7 | D | M3 nut across flats |
 | `nut_depth` | 4.3 | D |  |
-| `head_dia` | 5.8 | D |  |
+| `head_dia` | 6.5 | D |  |
 | `head_depth` | 3.8 | D | head plus a wave washer |
 
 
