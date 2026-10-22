@@ -312,3 +312,7 @@ than 30% over the cycles. Otherwise fall back to Option B.
 - Adjustability is the property to protect through detail design. If the bolt
   heads end up buried where a screwdriver cannot reach once assembled, the main
   advantage of this option is lost.
+
+## Update 2026-10-22: waiting for a print
+
+On the first print the O-ring under the bolt head was crushed or torn: nothing limited how hard the head squeezed it, and a wave washer does not fit (an M3 DIN 137B is 8 mm across). The head pocket now has a groove for the ring and a flat DIN 433 washer that lands on the pocket floor and stops the squeeze at 20 %. It is modelled and checked, **not printed**; this section changes once it has been. See plan item 2.2b and the changelog.
