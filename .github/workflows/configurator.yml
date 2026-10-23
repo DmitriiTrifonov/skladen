@@ -1,0 +1,43 @@
+name: Configurator
+
+# Builds configurator/ and publishes it with GitHub Pages. In the repo's settings,
+# Pages > Source must be "GitHub Actions". The parts in configurator/public/parts are
+# committed (cad/configurator_export.py makes them); CI only bundles the app.
+on:
+  push:
+    branches: [main]
+    paths: [configurator/**, .github/workflows/configurator.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: configurator/package-lock.json
+      - run: npm ci
+        working-directory: configurator
+      - run: npm run build
+        working-directory: configurator
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: configurator/dist
+      - id: deployment
+        uses: actions/deploy-pages@v4
