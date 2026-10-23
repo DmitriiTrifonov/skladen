@@ -31,8 +31,14 @@ the lid, nothing to buy.
 
 - The rocker is two keys split at its middle (X -39.15); the F1's actual split and the
   keys' height (3.0 assumed, in the check only) are not in `measurements.md`.
-- The tongue touches the key over its length, not at a nub: pressing near the fixed end
-  is stiffer than near the free one.
+- **First print (2026-10-23): the volume-up tongue pressed both volume keys.** The split
+  at the rocker's middle was a guess, and a tongue touching along its length overlapped
+  the neighbour. The two volume tongues now touch through a 4 x 4 nub each, near the
+  outer ends and 12.5 apart (X -45.0 and -32.5, `button_tab_beams`), the rest of the
+  tongue standing 0.3 back. The split can then lie anywhere from X -43 to -34.5; `build.py`
+  checks keys stretched to those limits. The power tongue, known to work, is unchanged.
+  Still wanted: the two keys' measured spans.
+- A tongue without a nub touches along its length, so pressing near its fixed end is stiffer.
 - The key's own travel and force (a few N, a few tenths of a millimetre) are not
   measured; if a tongue is too soft the key is pressed by the lid's weight, too stiff
   and it does nothing.

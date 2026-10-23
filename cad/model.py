@@ -224,9 +224,14 @@ def button_tabs(s, ph_y0, t):
         s -= _slab(a, b, -1.0, y_in + 0.4, top, bot + 1.0)
     for x0, x1 in posts:
         s += _slab(x0, x1, 0.0, y_in, top, bot)   # no deeper than the tongues: the keys' ends sit under them
-    for xf, xe in p.button_tab_beams:
+    kz = p.bezel_phone_off + p.phone_z / 2
+    for xf, xe, nub in p.button_tab_beams:
         a, b = (xf - 0.3, xe) if xe > xf else (xe, xf + 0.3)
-        s += _slab(a, b, y_in - t, y_in, top, bot)
+        back = p.button_tab_nub_h if nub is not None else 0.0   # the whole tongue sits back, the nub reaches
+        s += _slab(a, b, y_in - back - t, y_in - back, top, bot)
+        if nub is not None:
+            s += _slab(nub - p.button_tab_nub_w / 2, nub + p.button_tab_nub_w / 2,
+                       y_in - back - 0.3, y_in, kz - p.button_tab_nub_z / 2, kz + p.button_tab_nub_z / 2)
     return s
 
 

@@ -15,4 +15,4 @@ CAD, 3MF where a part is laid in its printing pose.
 | [`lid-variants/`](lid-variants/) | The whole bezel lid with rib heights 0.50 / 0.60 / 0.70 and tongues 0.8 / 1.0 / 1.2 |
 | [`logo/`](logo/) | Logo recess lid and inlay |
 | [`adapter/`](adapter/) | USB-C extender seat (parked) |
-| `skladen2-2.1-plates.3mf` | Every 2.1 part laid out on plates in one Bambu project: 1 lid with logo, 2 frame, 3 base + plugs, 4 through-logo lid, 5 closed frame, 6-8 whole lids with different ribs and tongues |
+| `skladen2-2.1-plates.3mf` | Every 2.1 part laid out on plates in one Bambu project: 1 lid with logo, 2 frame, 3 base + plugs, 4 through-logo lid, 5 closed frame, 6-10 whole lids, one each, with different ribs and tongues |

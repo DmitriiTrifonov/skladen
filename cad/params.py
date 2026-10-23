@@ -169,7 +169,14 @@ button_tab_t = 1.0         # tongue thickness along Y; stiffness goes with its c
 button_tab_pre = 0.10      # from the tongue's inner face to the key at rest
 button_tab_gap = 0.60      # free end to the next post (the slit down the sides is the same)
 # (fixed edge, free end) in lid X, then the posts between and beside them
-button_tab_beams = ((-48.6, -41.0), (-37.9, -30.3), (-11.3, -18.9))
+# (fixed edge, free end, nub centre or None). The two volume keys are only known to
+# span X -49.85..-28.45 together, so each tongue touches its key through a nub 4 wide near
+# the outer end, 12.5 apart: the split can sit anywhere between -43 and -34.5 and a tongue
+# still presses one key. The power key is known, so its tongue touches along its length.
+button_tab_beams = ((-48.6, -41.0, -45.0), (-37.9, -30.3, -32.5), (-11.3, -18.9, None))
+button_tab_nub_w = 4.0
+button_tab_nub_h = 0.30    # how far a nub stands off its tongue; the rest of the tongue is this far from the key
+button_tab_nub_z = 4.0     # along Z, centred on the phone's mid-thickness
 button_tab_posts = ((-51.1, -48.6), (-40.4, -37.9), (-29.7, -19.5), (-11.3, -8.9))
 # the openings cut between posts: each holds one tongue and its slit
 button_tab_openings = ((-48.6, -40.4), (-37.9, -29.7), (-19.5, -11.3))

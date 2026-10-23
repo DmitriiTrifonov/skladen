@@ -8,7 +8,21 @@ design reasons are in [docs/adr/](docs/adr/README.md).
 
 ## [Unreleased]
 
+### Added
+- **Crush ribs on the bezel lid's pocket walls** ([ADR-0015](docs/adr/0015-phone-crush-ribs.md)),
+  which stop the phone floating; the first coupon at 0.40 left it loose, so 0.50 / 0.60 / 0.70
+  are exported. Not yet confirmed on a print.
+- **Button tongues** in the bezel lid's front wall in place of the open window
+  ([ADR-0016](docs/adr/0016-button-tabs.md)), with a frame closed over them
+  (`export/bezel/skladen2-bezel-closed*`). The volume tongues touch through nubs after the
+  first coupon pressed both keys. Not yet confirmed on a print.
+- Whole-lid variants and phone-fit coupons for those parameters, a README in every `export/`
+  folder, ten named plates in `skladen2-2.1-plates.3mf`; where this stopped is in
+  [docs/status.md](docs/status.md).
+
 ### Changed
+- The USB-C extender seat is parked ([ADR-0013](docs/adr/0013-usbc-extender.md)): its build step
+  is off, its files are unchanged.
 - **Hinge head pocket has a hard stop.** On the first print the 3 x 1 O-ring under the bolt
   head was flattened or torn when the bolts were turned out, because nothing limited how hard
   the head could squeeze it. The ring now sits in a 0.8 mm deep groove in the pocket floor,

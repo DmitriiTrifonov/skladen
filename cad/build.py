@@ -183,6 +183,18 @@ def bezel_variant(base):
                   f"want 0 / > 0   {'ok' if rest < 0.01 and pushed > 0.1 else 'TAB MISSES'}")
             if rest >= 0.01 or pushed <= 0.1:
                 FAIL.append(f"button tab {name}")
+        # The volume split is not measured: keys stretched toward each other, as far as the
+        # nubs' spacing allows, must still be pressed by their own tongue only.
+        for name, kx0, kx1, other in (("volume down", -49.85, -35.0, "x > -34.6"),
+                                      ("volume up", -42.0, -28.45, "x < -42.9")):
+            key = Pos(0, -(p.button_tab_pre + 0.05), 0) * m._slab(
+                kx0, kx1, ky0 - p.button_proud, ky0, kz - 1.5, kz + 1.5)
+            hit = key & lid_b
+            xs = [v.X for v in hit.vertices()]
+            wrong = (max(xs) > -34.6) if other == "x > -34.6" else (min(xs) < -42.9)
+            print(f"  {'stretched ' + name + ' hits only its own':32s} {'ok' if not wrong else 'HITS BOTH':>8s}")
+            if wrong:
+                FAIL.append(f"stretched {name} key reaches the other tongue")
     covered = (m._slab(-p.phone_x / 2, p.phone_x / 2, ph_y0, ph_y0 + p.phone_y, 0.0, p.bezel_t)
                & m.rounded_outline(p.phone_x, p.phone_y, ph_y0,
                                    p.phone_corner_r_front, p.phone_corner_r_rear)
@@ -657,12 +669,17 @@ def main():
         _, lid_h = m.build(bezel=True, rib_h=h)
         part = m.phone_coupon(lid_h, x1=24.0)
         name = f"coupon-phone-lid-ribs-h{h:.2f}"
+        if h != 0.60:      # 0.60 is already printed; the plates file carries the others
+            PARTS.setdefault("coupons", {})[f"Ribs {h:.2f}, tab 1.0"] = laid_flat(part)
         save(part, "coupon-phone", name, step=False)
         bambu_project.write_single(laid_flat(part), m.OUT / "coupon-phone" / f"skladen2-{name}.3mf", name)
         print(f"  ribs {h:.2f}: {len(part.solids())} solid(s)")
     # The whole lid in the same five variants, for the plates: ribs 0.50 / 0.60 / 0.70 with the
     # 1.0 tongue, and 0.8 / 1.2 tongues at ribs 0.60. Plain lids, no logo.
     PARTS["variants"] = {}
+    deep_inlay = None
+    for part in logo.inlays(p.lid_rear_wall).values():
+        deep_inlay = part if deep_inlay is None else deep_inlay + part
     for label, kw in (("Ribs 0.50, tab 1.0", dict(rib_h=0.50)), ("Ribs 0.60, tab 1.0", dict(rib_h=0.60)),
                       ("Ribs 0.70, tab 1.0", dict(rib_h=0.70)),
                       ("Ribs 0.60, tab 0.8", dict(rib_h=0.60, tab_t=0.8)),
@@ -671,19 +688,31 @@ def main():
         n = len(lid_v.solids())
         if n != 1:
             FAIL.append(f"lid variant {label} is {n} solids")
-        file = "lid-bezel-rib{:.2f}-tab{:.1f}".format(kw["rib_h"], kw.get("tab_t", 1.0))
+        # with the dog cut through the rear wall, as plate 4's lid has it
+        lid_v = lid_v - deep_inlay
+        file = "lid-bezel-rib{:.2f}-tab{:.1f}-through".format(kw["rib_h"], kw.get("tab_t", 1.0))
         save(lid_v, "lid-variants", file, step=False)
-        PARTS["variants"][label] = laid_flat(lid_v)
+        PARTS["variants"][label] = lid_v
         print(f"  lid variant {label}: {n} solid(s)")
+    save(deep_inlay, "lid-variants", "logo-through-inlay", step=False)
     # The same coupon with the other tongue thicknesses, to pick the push by feel.
     # (at ribs 0.60, the height to try first; the 1.0 one is `-ribs-h0.60`)
     for t in (0.8, 1.2):
         _, lid_t = m.build(bezel=True, tab_t=t, rib_h=0.60)
         part = m.phone_coupon(lid_t, x1=24.0)
         name = f"coupon-phone-lid-ribs-tab{t:.1f}"
+        PARTS["coupons"][f"Ribs 0.60, tab {t:.1f}"] = laid_flat(part)
         save(part, "coupon-phone", name, step=False)
         bambu_project.write_single(laid_flat(part), m.OUT / "coupon-phone" / f"skladen2-{name}.3mf", name)
         print(f"  tongue {t:.1f}: {len(part.solids())} solid(s)")
+    # The coupons not yet printed, two to a plate, in one Bambu project of their own.
+    cp = PARTS["coupons"]
+    order = [["Ribs 0.50, tab 1.0", "Ribs 0.70, tab 1.0"], ["Ribs 0.60, tab 0.8", "Ribs 0.60, tab 1.2"]]
+    bambu_project.write_plates(
+        m.OUT / "coupon-phone" / "skladen2-coupon-phone-plates.3mf", None, None,
+        [[(f"Coupon {n}", cp[n], 3) for n in row] for row in order],
+        plate_names=[f"{i} Coupons: " + " + ".join(n.replace("Ribs ", "ribs ").replace("tab", "tab")
+                                                     for n in row) for i, row in enumerate(order, 1)])
 
     for sub, name, part in (("device", "base", base), ("device", "lid", lid),
                             ("coupon21", "coupon21-base", cb),
@@ -756,10 +785,18 @@ def main():
          + [(n, sh, 3) for n, sh in PARTS["plugs"]],
          # plates 5 to 8, after the through-logo lid (plate 4)
          [("Frame, closed over the buttons", PARTS["frame_closed"], 3)],
-         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.50, tab 1.0", "Ribs 0.60, tab 1.0")],
-         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.70, tab 1.0", "Ribs 0.60, tab 0.8")],
-         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.60, tab 1.2",)]],
-        through=(PARTS["lid_through"], PARTS["inlay_through"]), through_index=3)
+         ],
+        through=(PARTS["lid_through"], PARTS["inlay_through"]), through_index=3,
+        # plates 6 to 10: the whole lid in five variants, dog cut through, one to a plate
+        extra=[("Lid " + n, PARTS["variants"][n], PARTS["inlay_through"], pi, dy)
+               for n, pi, dy in (("Ribs 0.50, tab 1.0", 5, 0.0), ("Ribs 0.60, tab 1.0", 6, 0.0),
+                                 ("Ribs 0.70, tab 1.0", 7, 0.0), ("Ribs 0.60, tab 0.8", 8, 0.0),
+                                 ("Ribs 0.60, tab 1.2", 9, 0.0))],
+        plate_names=["1 Lid, logo", "2 Frame", "3 Base, switch window + plugs",
+                     "4 Lid, through logo", "5 Frame, closed over buttons",
+                     "6 Lid ribs 0.50 tab 1.0", "7 Lid ribs 0.60 tab 1.0",
+                     "8 Lid ribs 0.70 tab 1.0", "9 Lid ribs 0.60 tab 0.8",
+                     "10 Lid ribs 0.60 tab 1.2"])
     print("\nall plates in one project:", ", ".join(f"{n} -> plate {i}" for n, i in where.items()))
 
     # Keep docs/parameters.md from drifting: regenerate it every build.

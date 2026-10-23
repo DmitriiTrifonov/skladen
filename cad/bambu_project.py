@@ -104,7 +104,8 @@ def _flat(M):
     return " ".join(f"{x:.9g}" for x in np.asarray(M).flatten())
 
 
-def write_plates(out, lid, inlay, plates, through=None, through_index=None):
+def write_plates(out, lid, inlay, plates, through=None, through_index=None, extra=(),
+                 plate_names=()):
     """A multi-plate project: plate 1 is the lid with its logo exactly as write() lays
     it out; every other plate is a list of (name, shape, filament) lying as exported,
     each shape on its own plate, centred. Printer and filament settings come from the
@@ -112,7 +113,10 @@ def write_plates(out, lid, inlay, plates, through=None, through_index=None):
     rows going toward -Y), so a slice with the real slicer is the check that matters.
     `through` = (lid, inlay) of the through-logo variant: one more plate, the same lid
     in the same pose as plate 1, so the two cannot drift apart. It is the last plate
-    unless `through_index` (0-based) puts it earlier; `plates` then continue after it."""
+    unless `through_index` (0-based) puts it earlier; `plates` then continue after it.
+    `extra` = [(name, lid, inlay, plate, dy)], more through-logo lids in the same pose on
+    their own plates (0-based, after the others), `dy` mm along the plate's Y, so two can
+    share one. All of them print lid in filament 3, inlay in 4."""
     import uuid
     from math import ceil, sqrt
 
@@ -125,28 +129,30 @@ def write_plates(out, lid, inlay, plates, through=None, through_index=None):
     item_lid = re.search(r'<item [^>]*transform="([^"]+)"',
                          files["3D/3dmodel.model"].decode()).group(1).split()
     R, t = M_lid[:3, :3], M_lid[:3, 3]
-    v_lid, c_lid, t_lid = _local(lid)
-    v_logo, c_logo, t_logo = _local(inlay)
-    new_logo = np.eye(4)
-    new_logo[:3, :3] = R
-    new_logo[:3, 3] = R @ (c_logo - c_lid) + t
+    first = 1 if lid is not None else 0     # lid=None: a project of plain plates, no lid plate
+    if lid is not None:
+        v_lid, c_lid, t_lid = _local(lid)
+        v_logo, c_logo, t_logo = _local(inlay)
+        new_logo = np.eye(4)
+        new_logo[:3, :3] = R
+        new_logo[:3, 3] = R @ (c_logo - c_lid) + t
     M_lid = np.array(M_lid)
 
-    n_plates = 1 + len(plates) + (1 if through else 0)
+    n_plates = first + len(plates) + (1 if through else 0) + len({e[3] for e in extra})
     cols = ceil(sqrt(n_plates))
 
     def origin(i):
         return (i % cols) * PLATE_STRIDE, -(i // cols) * PLATE_STRIDE
 
-    meshes = [(v_logo, t_logo), (v_lid, t_lid)]     # mesh ids 1 and 2
+    meshes = [(v_logo, t_logo), (v_lid, t_lid)] if first else []    # mesh ids 1 and 2
     # objects: (id, name, extruder, [(mesh id, part matrix, part name, extruder)], item)
     objs = [(3, "Lid with logo", 3,
              [(1, new_logo, "inlay", 4), (2, M_lid, "lid", 3)],
-             " ".join(item_lid))]
-    plate_of = {3: 0}
+             " ".join(item_lid))] if first else []
+    plate_of = {3: 0} if first else {}
     nxt = 4
     for i, plate in enumerate(plates):
-        pi = i + 1
+        pi = i + first
         if through and through_index is not None and pi >= through_index:
             pi += 1
         ox, oy = origin(pi)
@@ -163,7 +169,7 @@ def write_plates(out, lid, inlay, plates, through=None, through_index=None):
                          f"1 0 0 0 1 0 0 0 1 {xy[0]:.6f} {xy[1]:.6f} {h:.6f}"))
             plate_of[nxt] = pi
             nxt += 1
-    fixed = {0}
+    fixed = {0} if first else set()
     if through:
         lid2, inlay2 = through
         v_l2, c_l2, t_l2 = _local(lid2)
@@ -181,6 +187,26 @@ def write_plates(out, lid, inlay, plates, through=None, through_index=None):
         tf2 = list(item_lid)
         tf2[9], tf2[10] = f"{float(item_lid[9]) + ox:.6f}", f"{float(item_lid[10]) + oy:.6f}"
         objs.append((nxt, "Lid with through logo", 3,
+                     [(len(meshes) - 1, logo2, "inlay", 4), (len(meshes), M_lid, "lid", 3)],
+                     " ".join(tf2)))
+        plate_of[nxt] = pi
+        fixed.add(pi)
+        nxt += 1
+    for name, lid2, inlay2, pi, dy in extra:
+        v_l2, c_l2, t_l2 = _local(lid2)
+        v_i2, c_i2, t_i2 = _local(inlay2)
+        if open_edges(t_l2) + open_edges(t_i2):
+            raise ValueError(f"open edges in {name}")
+        if not np.allclose(c_l2, c_lid, atol=1e-3):
+            raise ValueError(f"{name} is not centred like plate 1's lid")
+        logo2 = np.eye(4)
+        logo2[:3, :3] = R
+        logo2[:3, 3] = R @ (c_i2 - c_lid) + t
+        meshes += [(v_i2, t_i2), (v_l2, t_l2)]
+        ox, oy = origin(pi)
+        tf2 = list(item_lid)
+        tf2[9], tf2[10] = f"{float(item_lid[9]) + ox:.6f}", f"{float(item_lid[10]) + oy + dy:.6f}"
+        objs.append((nxt, name, 3,
                      [(len(meshes) - 1, logo2, "inlay", 4), (len(meshes), M_lid, "lid", 3)],
                      " ".join(tf2)))
         plate_of[nxt] = pi
@@ -285,11 +311,11 @@ def write_plates(out, lid, inlay, plates, through=None, through_index=None):
         ms.append("  </object>\n")
     for pi in range(n_plates):
         ms.append(f'  <plate>\n    <metadata key="plater_id" value="{pi + 1}"/>\n'
-                  f'    <metadata key="plater_name" value=""/>\n'
+                  f'    <metadata key="plater_name" value="{plate_names[pi] if pi < len(plate_names) else ""}"/>\n'
                   f'    <metadata key="locked" value="false"/>\n'
                   f'    <metadata key="filament_map_mode" value="Auto For Flush"/>\n'
                   f'    <metadata key="filament_maps" value="1 1 1 1 1"/>\n')
-        if pi == 0:
+        if pi == 0 and first:
             ms.append('    <metadata key="thumbnail_file" value="Metadata/plate_1.png"/>\n'
                       '    <metadata key="thumbnail_no_light_file" value="Metadata/plate_no_light_1.png"/>\n'
                       '    <metadata key="top_file" value="Metadata/top_1.png"/>\n'

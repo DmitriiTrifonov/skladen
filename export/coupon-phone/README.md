@@ -42,11 +42,13 @@ figures are a rough beam estimate (PETG, 10 mm tall tongue, at the tip), not a m
 
 Too soft: the lid's own weight presses a key. Too stiff: the key does not move.
 
-## On plates
+## Plates
 
-Not any more: plates 6 to 8 of `../skladen2-2.1-plates.3mf` carry the whole lid in the same
-five variants, see [`../lid-variants/`](../lid-variants/). These coupons are for printing
-on their own.
+`skladen2-coupon-phone-plates.3mf` is a Bambu project of the coupons not printed yet, two to
+a plate, each plate named: 1 = ribs 0.50 + ribs 0.70 (tongue 1.0), 2 = tongue 0.8 + tongue
+1.2 (ribs 0.60). Left out: ribs 0.40 and `-h0.60`, which were printed first. The whole lids
+in the same variants are plates 6 to 10 of `../skladen2-2.1-plates.3mf`, see
+[`../lid-variants/`](../lid-variants/).
 
 ## Other files
 
