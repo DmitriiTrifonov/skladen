@@ -104,14 +104,15 @@ def _flat(M):
     return " ".join(f"{x:.9g}" for x in np.asarray(M).flatten())
 
 
-def write_plates(out, lid, inlay, plates, through=None):
+def write_plates(out, lid, inlay, plates, through=None, through_index=None):
     """A multi-plate project: plate 1 is the lid with its logo exactly as write() lays
     it out; every other plate is a list of (name, shape, filament) lying as exported,
     each shape on its own plate, centred. Printer and filament settings come from the
     template. Plates are placed on Bambu's grid (a column count of ceil(sqrt(n)),
     rows going toward -Y), so a slice with the real slicer is the check that matters.
     `through` = (lid, inlay) of the through-logo variant: one more plate, the same lid
-    in the same pose as plate 1, so the two cannot drift apart."""
+    in the same pose as plate 1, so the two cannot drift apart. It is the last plate
+    unless `through_index` (0-based) puts it earlier; `plates` then continue after it."""
     import uuid
     from math import ceil, sqrt
 
@@ -144,7 +145,10 @@ def write_plates(out, lid, inlay, plates, through=None):
              " ".join(item_lid))]
     plate_of = {3: 0}
     nxt = 4
-    for pi, plate in enumerate(plates, start=1):
+    for i, plate in enumerate(plates):
+        pi = i + 1
+        if through and through_index is not None and pi >= through_index:
+            pi += 1
         ox, oy = origin(pi)
         for name, shape, fil in plate:
             v, c, ts = _local(shape)
@@ -172,7 +176,7 @@ def write_plates(out, lid, inlay, plates, through=None):
         logo2[:3, :3] = R
         logo2[:3, 3] = R @ (c_i2 - c_lid) + t
         meshes += [(v_i2, t_i2), (v_l2, t_l2)]
-        pi = n_plates - 1
+        pi = n_plates - 1 if through_index is None else through_index
         ox, oy = origin(pi)
         tf2 = list(item_lid)
         tf2[9], tf2[10] = f"{float(item_lid[9]) + ox:.6f}", f"{float(item_lid[10]) + oy:.6f}"

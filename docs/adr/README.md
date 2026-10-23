@@ -19,6 +19,8 @@ CAD. See [ADR-0001](0001-record-architecture-decisions.md) for why.
 | [0012](0012-removable-front-bezel.md) | A removable front bezel in place of tape | Accepted for 2.1.0 — printed; 180 deg tipping unresolved | Task 0.13, a print, the balance remedy |
 | [0013](0013-usbc-extender.md) | A short USB-C extender left in the phone | Proposed | Task 0.12 — measure an adapter |
 | [0014](0014-switch-by-hand.md) | Power switch by hand: a window in the rear face with a plug, no shuttle | Proposed — modelled in `export/switch-window/` | A print and a try with tweezers |
+| [0015](0015-phone-crush-ribs.md) | Crush ribs on the pocket walls to stop the phone rattling | Proposed | Print on the phone coupon |
+| [0016](0016-button-tabs.md) | Flexure tabs for the phone's buttons in the bezel lid | Proposed | Print the tab coupons (0.8 / 1.0 / 1.2) |
 
 ## Dependency order
 

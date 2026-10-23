@@ -157,6 +157,32 @@ def bezel_variant(base):
     print(f"  {'ring vs phone':32s} {hit:8.3f} mm3  want 0.00   {'ok' if hit < 0.01 else 'PRESSES'}")
     if hit >= 0.01:
         FAIL.append("bezel ring presses the phone")
+    # The crush ribs (ADR-0015): the phone, centred, must meet them - and only them.
+    squeeze = (phone & lid_b).volume
+    print(f"  {'phone meets the crush ribs':32s} {squeeze:8.3f} mm3  want > 0     "
+          f"{'ok' if squeeze > 0 else 'NO RIBS TOUCH'}")
+    if squeeze <= 0:
+        FAIL.append("phone ribs do not touch the phone")
+    clip_cut = sum((c[1] & m.phone_ribs(p.phone_x + 2 * p.clr_phone, p.phone_front_wall,
+                                        p.phone_y + 2 * p.clr_phone)).volume for c in m.clips())
+    print(f"  {'clip slots cutting the ribs':32s} {clip_cut:8.3f} mm3  want 0.00   "
+          f"{'ok' if clip_cut < 0.01 else 'CLIPS CUT RIBS'}")
+    if clip_cut >= 0.01:
+        FAIL.append("clip slots cut the phone ribs")
+    # Button tabs (ADR-0016): at rest each key is free of its tongue, and pushed in by the
+    # pre-travel plus a little it meets it. The keys' height is ASSUMED (3.0, centred).
+    if p.button_tabs:
+        kz = p.bezel_phone_off + p.phone_z / 2
+        ky0 = p.phone_front_wall + p.clr_phone
+        for name, kx0, kx1 in (("volume down", -49.85, -39.15), ("volume up", -39.15, -28.45),
+                               ("power", -19.85, -9.95)):
+            key = m._slab(kx0, kx1, ky0 - p.button_proud, ky0, kz - 1.5, kz + 1.5)
+            rest = (key & lid_b).volume
+            pushed = (Pos(0, -(p.button_tab_pre + 0.05), 0) * key & lid_b).volume
+            print(f"  {'key ' + name + ' at rest / pushed':32s} {rest:8.3f} / {pushed:6.2f} mm3  "
+                  f"want 0 / > 0   {'ok' if rest < 0.01 and pushed > 0.1 else 'TAB MISSES'}")
+            if rest >= 0.01 or pushed <= 0.1:
+                FAIL.append(f"button tab {name}")
     covered = (m._slab(-p.phone_x / 2, p.phone_x / 2, ph_y0, ph_y0 + p.phone_y, 0.0, p.bezel_t)
                & m.rounded_outline(p.phone_x, p.phone_y, ph_y0,
                                    p.phone_corner_r_front, p.phone_corner_r_rear)
@@ -271,6 +297,24 @@ def bezel_variant(base):
     check("flat frame height", flat.bounding_box().size.Z, p.clip_arm_top, tol=0.35)
     save(flat, "bezel", "bezel-flat", step=False)
     PARTS["frame"] = flat
+
+    # The frame closed over the buttons (ADR-0016): no cut-out, no legs; the tongues are
+    # pressed from the front edge, under the plate. Only meaningful with the tongues.
+    if p.button_tabs:
+        closed = m.bezel_frame(closed=True)
+        n = len(closed.solids())
+        print(f"  {'closed frame solids':32s} {n:8d}      want 1      {'ok' if n == 1 else 'DETACHED ISLAND'}")
+        if n != 1:
+            FAIL.append("closed frame is not one solid")
+        hit = (closed & lid_b).volume
+        print(f"  {'closed frame vs lid':32s} {hit:8.3f} mm3  want 0.00   {'ok' if hit < 0.01 else 'COLLISION'}")
+        if hit >= 0.01:
+            FAIL.append("closed frame collides with lid")
+        save(closed, "bezel", "bezel-closed")
+        flat_c = Rot(X=-tilt) * closed
+        flat_c = Pos(0, 0, -flat_c.bounding_box().min.Z) * flat_c
+        save(flat_c, "bezel", "bezel-closed-flat", step=False)
+        PARTS["frame_closed"] = flat_c
     PARTS["lid"], PARTS["inlay"] = lid_b_logo, green
 
     # The through-logo lid: the recess and the inlay go the whole way through the 1.2 rear
@@ -584,6 +628,63 @@ def main():
         FAIL.append("phone coupon is not one solid")
     save(pc, "coupon-phone", "coupon-phone-lid")
 
+    # The same coupon from the bezel lid (ADR-0015), longer so it takes in the rib on the
+    # front wall at X 17 and the one on the rear wall at 18 as well as the left end's.
+    # The bezel frame itself is not in it: try the phone alone, then the frame from a
+    # full print.
+    from math import atan, degrees
+    from build123d import Rot
+    import bambu_project
+    _, lid_rb = m.build(bezel=True)
+    pcb = m.phone_coupon(lid_rb, x1=24.0)
+    n = len(pcb.solids())
+    print(f"phone coupon (bezel lid, ribs)   {pcb.volume/1000:.1f} cm3   "
+          f"{'one solid' if n == 1 else f'{n} SOLIDS'}")
+    if n != 1:
+        FAIL.append("bezel phone coupon is not one solid")
+    save(pcb, "coupon-phone", "coupon-phone-lid-ribs")
+    tilt = degrees(atan((p.rim_rear - p.rim_front) / p.base_depth_to_axis))
+
+    def laid_flat(part):
+        flat = Rot(Y=180) * (Rot(X=-tilt) * part)
+        return Pos(0, 0, -flat.bounding_box().min.Z) * flat
+
+    bambu_project.write_single(laid_flat(pcb), m.OUT / "coupon-phone" / "skladen2-coupon-phone-lid-ribs.3mf",
+                               "coupon-phone-lid-ribs")
+    # The same coupon with taller ribs (the first one, 0.40, left the phone loose on the
+    # 2026-10-23 print): 0.2 per side of squeeze at 0.50, 0.3 at 0.60, 0.4 at 0.70.
+    for h in (0.50, 0.60, 0.70):
+        _, lid_h = m.build(bezel=True, rib_h=h)
+        part = m.phone_coupon(lid_h, x1=24.0)
+        name = f"coupon-phone-lid-ribs-h{h:.2f}"
+        save(part, "coupon-phone", name, step=False)
+        bambu_project.write_single(laid_flat(part), m.OUT / "coupon-phone" / f"skladen2-{name}.3mf", name)
+        print(f"  ribs {h:.2f}: {len(part.solids())} solid(s)")
+    # The whole lid in the same five variants, for the plates: ribs 0.50 / 0.60 / 0.70 with the
+    # 1.0 tongue, and 0.8 / 1.2 tongues at ribs 0.60. Plain lids, no logo.
+    PARTS["variants"] = {}
+    for label, kw in (("Ribs 0.50, tab 1.0", dict(rib_h=0.50)), ("Ribs 0.60, tab 1.0", dict(rib_h=0.60)),
+                      ("Ribs 0.70, tab 1.0", dict(rib_h=0.70)),
+                      ("Ribs 0.60, tab 0.8", dict(rib_h=0.60, tab_t=0.8)),
+                      ("Ribs 0.60, tab 1.2", dict(rib_h=0.60, tab_t=1.2))):
+        _, lid_v = m.build(bezel=True, **kw)
+        n = len(lid_v.solids())
+        if n != 1:
+            FAIL.append(f"lid variant {label} is {n} solids")
+        file = "lid-bezel-rib{:.2f}-tab{:.1f}".format(kw["rib_h"], kw.get("tab_t", 1.0))
+        save(lid_v, "lid-variants", file, step=False)
+        PARTS["variants"][label] = laid_flat(lid_v)
+        print(f"  lid variant {label}: {n} solid(s)")
+    # The same coupon with the other tongue thicknesses, to pick the push by feel.
+    # (at ribs 0.60, the height to try first; the 1.0 one is `-ribs-h0.60`)
+    for t in (0.8, 1.2):
+        _, lid_t = m.build(bezel=True, tab_t=t, rib_h=0.60)
+        part = m.phone_coupon(lid_t, x1=24.0)
+        name = f"coupon-phone-lid-ribs-tab{t:.1f}"
+        save(part, "coupon-phone", name, step=False)
+        bambu_project.write_single(laid_flat(part), m.OUT / "coupon-phone" / f"skladen2-{name}.3mf", name)
+        print(f"  tongue {t:.1f}: {len(part.solids())} solid(s)")
+
     for sub, name, part in (("device", "base", base), ("device", "lid", lid),
                             ("coupon21", "coupon21-base", cb),
                             ("coupon21", "coupon21-lid", cl)):
@@ -643,15 +744,22 @@ def main():
     print(f"  exported to {m.OUT / 'plainnut'}")
 
     bezel_variant(base)
-    adapter_variant(base)
+    # ADR-0013 is parked (2026-10-23): no USB-C extender for now. adapter_variant() and
+    # export/adapter/ stay as they were; switch the call back on to rebuild them.
+    # adapter_variant(base)
     switch_window_variant()
     import bambu_project
     where = bambu_project.write_plates(
         m.OUT / "skladen2-2.1-plates.3mf", PARTS["lid"], PARTS["inlay"],
         [[("Frame", PARTS["frame"], 3)],
          [("Base, switch window", PARTS["base"], 3)]
-         + [(n, sh, 3) for n, sh in PARTS["plugs"]]],
-        through=(PARTS["lid_through"], PARTS["inlay_through"]))
+         + [(n, sh, 3) for n, sh in PARTS["plugs"]],
+         # plates 5 to 8, after the through-logo lid (plate 4)
+         [("Frame, closed over the buttons", PARTS["frame_closed"], 3)],
+         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.50, tab 1.0", "Ribs 0.60, tab 1.0")],
+         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.70, tab 1.0", "Ribs 0.60, tab 0.8")],
+         [(f"Lid {n}", PARTS["variants"][n], 3) for n in ("Ribs 0.60, tab 1.2",)]],
+        through=(PARTS["lid_through"], PARTS["inlay_through"]), through_index=3)
     print("\nall plates in one project:", ", ".join(f"{n} -> plate {i}" for n, i in where.items()))
 
     # Keep docs/parameters.md from drifting: regenerate it every build.

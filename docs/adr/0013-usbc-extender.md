@@ -1,6 +1,6 @@
 # ADR-0013: A short USB-C extender left in the phone
 
-- **Status:** Proposed
+- **Status:** Proposed — parked 2026-10-23 (no extender for now; the seat is still in `model.py`, its build step in `build.py` is commented out)
 - **Date:** 2026-10-17
 - **Decides:** how F6 is met; sizes the lid's right-end slot
 

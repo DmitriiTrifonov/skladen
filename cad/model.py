@@ -93,7 +93,7 @@ def base_shell():
     return s
 
 
-def lid_shell(bezel=False, seat=False):
+def lid_shell(bezel=False, seat=False, tab_t=None, rib_h=None):
     bot_f, bot_r = p.rim_front, p.rim_rear
     s = yz_prism(
         [
@@ -193,6 +193,9 @@ def lid_shell(bezel=False, seat=False):
         (p.lid_x - ph_x) / 2 + 2.0, p.phone_jack_cut_w, top - bot
     )
     if bezel:
+        s += phone_ribs(ph_x, ph_y0, ph_y, rib_h)
+        if p.button_tabs:
+            s = button_tabs(s, ph_y0, tab_t or p.button_tab_t)
         s -= front_rebate()
         s -= lightening(ph_x, ph_y0, ph_y)
         for clip in clips():
@@ -203,6 +206,53 @@ def lid_shell(bezel=False, seat=False):
     if seat:
         s += adapter_seat(uy, p.bezel_phone_off if bezel else 0.0)
     return s
+
+
+def button_tabs(s, ph_y0, t):
+    """ADR-0016: three tongues in the front wall in place of the open button window.
+
+    Each tongue is cut free all round except at its fixed end, through the rear skin too,
+    so it prints standing from the bed with nothing to bridge, and bends in the plane of
+    its layers. Its inner face stops `button_tab_pre` short of the key. Cut first, then
+    the posts and tongues are put back, so everything fuses at the skin and the posts.
+    """
+    y_in = ph_y0 + p.clr_phone - p.button_proud - p.button_tab_pre
+    top, bot = 0.0, p.lid_t                     # offsets: the face (the rebate trims it), the rear surface
+    posts = p.button_tab_posts
+    # the opening between neighbouring posts, through the skin, out to the front edge
+    for a, b in p.button_tab_openings:
+        s -= _slab(a, b, -1.0, y_in + 0.4, top, bot + 1.0)
+    for x0, x1 in posts:
+        s += _slab(x0, x1, 0.0, y_in, top, bot)   # no deeper than the tongues: the keys' ends sit under them
+    for xf, xe in p.button_tab_beams:
+        a, b = (xf - 0.3, xe) if xe > xf else (xe, xf + 0.3)
+        s += _slab(a, b, y_in - t, y_in, top, bot)
+    return s
+
+
+def phone_ribs(ph_x, ph_y0, ph_y, h=None):
+    """ADR-0015: thin crush ribs on the pocket walls, standing from the rear skin up to the
+    phone's glass with a 45 deg lead-in at the top, so they print on their sides-up and
+    the phone drops past them. Two on each long wall, two on each end; the phone is
+    centred between them, with `phone_rib_h` of squeeze less the pocket's play."""
+    h, w = h or p.phone_rib_h, p.phone_rib_w
+    o_glass, o_floor = p.bezel_phone_off, p.pocket_z
+    # (inward, offset) in the wall's frame; 0.3 buried in the wall so the union is clean
+    prof = [(-0.3, o_floor + 0.3), (h, o_floor + 0.3), (h, o_glass + 2 * h),
+            (0.0, o_glass), (-0.3, o_glass)]
+    out = None
+    for wall_y, d, xs in ((ph_y0, +1, p.phone_rib_front_xs),
+                          (ph_y0 + ph_y, -1, p.phone_rib_rear_xs)):
+        for x in xs:
+            rib = yz_prism([(wall_y + d * u, _face_z(wall_y, o)) for u, o in prof], w, x)
+            out = rib if out is None else out + rib
+    uy = ph_y0 + ph_y / 2
+    for wall_x, d, ys in ((-ph_x / 2, +1, p.phone_rib_left_ys),
+                          (ph_x / 2, -1, [uy + dy for dy in p.phone_rib_right_dys])):
+        for y in ys:
+            rib = _xz_prism([(wall_x + d * u, _face_z(y, o)) for u, o in prof], w, y)
+            out = out + rib
+    return out
 
 
 def lightening(ph_x, ph_y0, ph_y):
@@ -420,8 +470,11 @@ def audio_holes(phone_y0, z_at, phone_off):
     return out
 
 
-def bezel_frame():
-    """The plate over the whole front, flush with the lid's face, with its clips."""
+def bezel_frame(closed=False):
+    """The plate over the whole front, flush with the lid's face, with its clips.
+
+    closed: no cut-out over the buttons and no legs there, so the plate roofs the tongues'
+    recesses (ADR-0016); the tongues are pressed from the front edge, under it."""
     g = p.bezel_gap
     ph_y0 = p.phone_front_wall
     outer = _slab(-p.lid_x / 2 + g, p.lid_x / 2 - g, g, p.bezel_y_end, 0.0, p.bezel_t) \
@@ -445,21 +498,22 @@ def bezel_frame():
     frame -= _slab(ex - p.earpiece_w / 2 - k, ex + p.earpiece_w / 2 + k,
                    uy - p.earpiece_len / 2 - k, uy + p.earpiece_len / 2 + k,
                    -1.0, p.bezel_t + 1.0)
-    # The buttons are pressed from the front edge, through the lid's window. The
-    # plate would roof it, so it is cut away over the same span, joining the screen
-    # window: fingers and a thumbnail reach the buttons as they do on the open lid.
-    win_y_front = ph_y0 + p.clr_phone + p.bezel_overlap_side
-    frame -= _slab(p.button_win_x0, p.button_win_x1, -1.0, win_y_front + 0.5,
-                   -1.0, p.bezel_t + 1.0)
-    # Legs down both sides of the button window press the plate square: it sits in the
-    # lid's window with 0.05 either side, so the cut-out edge cannot lift or drift.
-    bw0, bw1 = p.button_win_x0, p.button_win_x1
-    lt, lc = p.bezel_leg_t, p.bezel_leg_clr
-    for x0, x1 in ((bw0 + lc, bw0 + lc + lt), (bw1 - lc - lt, bw1 - lc)):
-        # a strip of the plate stays beside the cut-out, so the leg hangs from the plate
-        o0, o1 = (x0 - 0.5, x1) if x0 < (bw0 + bw1) / 2 else (x0, x1 + 0.5)
-        frame += _slab(o0, o1, 0.3, win_y_front + 1.0, 0.0, p.bezel_t)
-        frame += _slab(x0, x1, 0.3, 0.3 + p.bezel_leg_len, p.bezel_t, p.bezel_t + p.bezel_leg_h)
+    if not closed:
+        # The buttons are pressed from the front edge, through the lid's window. The
+        # plate would roof it, so it is cut away over the same span, joining the screen
+        # window: fingers and a thumbnail reach the buttons as they do on the open lid.
+        win_y_front = ph_y0 + p.clr_phone + p.bezel_overlap_side
+        frame -= _slab(p.button_win_x0, p.button_win_x1, -1.0, win_y_front + 0.5,
+                       -1.0, p.bezel_t + 1.0)
+        # Legs down both sides of the button window press the plate square: it sits in the
+        # lid's window with 0.05 either side, so the cut-out edge cannot lift or drift.
+        bw0, bw1 = p.button_win_x0, p.button_win_x1
+        lt, lc = p.bezel_leg_t, p.bezel_leg_clr
+        for x0, x1 in ((bw0 + lc, bw0 + lc + lt), (bw1 - lc - lt, bw1 - lc)):
+            # a strip of the plate stays beside the cut-out, so the leg hangs from the plate
+            o0, o1 = (x0 - 0.5, x1) if x0 < (bw0 + bw1) / 2 else (x0, x1 + 0.5)
+            frame += _slab(o0, o1, 0.3, win_y_front + 1.0, 0.0, p.bezel_t)
+            frame += _slab(x0, x1, 0.3, 0.3 + p.bezel_leg_len, p.bezel_t, p.bezel_t + p.bezel_leg_h)
     for arm, _ in clips():
         frame += arm
     return frame
@@ -682,8 +736,9 @@ def soften(part, radius, name, half_x, y_at):
         return part
 
 
-def build(fillets=True, nut_depth=None, bezel=False, switch_window=False, seat=False):
-    base, lid = base_shell(), lid_shell(bezel, seat)
+def build(fillets=True, nut_depth=None, bezel=False, switch_window=False, seat=False, tab_t=None,
+          rib_h=None):
+    base, lid = base_shell(), lid_shell(bezel, seat, tab_t, rib_h)
     for x0 in p.station_x:
         base = base - lid_knuckle(x0, p.knuckle_clr) + base_station(x0)
         base = base - bore(x0) - fasteners(x0, nut_depth)

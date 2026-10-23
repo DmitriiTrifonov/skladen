@@ -157,6 +157,23 @@ phone_front_wall = 4.00
 # They stand 0.5 proud of the side, and sit on the phone's mid-plane.
 button_win_x0, button_win_x1 = -52.50, -7.50
 
+# Button tabs (ADR-0016, bezel lid only): in place of the open window the front wall carries
+# thin tongues, each fixed to a post at one end and free at the other, which push the
+# phone's buttons when pressed from the front. In the FBX the volume rocker is X -49.85 to
+# -28.45 and the power key -19.85 to -9.95 (measurements.md: 27.9-49.3 and 57.9-67.8 from
+# the top edge). The split of the rocker into two keys is ASSUMED to be at its middle.
+# NOT PRINTED: tab_t sets the push needed; the coupons carry 0.8 / 1.0 / 1.2.
+button_tabs = True
+button_proud = 0.5         # the keys stand this far off the phone's side (FBX)
+button_tab_t = 1.0         # tongue thickness along Y; stiffness goes with its cube
+button_tab_pre = 0.10      # from the tongue's inner face to the key at rest
+button_tab_gap = 0.60      # free end to the next post (the slit down the sides is the same)
+# (fixed edge, free end) in lid X, then the posts between and beside them
+button_tab_beams = ((-48.6, -41.0), (-37.9, -30.3), (-11.3, -18.9))
+button_tab_posts = ((-51.1, -48.6), (-40.4, -37.9), (-29.7, -19.5), (-11.3, -8.9))
+# the openings cut between posts: each holds one tongue and its slit
+button_tab_openings = ((-48.6, -40.4), (-37.9, -29.7), (-19.5, -11.3))
+
 # --- camera cutout --------------------------------------------------------
 # The FBX camera plateau, 1.0 proud of the back: X -6.0 to 5.9 across the phone
 # (centred), Y 31.6 to 63.2 toward the top - one tall module over both lenses and
@@ -211,6 +228,19 @@ adapter_rib_w = 0.80             # along X
 adapter_rib_n = 3                # per cheek
 adapter_ridge_h = 0.45           # detent ridge height; 45 deg both ways, so it prints face-up
 adapter_ridge_len = 5.0          # along X, centred on the seat
+
+# --- crush ribs on the bezel lid's pocket walls (ADR-0015) -------------------
+# The pocket floats the phone 0.3 per side and the plate leaves 0.2 over the glass, so it
+# rattles. Thin ribs stand off the walls and take up the side play, as the adapter seat's
+# ribs did: 2 * rib_h less the 0.6 gap is the squeeze with the phone centred. NOT
+# PRINTED: the base pocket came out 0.6 narrower than modelled over 194 mm, so if the
+# phone will not go in, lower rib_h; if it still moves, raise it.
+phone_rib_h = 0.40       # how far a rib stands off its wall; 0.2 of squeeze when centred
+phone_rib_w = 0.80       # along the wall: two lines of a 0.4 nozzle, which crush rather than bind
+phone_rib_front_xs = (17.0, 53.0)          # the button window is X -52.5..-7.5, clips at -1 / 35 / 70
+phone_rib_rear_xs = (-54.0, -18.0, 18.0, 54.0)   # clips at -72 / -36 / 0 / 36 / 72
+phone_rib_right_dys = (-9.75, 9.75)        # from the USB-C's centreline: between the slot and the audio holes
+phone_rib_left_ys = (31.0, 55.0)           # clear of the jack slot (y 15.7-24.7) and the clips at 8 / 42 / 74
 
 # --- removable front bezel (ADR-0012, a separate export) ---------------------
 # A plate over the WHOLE front of the lid (as in the Reddit build), with a window
