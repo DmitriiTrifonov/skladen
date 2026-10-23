@@ -62,3 +62,6 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .app { grid-template-columns: 1fr; grid-template-rows: 46vh auto; height: auto; min-height: 100%; }
   .panel { border-left: 0; border-top: 1px solid var(--line); }
 }
+.home { color: var(--muted); text-decoration: none; font-size: 12px; align-self: flex-start; }
+.home:hover { color: var(--accent); text-decoration: underline; }
+.home:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

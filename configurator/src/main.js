@@ -11,7 +11,7 @@ const params = new URLSearchParams(location.search);
 const lang = params.get("lang") || (navigator.language || "en").slice(0, 2);
 const RU = lang === "ru";
 const T = RU ? {
-  title: "Конфигуратор Skladen 2", sub: "Выберите детали и скачайте файл для печати",
+  home: "Mitya Labs", title: "Конфигуратор Skladen 2", sub: "Выберите детали и скачайте файл для печати",
   lid: "Крышка", frame: "Рамка", base: "База",
   rib: "Рёбра прижима, мм", ribHint: "Высота ребра над стенкой кармана. Начните с 0.60.",
   tab: "Язычки кнопок, мм", tabHint: "Тоньше — мягче нажим на кнопку телефона.",
@@ -28,7 +28,7 @@ const T = RU ? {
   stlNote: "STL: все детали одним файлом, один цвет.", mfNote: "3MF: каждая деталь — отдельный объект, вставка логотипа — вторая часть. Что не влезло на один стол, лежит на следующем; в слайсере можно разложить заново.",
   parts: { lid: "Крышка", inlay: "Вставка логотипа", frame: "Рамка", base: "База", shuttle: "Толкатель", plug: "Пробка" },
 } : {
-  title: "Skladen 2 Configurator", sub: "Pick the parts, download a print file",
+  home: "Mitya Labs", title: "Skladen 2 Configurator", sub: "Pick the parts, download a print file",
   lid: "Lid", frame: "Frame", base: "Base",
   rib: "Crush ribs, mm", ribHint: "How far a rib stands off the pocket wall. Start with 0.60.",
   tab: "Button tongues, mm", tabHint: "Thinner is a softer push on the phone's key.",
@@ -345,6 +345,7 @@ function group(key, title, body) {
 
 function renderPanel() {
   panel.innerHTML = `
+    <a class="home" href="https://mitya-labs.github.io/${RU ? "" : "en/"}" target="_top">← ${T.home}</a>
     <h1>${T.title}<small>${T.sub}</small></h1>
     ${group("lid", T.lid,
       row(T.rib, seg("rib", OPTIONS.rib), T.ribHint) +
