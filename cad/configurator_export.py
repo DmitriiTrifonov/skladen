@@ -1,6 +1,7 @@
 """Every part the web configurator can offer, as a compact mesh in its printing pose.
 
-Run: .venv/bin/python cad/configurator_export.py
+Run: .venv/bin/python cad/configurator_export.py [--assembled]
+(--assembled rebuilds only the device in place, for the page's model view.)
 
 Writes configurator/public/parts/*.bin.gz and manifest.json. Nothing here is a new
 design: each part comes from the same model.build() calls as cad/build.py, so the
@@ -36,9 +37,18 @@ manifest = {"parts": {}}
 
 def write(key, shape, role):
     """One part to <key>.bin.gz; the manifest keeps its bounding box for the layout."""
-    v, t = bambu_project.welded(shape)
-    if bambu_project.open_edges(t):
-        raise ValueError(f"open edges in {key}")
+    if isinstance(shape, (list, tuple)):      # several solids, one mesh (keycaps, text lines)
+        vs, ts, off = [], [], 0
+        for sh in shape:
+            v1, t1 = bambu_project.welded(sh)
+            vs.append(v1)
+            ts += [tuple(i + off for i in tri) for tri in t1]
+            off += len(v1)
+        v, t = np.concatenate(vs), ts
+    else:
+        v, t = bambu_project.welded(shape)
+        if bambu_project.open_edges(t):
+            raise ValueError(f"open edges in {key}")
     raw = (struct.pack("<II", len(v), len(t)) + v.astype("<f4").tobytes()
            + np.array(t, dtype="<u4").tobytes())
     (OUT / f"{key}.bin.gz").write_bytes(gzip.compress(raw, 9, mtime=0))
@@ -58,8 +68,40 @@ def union(parts):
     return out
 
 
+def assembled():
+    """The device in place, for the page's model view: lid parts in the CLOSED pose (the page
+    swings them about the hinge), phone and keyboard as the stand-ins render.py draws."""
+    import render
+
+    base = m.build()[0]
+    lid = m.build(bezel=True, rib_h=0.60, tab_t=1.0)[1]
+    recess = union(logo.inlays().values())
+    kbd, caps = render.keyboard()
+    ph, glass, text = render.phone()
+    prompt = [t for t, c in text if c is render.TXT_PROMPT]
+    out = [t for t, c in text if c is not render.TXT_PROMPT]
+    print("assembled")
+    write("asm-base", base, "base")
+    write("asm-lid", lid - recess, "lid")
+    write("asm-inlay", recess, "inlay")
+    write("asm-frame", m.bezel_ring(), "frame")
+    write("asm-kbd", kbd, "kbd")
+    write("asm-caps", list(caps), "caps")
+    write("asm-phone", ph, "phone")
+    write("asm-glass", glass, "glass")
+    write("asm-text", out, "text")
+    write("asm-prompt", prompt, "prompt")
+    manifest["hinge"] = {"y": p.hinge_axis_y, "z": p.hinge_axis_z, "close_tilt": p.close_tilt}
+
+
 def main():
+    only = "--assembled" in sys.argv
     OUT.mkdir(parents=True, exist_ok=True)
+    if only:      # keep the parts already built, add the assembled device to them
+        manifest.update(json.loads((OUT / "manifest.json").read_text()))
+        assembled()
+        (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1))
+        return
     for old in OUT.glob("*"):
         old.unlink()
 
@@ -119,6 +161,7 @@ def main():
         plug = Rot(X=90) * m.switch_plug(clr)
         write(f"plug-c{clr:.2f}", Pos(0, 0, -plug.bounding_box().min.Z) * plug, "small")
 
+    assembled()
     manifest["options"] = {
         "rib": [f"{r:.2f}" for r in RIBS], "tab": [f"{t:.1f}" for t in TABS],
         "finger": [f"{f:.1f}" for f in p.sw_finger_len],

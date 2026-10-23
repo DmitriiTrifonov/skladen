@@ -11,7 +11,7 @@ const params = new URLSearchParams(location.search);
 const lang = params.get("lang") || (navigator.language || "en").slice(0, 2);
 const RU = lang === "ru";
 const T = RU ? {
-  home: "Mitya Labs", title: "Конфигуратор Skladen 2", sub: "Выберите детали и скачайте файл для печати",
+  angle: "Угол раскрытия", cta: "Открыть конфигуратор →", home: "Mitya Labs", title: "Конфигуратор Skladen 2", sub: "Выберите детали и скачайте файл для печати",
   lid: "Крышка", frame: "Рамка", base: "База",
   rib: "Рёбра прижима, мм", ribHint: "Высота ребра над стенкой кармана. Начните с 0.60.",
   tab: "Язычки кнопок, мм", tabHint: "Тоньше — мягче нажим на кнопку телефона.",
@@ -28,7 +28,7 @@ const T = RU ? {
   stlNote: "STL: все детали одним файлом, один цвет.", mfNote: "3MF: каждая деталь — отдельный объект, вставка логотипа — вторая часть. Что не влезло на один стол, лежит на следующем; в слайсере можно разложить заново.",
   parts: { lid: "Крышка", inlay: "Вставка логотипа", frame: "Рамка", base: "База", shuttle: "Толкатель", plug: "Пробка" },
 } : {
-  home: "Mitya Labs", title: "Skladen 2 Configurator", sub: "Pick the parts, download a print file",
+  angle: "Opening angle", cta: "Open the configurator →", home: "Mitya Labs", title: "Skladen 2 Configurator", sub: "Pick the parts, download a print file",
   lid: "Lid", frame: "Frame", base: "Base",
   rib: "Crush ribs, mm", ribHint: "How far a rib stands off the pocket wall. Start with 0.60.",
   tab: "Button tongues, mm", tabHint: "Thinner is a softer push on the phone's key.",
@@ -153,8 +153,16 @@ const view = document.getElementById("view");
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 view.prepend(renderer.domElement);
+if (!params.has("embed")) {
+  const home = document.createElement("a");
+  home.className = "home";
+  home.href = `https://mitya-labs.github.io/${RU ? "" : "en/"}`;
+  home.target = "_top";
+  home.textContent = `← ${T.home}`;
+  view.append(home);
+}
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(35, 1, 1, 3000);
+const camera = new THREE.PerspectiveCamera(35, 1, 10, 3000);
 camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -345,7 +353,6 @@ function group(key, title, body) {
 
 function renderPanel() {
   panel.innerHTML = `
-    <a class="home" href="https://mitya-labs.github.io/${RU ? "" : "en/"}" target="_top">← ${T.home}</a>
     <h1>${T.title}<small>${T.sub}</small></h1>
     ${group("lid", T.lid,
       row(T.rib, seg("rib", OPTIONS.rib), T.ribHint) +
@@ -393,4 +400,57 @@ panel.addEventListener("change", (e) => {
   if (t) { state[t] = e.target.checked ? "1" : "0"; sync(); }
 });
 
-fetch(`${PARTS}manifest.json`).then((r) => r.json()).then((m) => { manifest = m; sync(); });
+// ---- model view (?embed=1): the device in place, for the site's iframe ------
+const ASM = {
+  base: 0x2f57d2, lid: 0x2f57d2, inlay: 0x2fb36a, frame: 0xd9d9d2, kbd: 0x1d1f24, caps: 0x2b2e35,
+  phone: 0x24262b, glass: 0x0a0c10, text: 0xbfc6d0, prompt: 0x86d49a,
+};
+const LID_PARTS = ["lid", "inlay", "frame", "phone", "glass", "text", "prompt"];
+
+async function showModel() {
+  document.body.classList.add("embed");
+  resize();
+  const names = Object.keys(ASM);
+  const data = await Promise.all(names.map((n) => load(`asm-${n}`)));
+  const { y, z, close_tilt: tilt } = manifest.hinge;
+  const lid = new THREE.Group();
+  lid.position.set(0, y, z);
+  scene.add(lid);
+  names.forEach((n, i) => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(data[i].pos, 3));
+    geo.setIndex(new THREE.BufferAttribute(data[i].idx, 1));
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: ASM[n], flatShading: true, roughness: n === "glass" ? 0.2 : 0.55, metalness: 0.05,
+      polygonOffset: n === "phone" || n === "glass" || n === "text" || n === "prompt", polygonOffsetFactor: 2, polygonOffsetUnits: 2 }));
+    if (LID_PARTS.includes(n)) { mesh.position.set(0, -y, -z); lid.add(mesh); } else scene.add(mesh);
+  });
+  const swing = (deg) => { lid.rotation.x = -((deg + tilt) * Math.PI) / 180; };
+  camera.position.set(-250, -355, 215);
+  controls.target.set(2, 45, 42);
+  controls.minDistance = 250; controls.maxDistance = 1400;
+
+  const bar = document.createElement("div");
+  bar.className = "bar";
+  const here = new URL(location.href);
+  here.search = `?lang=${RU ? "ru" : "en"}`;
+  bar.innerHTML = `<label>${T.angle} <output id="deg">112°</output>
+      <input id="open" type="range" min="0" max="150" value="112" aria-label="${T.angle}"></label>
+    <a class="cta" href="${here.href}" target="_top">${T.cta}</a>`;
+  view.append(bar);
+  const slider = bar.querySelector("#open"), out = bar.querySelector("#deg");
+  slider.addEventListener("input", () => { swing(+slider.value); out.textContent = `${slider.value}°`; });
+  // Opens by itself once, so the page does not start as a closed slab.
+  const t0 = performance.now();
+  (function open() {
+    const k = Math.min((performance.now() - t0) / 1400, 1);
+    const deg = Math.round(112 * (1 - Math.pow(1 - k, 3)));
+    swing(deg); slider.value = deg; out.textContent = `${deg}°`;
+    if (k < 1) requestAnimationFrame(open);
+  })();
+}
+
+fetch(`${PARTS}manifest.json`).then((r) => r.json()).then((m) => {
+  manifest = m;
+  if (params.has("embed")) showModel(); else sync();
+});
