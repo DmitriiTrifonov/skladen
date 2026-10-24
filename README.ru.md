@@ -24,9 +24,9 @@ Skladen 2 — это конструкция Mk3 (Pixel 3a XL, клавиатур
 
 <p align="center">
   <img src="docs/img/skladen2-photo.jpg" width="760"
-       alt="Напечатанный Skladen 2.1 на столе, открытый: Pocophone F1 под рамкой на защёлках в прозрачной крышке из PETG, клавиатура Jomaa в основании">
+       alt="Напечатанный Skladen 2.1.1 на столе, открытый: Pocophone F1 под рамкой на защёлках в бирюзовой крышке из PETG, клавиатура Jomaa в прозрачном основании">
   <br>
-  <sub>Skladen 2.1.0, напечатан и собран: рамка на защёлках, прозрачный PETG.</sub>
+  <sub>Skladen 2.1.1, напечатан и собран: рамка на защёлках, бирюзовая крышка из PETG, прозрачное основание.</sub>
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ Skladen 2 — это конструкция Mk3 (Pixel 3a XL, клавиатур
 
 | Версия | Что | Где |
 |---|---|---|
-| **2.1.1** | 2.1.0 плюс рёбра обжима и язычки кнопок в крышке с рамкой; посадка подтверждена на купоне, целая крышка ещё не напечатана | `export/bezel/`, `export/lid-variants/`, [конфигуратор](https://mitya-labs.github.io/skladen/) |
+| **2.1.1** | 2.1.0 плюс рёбра обжима и язычки кнопок в крышке с рамкой; напечатан | `export/bezel/`, `export/lid-variants/`, [конфигуратор](https://mitya-labs.github.io/skladen/) |
 | **2.1.0** | Skladen 2 с рамкой на защёлках; напечатан | [тег v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
 | **2.0.0** | Skladen 2: Pocophone F1, телефон на скотче; напечатан | [тег v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
 | **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; напечатан | [тег v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [его README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), ветка [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |
@@ -58,7 +58,7 @@ Skladen 2 — это конструкция Mk3 (Pixel 3a XL, клавиатур
 
 ## Состояние
 
-**Версия 2.1.0 напечатана и собрана** (фото выше), с рамкой на защёлках в
+**Версия 2.1.1 напечатана и собрана** (фото выше), с рамкой на защёлках в
 `export/bezel/`. Последние правки в ней (отверстия для выталкивания, отверстия под динамик
 и микрофон, закрытие челки, основание с окном под переключатель) смоделированы и проверены,
 но на печати ещё не подтверждены; см. [Версии](#версии) и [CHANGELOG](CHANGELOG.md).

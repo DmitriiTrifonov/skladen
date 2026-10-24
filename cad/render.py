@@ -34,8 +34,9 @@ def hexcol(s):
     return np.array([int(s[i:i + 2], 16) for i in (1, 3, 5)], float) / 255
 
 
-# Colours: the shells are the blue PETG the first coupons were printed in.
-PETG = hexcol("#2F57D2")
+# Colours as printed (photo of 2026-10-24): a teal translucent PETG lid, a clear frosted base.
+LID_PETG = hexcol("#4DC4C0")
+BASE_PETG = hexcol("#D6E2E2")
 KBD_BODY = hexcol("#1D1F24")
 KBD_CAP = hexcol("#2B2E35")
 PHONE = hexcol("#24262B")
@@ -334,10 +335,10 @@ def main():
 
     def lid_parts(turn):
         rot = (lambda s: s.rotate(axis, turn)) if turn else (lambda s: s)
-        return ([(rot(lid), PETG, 0.35), (rot(ph), PHONE, 0.2), (rot(glass), GLASS, 0.9)]
+        return ([(rot(lid), LID_PETG, 0.35), (rot(ph), PHONE, 0.2), (rot(glass), GLASS, 0.9)]
                 + [(rot(t), c, 0.0) for t, c in text])
 
-    below = [(base, PETG, 0.35), (kbd, KBD_BODY, 0.15)] + [(c, KBD_CAP, 0.25) for c in caps]
+    below = [(base, BASE_PETG, 0.35), (kbd, KBD_BODY, 0.15)] + [(c, KBD_CAP, 0.25) for c in caps]
 
     print("renders:")
     opening = 112

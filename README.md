@@ -24,9 +24,9 @@ power-switch shuttle are unchanged.** What differs is the lid:
 
 <p align="center">
   <img src="docs/img/skladen2-photo.jpg" width="760"
-       alt="The printed Skladen 2.1 on a desk, open: a Pocophone F1 under the clip-on bezel in a transparent PETG lid, the Jomaa keyboard in the base">
+       alt="The printed Skladen 2.1.1 on a desk, open: a Pocophone F1 under the clip-on bezel in a teal PETG lid, the Jomaa keyboard in a clear base">
   <br>
-  <sub>Skladen 2.1.0, printed and assembled: the clip-on bezel, in transparent PETG.</sub>
+  <sub>Skladen 2.1.1, printed and assembled: the clip-on bezel in a teal PETG lid, a clear base.</sub>
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ This branch (`main`) is **Skladen 2**. Earlier versions stay reachable by tag; t
 
 | Version | What | Where |
 |---|---|---|
-| **2.1.1** | 2.1.0 plus crush ribs and button tongues in the bezel lid; fit confirmed on a coupon, whole lid not printed yet | `export/bezel/`, `export/lid-variants/`, [configurator](https://mitya-labs.github.io/skladen/) |
+| **2.1.1** | 2.1.0 plus crush ribs and button tongues in the bezel lid; printed | `export/bezel/`, `export/lid-variants/`, [configurator](https://mitya-labs.github.io/skladen/) |
 | **2.1.0** | Skladen 2 plus the clip-on front bezel; printed | [tag v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
 | **2.0.0** | Skladen 2: Pocophone F1, phone held by tape; printed | [tag v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
 | **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; printed | [tag v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [its README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), branch [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |
@@ -58,8 +58,8 @@ interchanging (another phone), a minor for a compatible option such as the bezel
 
 ## Status
 
-**Version 2.1.0 is printed and assembled** (photo above), with the clip-on front bezel in
-`export/bezel/`. The latest revisions to it (eject holes, speaker and microphone openings,
+**Version 2.1.1 is printed and assembled** (photo above), with the clip-on front bezel in
+`export/bezel/`, the crush ribs and the button tongues. The earlier revisions to it (eject holes, speaker and microphone openings,
 the notch cover, the switch-window base) are modelled and checked, but not yet confirmed
 on a print; see [Versions](#versions) and the [changelog](CHANGELOG.md).
 `cad/build.py` builds both shells and

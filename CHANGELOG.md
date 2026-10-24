@@ -8,7 +8,10 @@ design reasons are in [docs/adr/](docs/adr/README.md).
 
 ## [Unreleased]
 
-## [2.1.1] — 2026-10-24, phone fit: crush ribs and button tongues
+## [2.1.1] — 2026-10-24, phone fit: crush ribs and button tongues (printed)
+
+The whole lid is printed (teal PETG lid, clear base; photo in the README). The renders and
+the configurator's model view use the same colours.
 
 ### Added
 - **Crush ribs on the bezel lid's pocket walls** ([ADR-0015](docs/adr/0015-phone-crush-ribs.md)),
