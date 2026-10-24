@@ -48,6 +48,7 @@ This branch (`main`) is **Skladen 2**. Earlier versions stay reachable by tag; t
 
 | Version | What | Where |
 |---|---|---|
+| **2.1.1** | 2.1.0 plus crush ribs and button tongues in the bezel lid; fit confirmed on a coupon, whole lid not printed yet | `export/bezel/`, `export/lid-variants/`, [configurator](https://mitya-labs.github.io/skladen/) |
 | **2.1.0** | Skladen 2 plus the clip-on front bezel; printed | [tag v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
 | **2.0.0** | Skladen 2: Pocophone F1, phone held by tape; printed | [tag v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
 | **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; printed | [tag v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [its README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), branch [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |

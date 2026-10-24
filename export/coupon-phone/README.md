@@ -25,6 +25,8 @@ Squeeze is the rib height less the 0.3 mm per-side pocket gap, with the phone ce
 
 Start with 0.60. If the phone goes in only with force, or not at all, take 0.50; if it
 still moves, 0.70. Then set `phone_rib_h` in `cad/params.py` to the winner and rebuild.
+**2026-10-23: `-h0.60` (rebuilt: volume tongues moved 1.75 mm, nubs 2.5 wide at the outer
+ends, ADR-0016) is sent to print.** The earlier `-h0.60` print had the old tongues.
 These coupons all carry the default button tongue, 1.0 mm. The old `-ribs` (0.40) file
 is not on a plate.
 

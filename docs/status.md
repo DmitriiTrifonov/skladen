@@ -5,13 +5,15 @@ coupon's result.
 
 ## What was done
 
+- **Coupon `-ribs-h0.60` confirmed (2026-10-23):** ribs 0.60 and tongue 1.0 with the moved tongues and 2.5 nubs work. `phone_rib_h` is now 0.60 by default; plate 4 and the rest are built with it. Next: print one whole lid (plate 4 or 7) with the closed frame.
+
 - **Crush ribs on the pocket walls** ([ADR-0015](adr/0015-phone-crush-ribs.md)). The phone
   floated 0.3 per side. First coupon, ribs 0.40 (0.1 squeeze per side): **the phone was still
   loose.** Variants 0.50 / 0.60 / 0.70 are modelled (`phone_rib_h`, default still 0.40).
 - **Button tongues** ([ADR-0016](adr/0016-button-tabs.md)) replace the open button window in
   the bezel lid. First coupon (tongue 1.0, no nubs): **the volume tongue nearest the power key
   pressed both volume keys**, because the split between the two keys was a guess. Fixed in the
-  model with 4 x 4 nubs at X -45.0 and -32.5; **not printed**. Power works.
+  model with 4 x 4 nubs at X -45.0 and -32.5. Second print: still pressed both, and the volume tongues stood 1.5-2 mm toward the top end. Now moved +1.75 with 2.5-wide nubs at the outer ends (ADR-0016); **not printed**. Power works.
 - **Closed frame** (`export/bezel/skladen2-bezel-closed*`): the plate with no cut-out over the
   buttons; for use with the tongues.
 - **USB-C extender parked** ([ADR-0013](adr/0013-usbc-extender.md)): build step off, files in

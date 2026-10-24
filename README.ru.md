@@ -48,6 +48,7 @@ Skladen 2 — это конструкция Mk3 (Pixel 3a XL, клавиатур
 
 | Версия | Что | Где |
 |---|---|---|
+| **2.1.1** | 2.1.0 плюс рёбра обжима и язычки кнопок в крышке с рамкой; посадка подтверждена на купоне, целая крышка ещё не напечатана | `export/bezel/`, `export/lid-variants/`, [конфигуратор](https://mitya-labs.github.io/skladen/) |
 | **2.1.0** | Skladen 2 с рамкой на защёлках; напечатан | [тег v2.1.0](https://github.com/mitya-labs/skladen/tree/v2.1.0), `export/bezel/` |
 | **2.0.0** | Skladen 2: Pocophone F1, телефон на скотче; напечатан | [тег v2.0.0](https://github.com/mitya-labs/skladen/tree/v2.0.0) |
 | **1.0.0** | Skladen 1 / Mk3: Pixel 3a XL; напечатан | [тег v1.0.0](https://github.com/mitya-labs/skladen/tree/v1.0.0), [его README](https://github.com/mitya-labs/skladen/blob/v1.0.0/README.md), ветка [`v1`](https://github.com/mitya-labs/skladen/tree/v1) |

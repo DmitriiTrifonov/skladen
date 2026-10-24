@@ -174,8 +174,9 @@ def bezel_variant(base):
     if p.button_tabs:
         kz = p.bezel_phone_off + p.phone_z / 2
         ky0 = p.phone_front_wall + p.clr_phone
-        for name, kx0, kx1 in (("volume down", -49.85, -39.15), ("volume up", -39.15, -28.45),
-                               ("power", -19.85, -9.95)):
+        sh = p.button_key_shift
+        for name, kx0, kx1 in (("volume down", -49.85 + sh, -39.15 + sh), ("volume up", -39.15 + sh, -28.45 + sh),
+                               ("power", -19.85 + sh, -9.95 + sh)):
             key = m._slab(kx0, kx1, ky0 - p.button_proud, ky0, kz - 1.5, kz + 1.5)
             rest = (key & lid_b).volume
             pushed = (Pos(0, -(p.button_tab_pre + 0.05), 0) * key & lid_b).volume
@@ -185,13 +186,13 @@ def bezel_variant(base):
                 FAIL.append(f"button tab {name}")
         # The volume split is not measured: keys stretched toward each other, as far as the
         # nubs' spacing allows, must still be pressed by their own tongue only.
-        for name, kx0, kx1, other in (("volume down", -49.85, -35.0, "x > -34.6"),
-                                      ("volume up", -42.0, -28.45, "x < -42.9")):
+        for name, kx0, kx1, other in (("volume down", -49.85 + sh, -31.4, "x > -31.5"),
+                                      ("volume up", -44.0, -28.45 + sh, "x < -44.1")):
             key = Pos(0, -(p.button_tab_pre + 0.05), 0) * m._slab(
                 kx0, kx1, ky0 - p.button_proud, ky0, kz - 1.5, kz + 1.5)
             hit = key & lid_b
             xs = [v.X for v in hit.vertices()]
-            wrong = (max(xs) > -34.6) if other == "x > -34.6" else (min(xs) < -42.9)
+            wrong = (max(xs) > -31.5) if other == "x > -31.5" else (min(xs) < -44.1)
             print(f"  {'stretched ' + name + ' hits only its own':32s} {'ok' if not wrong else 'HITS BOTH':>8s}")
             if wrong:
                 FAIL.append(f"stretched {name} key reaches the other tongue")

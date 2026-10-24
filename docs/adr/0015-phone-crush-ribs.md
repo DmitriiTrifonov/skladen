@@ -1,6 +1,6 @@
 # ADR-0015: Crush ribs on the pocket walls to stop the phone rattling
 
-- **Status:** Proposed — modelled, not printed
+- **Status:** Accepted — ribs 0.60 confirmed on the coupon (2026-10-23); `phone_rib_h` default 0.60
 - **Date:** 2026-10-23
 - **Decides:** how the phone is held in the bezel lid's pocket ([ADR-0012](0012-removable-front-bezel.md) removed the tape)
 

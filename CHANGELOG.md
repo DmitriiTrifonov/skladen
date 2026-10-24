@@ -8,14 +8,19 @@ design reasons are in [docs/adr/](docs/adr/README.md).
 
 ## [Unreleased]
 
+## [2.1.1] — 2026-10-24, phone fit: crush ribs and button tongues
+
 ### Added
 - **Crush ribs on the bezel lid's pocket walls** ([ADR-0015](docs/adr/0015-phone-crush-ribs.md)),
   which stop the phone floating; the first coupon at 0.40 left it loose, so 0.50 / 0.60 / 0.70
-  are exported. Not yet confirmed on a print.
+  were tried. **0.60 confirmed on a coupon** and now the default (`phone_rib_h`).
 - **Button tongues** in the bezel lid's front wall in place of the open window
   ([ADR-0016](docs/adr/0016-button-tabs.md)), with a frame closed over them
-  (`export/bezel/skladen2-bezel-closed*`). The volume tongues touch through nubs after the
-  first coupon pressed both keys. Not yet confirmed on a print.
+  (`export/bezel/skladen2-bezel-closed*`). The volume tongues touch through nubs (2.5 wide, at the outer ends) after the
+  first coupons pressed both keys, and stand 1.75 mm further toward the phone's bottom than
+  first modelled (`button_key_shift`). **Confirmed on a coupon** with tongue 1.0; a whole lid
+  is not printed yet.
+- The web configurator's parts are rebuilt with all of the above.
 - Whole-lid variants and phone-fit coupons for those parameters, a README in every `export/`
   folder, ten named plates in `skladen2-2.1-plates.3mf`; where this stopped is in
   [docs/status.md](docs/status.md).

@@ -170,16 +170,21 @@ button_tab_pre = 0.10      # from the tongue's inner face to the key at rest
 button_tab_gap = 0.60      # free end to the next post (the slit down the sides is the same)
 # (fixed edge, free end) in lid X, then the posts between and beside them
 # (fixed edge, free end, nub centre or None). The two volume keys are only known to
-# span X -49.85..-28.45 together, so each tongue touches its key through a nub 4 wide near
-# the outer end, 12.5 apart: the split can sit anywhere between -43 and -34.5 and a tongue
-# still presses one key. The power key is known, so its tongue touches along its length.
-button_tab_beams = ((-48.6, -41.0, -45.0), (-37.9, -30.3, -32.5), (-11.3, -18.9, None))
-button_tab_nub_w = 4.0
+# span X -49.85..-28.45 together, so each tongue touches its key through a nub 2.5 wide at
+# its outer end, 15.6 apart: the split can sit anywhere between -44.2 and -31.1 and a tongue
+# still presses one key (the first print's nubs, 4 wide at -45.0 / -32.5, still pressed both). The power key is known, so its tongue touches along its length.
+button_tab_beams = ((-46.85, -39.25, -45.45), (-36.15, -28.55, -29.85), (-11.3, -18.9, None))
+button_tab_nub_w = 2.5
 button_tab_nub_h = 0.30    # how far a nub stands off its tongue; the rest of the tongue is this far from the key
 button_tab_nub_z = 4.0     # along Z, centred on the phone's mid-thickness
-button_tab_posts = ((-51.1, -48.6), (-40.4, -37.9), (-29.7, -19.5), (-11.3, -8.9))
+button_tab_posts = ((-51.1, -46.85), (-38.65, -36.15), (-27.95, -19.5), (-11.3, -8.9))
 # the openings cut between posts: each holds one tongue and its slit
-button_tab_openings = ((-48.6, -40.4), (-37.9, -29.7), (-19.5, -11.3))
+button_tab_openings = ((-46.85, -38.65), (-36.15, -27.95), (-19.5, -11.3))
+# The FBX keys sit this far toward the phone's bottom (+X) of where the first print's tongues
+# stood (owner, 2026-10-23: the lid's buttons were 1.5-2 mm toward the top end). The volume
+# tongues and posts moved by it; the power tongue already overlaps its key, and its post is
+# held at -11.3 by the window's end.
+button_key_shift = 1.75
 
 # --- camera cutout --------------------------------------------------------
 # The FBX camera plateau, 1.0 proud of the back: X -6.0 to 5.9 across the phone
@@ -242,7 +247,7 @@ adapter_ridge_len = 5.0          # along X, centred on the seat
 # ribs did: 2 * rib_h less the 0.6 gap is the squeeze with the phone centred. NOT
 # PRINTED: the base pocket came out 0.6 narrower than modelled over 194 mm, so if the
 # phone will not go in, lower rib_h; if it still moves, raise it.
-phone_rib_h = 0.40       # how far a rib stands off its wall; 0.2 of squeeze when centred
+phone_rib_h = 0.60       # how far a rib stands off its wall; 0.3 of squeeze when centred (coupon confirmed, ADR-0015)
 phone_rib_w = 0.80       # along the wall: two lines of a 0.4 nozzle, which crush rather than bind
 phone_rib_front_xs = (17.0, 53.0)          # the button window is X -52.5..-7.5, clips at -1 / 35 / 70
 phone_rib_rear_xs = (-54.0, -18.0, 18.0, 54.0)   # clips at -72 / -36 / 0 / 36 / 72

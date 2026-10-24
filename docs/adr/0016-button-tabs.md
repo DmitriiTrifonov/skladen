@@ -1,6 +1,6 @@
 # ADR-0016: Flexure tabs for the phone's buttons in the bezel lid
 
-- **Status:** Proposed — modelled, not printed
+- **Status:** Accepted — the coupon with tongue 1.0 and the moved tongues/nubs confirmed (2026-10-23); whole lid not yet printed
 - **Date:** 2026-10-23
 - **Decides:** what replaces the open 45 mm button window in the bezel lid ([ADR-0004](0004-phone-retention.md), [ADR-0012](0012-removable-front-bezel.md))
 
@@ -38,6 +38,12 @@ the lid, nothing to buy.
   tongue standing 0.3 back. The split can then lie anywhere from X -43 to -34.5; `build.py`
   checks keys stretched to those limits. The power tongue, known to work, is unchanged.
   Still wanted: the two keys' measured spans.
+- **Second print (2026-10-23): the tongue nearest the power key still pressed both volume
+  keys, and the volume tongues and the post between them stood 1.5-2 mm toward the phone's
+  top end of the keys.** Now: the volume tongues, nubs and posts moved 1.75 toward +X
+  (`button_key_shift`), the nubs are 2.5 wide at the tongues' outer ends (X -45.45 and
+  -29.85), so the split can lie anywhere from -44.2 to -31.1. The power tongue and its post
+  are unchanged and work. Not printed.
 - A tongue without a nub touches along its length, so pressing near its fixed end is stiffer.
 - The key's own travel and force (a few N, a few tenths of a millimetre) are not
   measured; if a tongue is too soft the key is pressed by the lid's weight, too stiff
