@@ -22,6 +22,7 @@ from build123d import Axis
 from PIL import Image, ImageFilter
 
 sys.path.insert(0, str(Path(__file__).parent))
+import logo
 import model as m
 import params as p
 
@@ -34,9 +35,10 @@ def hexcol(s):
     return np.array([int(s[i:i + 2], 16) for i in (1, 3, 5)], float) / 255
 
 
-# Colours as printed (photo of 2026-10-24): a teal translucent PETG lid, a clear frosted base.
-LID_PETG = hexcol("#4DC4C0")
-BASE_PETG = hexcol("#D6E2E2")
+# Colours as printed (photo of 2026-10-24): lid and base are translucent clear PETG, the
+# bezel frame and the logo inlay on the lid are translucent teal.
+CLEAR_PETG = hexcol("#D6E2E2")
+TEAL_PETG = hexcol("#4DC4C0")
 KBD_BODY = hexcol("#1D1F24")
 KBD_CAP = hexcol("#2B2E35")
 PHONE = hexcol("#24262B")
@@ -327,18 +329,29 @@ def render(parts, cam, out):
           f"   {len(F)} triangles")
 
 
+def union(parts):
+    out = None
+    for part in parts:
+        out = part if out is None else out + part
+    return out
+
+
 def main():
-    base, lid = m.build()
+    base = m.build()[0]
+    lid = m.build(bezel=True, rib_h=p.phone_rib_h, tab_t=p.button_tab_t)[1]
+    inlay = union(logo.inlays().values())
+    lid = lid - inlay
+    frame = m.bezel_ring()
     kbd, caps = keyboard()
     ph, glass, text = phone()
     axis = Axis((0, p.hinge_axis_y, p.hinge_axis_z), (1, 0, 0))
 
     def lid_parts(turn):
         rot = (lambda s: s.rotate(axis, turn)) if turn else (lambda s: s)
-        return ([(rot(lid), LID_PETG, 0.35), (rot(ph), PHONE, 0.2), (rot(glass), GLASS, 0.9)]
+        return ([(rot(lid), CLEAR_PETG, 0.35), (rot(inlay), TEAL_PETG, 0.35), (rot(frame), TEAL_PETG, 0.35), (rot(ph), PHONE, 0.2), (rot(glass), GLASS, 0.9)]
                 + [(rot(t), c, 0.0) for t, c in text])
 
-    below = [(base, BASE_PETG, 0.35), (kbd, KBD_BODY, 0.15)] + [(c, KBD_CAP, 0.25) for c in caps]
+    below = [(base, CLEAR_PETG, 0.35), (kbd, KBD_BODY, 0.15)] + [(c, KBD_CAP, 0.25) for c in caps]
 
     print("renders:")
     opening = 112

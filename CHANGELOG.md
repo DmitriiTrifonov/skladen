@@ -10,7 +10,7 @@ design reasons are in [docs/adr/](docs/adr/README.md).
 
 ## [2.1.1] — 2026-10-24, phone fit: crush ribs and button tongues (printed)
 
-The whole lid is printed (teal PETG lid, clear base; photo in the README). The renders and
+The whole lid is printed (clear PETG lid and base, teal bezel and logo; photo in the README). The renders and
 the configurator's model view use the same colours.
 
 ### Added

@@ -24,9 +24,9 @@ power-switch shuttle are unchanged.** What differs is the lid:
 
 <p align="center">
   <img src="docs/img/skladen2-photo.jpg" width="760"
-       alt="The printed Skladen 2.1.1 on a desk, open: a Pocophone F1 under the clip-on bezel in a teal PETG lid, the Jomaa keyboard in a clear base">
+       alt="The printed Skladen 2.1.1 on a desk, open: a Pocophone F1 under the clip-on bezel in a clear PETG lid with a teal bezel and logo, the Jomaa keyboard in a clear base">
   <br>
-  <sub>Skladen 2.1.1, printed and assembled: the clip-on bezel in a teal PETG lid, a clear base.</sub>
+  <sub>Skladen 2.1.1, printed and assembled: the clip-on bezel in teal, a clear PETG lid and base.</sub>
 </p>
 
 <p align="center">

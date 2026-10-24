@@ -200,7 +200,7 @@ function frame(n) {
   camera.position.set(cx - span * 0.25, BED / 2 - span * 1.15 - 60, span * 0.95 + 60);
 }
 
-const COLORS = { lid: 0x4dc4c0, inlay: 0x168c8a, frame: 0xd6e2e2, base: 0xd6e2e2, small: 0xe0a030 };
+const COLORS = { lid: 0xd6e2e2, inlay: 0x4dc4c0, frame: 0x4dc4c0, base: 0xd6e2e2, small: 0xe0a030 };
 const mats = Object.fromEntries(Object.entries(COLORS).map(([k, c]) => [k, new THREE.MeshStandardMaterial({ color: c, flatShading: true, roughness: 0.55, metalness: 0.05 })]));
 const content = new THREE.Group();
 scene.add(content);
@@ -402,7 +402,7 @@ panel.addEventListener("change", (e) => {
 
 // ---- model view (?embed=1): the device in place, for the site's iframe ------
 const ASM = {
-  base: 0xd6e2e2, lid: 0x4dc4c0, inlay: 0x168c8a, frame: 0xd6e2e2, kbd: 0x1d1f24, caps: 0x2b2e35,
+  base: 0xd6e2e2, lid: 0xd6e2e2, inlay: 0x4dc4c0, frame: 0x4dc4c0, kbd: 0x1d1f24, caps: 0x2b2e35,
   phone: 0x24262b, glass: 0x0a0c10, text: 0xbfc6d0, prompt: 0x86d49a,
 };
 const LID_PARTS = ["lid", "inlay", "frame", "phone", "glass", "text", "prompt"];
